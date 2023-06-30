@@ -34,7 +34,7 @@ UINT8 LCD_CODE[] = {0x7E, 0x48, 0x3D, 0x6D, 0x4B, 0x67, 0x77, 0x4C, 0x7F, 0x6F, 
 
 #define BUTTON_PRESSED !P07
 #define IS_SYS_RUN_MOD_A 	P15
-#define TIMOUT_NON_DETECT_OBJ 120000    //ms 
+#define TIMOUT_NON_DETECT_OBJ 1800000    //ms 
 
 UINT16 valueps;
 UINT16 obj_count = 0;

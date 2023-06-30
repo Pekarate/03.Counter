@@ -1,0 +1,241 @@
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 11:11:29 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN .\Output\delay.obj
+COMPILER INVOKED BY: D:\00.SOFTWARE\03.KeilcC51\C51\BIN\C51.EXE ..\Library\StdDriver\src\delay.c LARGE OMF2 OPTIMIZE(7,S
+                    -PEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEBUG PRINT(.\lst\delay.lst) TABS(2) OBJE
+                    -CT(.\Output\delay.obj)
+
+line level    source
+
+   1          /*--------------------------------------------------------------------------------------------------------
+             --*/
+   2          /*                                                                                                        
+             - */
+   3          /* SPDX-License-Identifier: Apache-2.0                                                                    
+             - */
+   4          /* Copyright(c) 2020 Nuvoton Technology Corp. All rights reserved.                                        
+             - */
+   5          /*                                                                                                        
+             - */
+   6          /*--------------------------------------------------------------------------------------------------------
+             --*/
+   7          
+   8          #include "MS51_16K.H"
+   9          
+  10           
+  11          /**
+  12            * @brief Timer0 delay setting 
+  13            * @param[in] u32SYSCLK define Fsys clock value. for example 24000000, use the real Fsys value.
+  14            *                       - \ref 24000000 (use HIRC 24MHz)
+  15            *                       - \ref 16000000 (use HIRC 16MHz)
+  16            * @param[in] u8CNT define count time.
+  17            * @param[in] u6DLYUnit define delay time base is us. From 1~10000, the maxima value please not over 1000
+             -0.
+  18            *                       - \ref 1000 (1ms)
+  19            *                       - \ref 100 (100us)
+  20            * @return  None
+  21            * @note    If use LIRC or LXT as Fsys need adjust this marco.
+  22            * @exmaple :  Timer0_Delay(16000000,200,1000);
+  23          */
+  24          void Timer0_Delay(unsigned long u32SYSCLK, unsigned int u16CNT, unsigned int u16DLYUnit)
+  25          {
+  26   1            unsigned char TL0TMP, TH0TMP;
+  27   1        
+  28   1            TIMER0_FSYS_DIV12;                                  //T0M=0, Timer0 Clock = Fsys/12
+  29   1            ENABLE_TIMER0_MODE1;                                   //Timer0 is 16-bit mode
+  30   1            TL0TMP = LOBYTE(65535-((u32SYSCLK/1000000)*u16DLYUnit/12));
+  31   1            TH0TMP = HIBYTE(65535-((u32SYSCLK/1000000)*u16DLYUnit/12));
+  32   1        
+  33   1          while (u16CNT != 0)
+  34   1          {
+  35   2            TL0=TL0TMP;
+  36   2            TH0=TH0TMP;
+  37   2            set_TCON_TR0;                                    //Start Timer0
+  38   2            while (!TF0);                       //Check Timer0 Time-Out Flag
+  39   2            clr_TCON_TF0;
+  40   2            clr_TCON_TR0;                       //Stop Timer0
+  41   2            u16CNT --;
+  42   2          }
+  43   1      
+  44   1      }
+  45          
+  46          /**
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 11:11:29 PAGE 2   
+
+  47            * @brief Timer1 delay setting 
+  48            * @param[in] u32SYSCLK define Fsys clock value. for example 24000000, use the real Fsys value.
+  49            *                       - \ref 24000000 (use HIRC)
+  50            *                       - \ref 22118400 (use HXT)
+  51            * @param[in] u8CNT define count time.
+  52            * @param[in] u16DLYUnit define delay time base is us. From 1~10000, the maxima value please not over 100
+             -00.
+  53            *                       - \ref 1000 (1ms)
+  54            *                       - \ref 100 (100us)
+  55            * @return  None
+  56            * @note    If use LIRC or LXT as Fsys need adjust this marco.
+  57            * @exmaple :  Timer1_Delay(24000000,5,1000);
+  58          */
+  59          void Timer1_Delay(unsigned long u32SYSCLK, unsigned int u16CNT, unsigned int u16DLYUnit)
+  60          {
+  61   1          unsigned char TL1TMP,TH1TMP;
+  62   1      
+  63   1          TIMER1_FSYS_DIV12;                                 //T1M=0, Timer1 Clock = Fsys/12
+  64   1          ENABLE_TIMER1_MODE1;                                //Timer1 is 16-bit mode
+  65   1          TL1TMP = LOBYTE(65535-((u32SYSCLK/1000000)*u16DLYUnit)/12);
+  66   1          TH1TMP = HIBYTE(65535-((u32SYSCLK/1000000)*u16DLYUnit)/12);
+  67   1        
+  68   1          while (u16CNT != 0)
+  69   1          {
+  70   2            TL1 = TL1TMP;
+  71   2            TH1 = TH1TMP;
+  72   2            set_TCON_TR1;                                //Start Timer1
+  73   2            while (!TF1);                                //Check Timer1 Time-Out Flag
+  74   2            clr_TCON_TF1;
+  75   2            clr_TCON_TR1;
+  76   2            u16CNT --;
+  77   2          }
+  78   1      }
+  79          
+  80          /**
+  81            * @brief Timer2 delay setting 
+  82            * @param[in] u32SYSCLK define Fsys clock value. for example 24000000, use the real Fsys value.
+  83            *                       - \ref 24000000 (use HIRC)
+  84            *                       - \ref 22118400 (use HXT for example)
+  85            * @param[in] u16TMDIV define timer2 clock devider value from 1\4\16\32\64\128\256\512 detail check datas
+             -heet T2MOD.
+  86            *                       - \ref 512
+  87            * @param[in] u16CNT define total count times.
+  88            * @param[in] u6DLYUnit define delay time base is us. From 1~1000000, please consider the value with devi
+             -der.
+  89            *                       - \ref 1000 (1ms)
+  90            *                       - \ref 100 (100us)
+  91            * @return  None
+  92            * @note    If use LIRC or LXT as Fsys need adjust this marco.
+  93            * @exmaple :  Timer2_Delay(24000000,128,5,1000);
+  94          */
+  95          void Timer2_Delay(unsigned long u32SYSCLK,unsigned int u16TMDIV, unsigned int u16CNT, unsigned long u32DLY
+             -Unit)
+  96          {
+  97   1          unsigned char TL2TMP,TH2TMP;
+  98   1        
+  99   1          SFRS = 0x00;
+ 100   1          switch (u16TMDIV)
+ 101   1          {
+ 102   2            case 1:T2MOD&=0x8F; break;
+ 103   2            case 4:T2MOD&=0x8F;T2MOD|=0x10; break;
+ 104   2            case 16:T2MOD&=0x8F;T2MOD|=0x20; break;
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 11:11:29 PAGE 3   
+
+ 105   2            case 32:T2MOD&=0x8F;T2MOD|=0x30; break;
+ 106   2            case 64:T2MOD&=0x8F;T2MOD|=0x40; break;
+ 107   2            case 128:T2MOD&=0x8F;T2MOD|=0x50; break;
+ 108   2            case 256:T2MOD&=0x8F;T2MOD|=0x60; break;
+ 109   2            case 512:T2MOD&=0x8F;T2MOD|=0x70; break;
+ 110   2          }
+ 111   1          clr_T2CON_CMRL2;                                  //Timer 2 as auto-reload mode
+ 112   1          set_T2MOD_LDEN;
+ 113   1          set_T2MOD_CMPCR;                                  //Timer 2 value is auto-cleared as 0000H when a comp
+             -are match occurs.
+ 114   1          TL2TMP = LOBYTE(65536-((u32SYSCLK/1000000)*u32DLYUnit/u16TMDIV));
+ 115   1          TH2TMP = HIBYTE(65536-((u32SYSCLK/1000000)*u32DLYUnit/u16TMDIV));
+ 116   1          while (u16CNT != 0)
+ 117   1          {
+ 118   2            TL2 = TL2TMP;
+ 119   2            TH2 = TH2TMP;
+ 120   2            set_T2CON_TR2;                                    //Start Timer2
+ 121   2            while (TF2!=1);            //Check Timer2 Time-Out Flag
+ 122   2            clr_T2CON_TF2;
+ 123   2            clr_T2CON_TR2;                                    //Stop Timer2
+ 124   2            u16CNT --;
+ 125   2          }
+ 126   1      }
+ 127          /**
+ 128            * @brief Timer3 delay setting 
+ 129            * @param[in] u32SYSCLK define Fsys clock value. for example 24000000, use the real Fsys value.
+ 130            *                       - \ref 24000000 (use HIRC)
+ 131            *                       - \ref 22118400 (use HXT for example)
+ 132            * @param[in] u8TMDIV define timer2 clock devider value from 1\2\4\8\16\32\64\128 detail check datasheet 
+             -T3MOD.
+ 133            *                       - \ref 512
+ 134            * @param[in] u16CNT define total count times.
+ 135            * @param[in] u32DLYUnit define delay time base is us. From 1~1000000, please consider the value with dev
+             -ider.
+ 136            *                       - \ref 1000 (1ms)
+ 137            *                       - \ref 100 (100us)
+ 138            * @return  None
+ 139            * @note    If use LIRC or LXT as Fsys need adjust this marco.
+ 140            * @exmaple :  Timer3_Delay(24000000,16,5,1000);
+ 141          */
+ 142          void Timer3_Delay(unsigned long u32SYSCLK,unsigned char u8TMDIV, unsigned int u16CNT, unsigned long u32DLY
+             -Unit)
+ 143          {
+ 144   1          unsigned char TL3TMP,TH3TMP;  
+ 145   1        
+ 146   1          SFRS = 0x00;
+ 147   1          switch (u8TMDIV)
+ 148   1          {
+ 149   2            case 1:T3CON&=0xF8; break;
+ 150   2            case 2:T3CON&=0xF8;T3CON|=0x01; break;
+ 151   2            case 4:T3CON&=0xF8;T3CON|=0x02; break;
+ 152   2            case 8:T3CON&=0xF8;T3CON|=0x03; break;
+ 153   2            case 16:T3CON&=0xF8;T3CON|=0x04; break;
+ 154   2            case 32:T3CON&=0xF8;T3CON|=0x05; break;
+ 155   2            case 64:T3CON&=0xF8;T3CON|=0x06; break;
+ 156   2            case 128:T3CON&=0xF8;T3CON|=0x07; break;
+ 157   2          }
+ 158   1          TL3TMP = LOBYTE(65536-((u32SYSCLK/1000000)*u32DLYUnit/u8TMDIV));
+ 159   1          TH3TMP = HIBYTE(65536-((u32SYSCLK/1000000)*u32DLYUnit/u8TMDIV));
+ 160   1          while (u16CNT != 0)
+ 161   1          {
+ 162   2            clr_T3CON_TF3;
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 11:11:29 PAGE 4   
+
+ 163   2            RL3 = TL3TMP;
+ 164   2            RH3 = TH3TMP;
+ 165   2            set_T3CON_TR3;                                    //Trigger Timer3
+ 166   2            while (!(T3CON&SET_BIT4));                        //Check Timer3 Time-Out Flag
+ 167   2            clr_T3CON_TF3;
+ 168   2            clr_T3CON_TR3;                                    //Stop Timer3
+ 169   2            u16CNT --;
+ 170   2          }
+ 171   1      }
+ 172          
+ 173          
+ 174          //********************************************************************************************************
+             -********  
+ 175          //**** Timer Interrupt enable setting  
+ 176          //**** 1. Delay value
+ 177          //**** 2. Define unit
+ 178          //**** For example: Timer3_Delay(5,UNIT_100US) = Delay 100us
+ 179          void Timer_Interrupt_Enable(unsigned char u8TM)
+ 180          {
+ 181   1          switch(u8TM)
+ 182   1          {
+ 183   2            case TIMER0: set_IE_ET0;break;
+ 184   2            case TIMER1: set_IE_ET1;break;
+ 185   2            case TIMER2: set_EIE_ET2;break;
+ 186   2            case TIMER3: set_EIE1_ET3;break;
+ 187   2          }
+ 188   1      }
+ 189          
+ 190          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1185    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      43
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

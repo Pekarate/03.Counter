@@ -1,0 +1,41 @@
+{
+    "configurations": [
+        {
+            "name": "I2C_EEPROM",
+            "includePath": [
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\Library\\Device\\Include",
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\Library\\StdDriver\\inc",
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\SampleCode\\RegBased\\I2C_EEPROM_Master_Polling\\inc",
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\SampleCode\\RegBased\\I2C_EEPROM_Master_Polling",
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\Library\\StdDriver\\src",
+                "d:\\02.CODE\\03.Nuvuton\\MS51BSP\\MS51BSP_KEIL-master\\MS51FB9AE_MS51XB9AE_MS51XB9BE\\Library\\Startup\\Keil"
+            ],
+            "defines": [
+                "__C51__",
+                "__VSCODE_C51__",
+                "reentrant=",
+                "compact=",
+                "small=",
+                "large=",
+                "data=",
+                "idata=",
+                "pdata=",
+                "bdata=",
+                "xdata=",
+                "code=",
+                "bit=char",
+                "sbit=char",
+                "sfr=char",
+                "sfr16=int",
+                "sfr32=int",
+                "interrupt=",
+                "using=",
+                "_at_=",
+                "_priority_=",
+                "_task_="
+            ],
+            "intelliSenseMode": "${default}"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,12 @@
+".\Output\htim.obj",
+".\Output\main.obj",
+".\Output\vcnl36821.obj",
+".\Output\common.obj",
+".\Output\delay.obj",
+".\Output\sys.obj",
+".\Output\uart.obj",
+".\Output\STARTUP.obj" 
+TO ".\Output\I2C_EEPROM_Master_Polling" 
+
+PRINT(".\lst\I2C_EEPROM_Master_Polling.map") DISABLEWARNING (16) 
+REMOVEUNUSED 

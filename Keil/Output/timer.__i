@@ -1,0 +1,1 @@
+"..\..\..\..\Library\StdDriver\src\timer.c" LARGE OMF2 OPTIMIZE (7,SPEED) BROWSE INCDIR(..\..\..\..\Library\Device\Include;..\..\..\..\Library\StdDriver\inc) DEBUG PRINT(.\lst\timer.lst) TABS (2) OBJECT(.\Output\timer.obj)

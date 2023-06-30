@@ -139,7 +139,7 @@ void LCD_show(UINT16 count)
 
 
 
-#define DETECT_THRESHOLD  30
+#define DETECT_THRESHOLD  20
 #define NON_DETECT_COUNT 2
 
 #define TIME_COUNT_OFFJECT 1500  //ms
@@ -164,7 +164,10 @@ void Process_VCNL36821S(void) {
 					object_detected ++;
 					if(object_detected == OBJECT_INC_TIMES)
 					{
+						if (Sys_Mode == SYS_MODE_A)
+						{	
 							obj_count ++;
+						}
 					}
 					if(object_detected > OBJECT_INC_TIMES)
 					{
@@ -258,11 +261,22 @@ void BTN_process()
 				}
 				break;
 			case BTN_RELEASE:
+				{
+					
+				}
 				break;
 			default:
 				break;
 		}
 	} else {
+		switch(btn_state)
+		{
+			case BTN_PRESSED2S:
+				if (Sys_Mode == SYS_MODE_B){
+					obj_count ++;
+				}
+				break;
+		}
 		btn_state = BTN_IDLE;
 	}
 }
@@ -387,9 +401,10 @@ void main(void)
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
+	CKDIV = 2;
 	Init_I2C();
 	LCD_INIT();
-	Timer3_INT_Initial(DIV16, 0xFC, 0x18);
+	Timer3_INT_Initial(DIV4, 0xFC, 0x18);
 	VCNL_initialize();
 	GPIO_Init();
 	

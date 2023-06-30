@@ -3,7 +3,7 @@
 #include "htim.h"
 
 #define SYS_DIV 1
-#define I2C_CLOCK 39 /* Setting I2C clock as 100K */
+#define I2C_CLOCK 9 /* Setting I2C clock as 100K */
 
 #define EEPROM_SLA 0xC0
 #define EEPROM_WR 0
@@ -271,7 +271,7 @@ void VCNL_initialize(void)
 {
   // clean config bytes
   VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
-  VCNL36821_Write_register(VCNL_PS_CONF2,0xC0,0xA0);
+  VCNL36821_Write_register(VCNL_PS_CONF2,0xC0,0xD0);
   VCNL36821_Write_register(VCNL_PS_CONF3,0x00,0x0D);//config 3,4
   VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
   VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//

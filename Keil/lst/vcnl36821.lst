@@ -1,11 +1,11 @@
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 1   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE VCNL36821
 OBJECT MODULE PLACED IN .\Output\vcnl36821.obj
 COMPILER INVOKED BY: D:\00.SOFTWARE\03.KeilcC51\C51\BIN\C51.EXE ..\src\vcnl36821.c LARGE OMF2 OPTIMIZE(7,SPEED) BROWSE I
-                    -NCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEBUG PRINT(.\lst\vcnl36821.lst) TABS(2) OBJECT(.\Outpu
-                    -t\vcnl36821.obj)
+                    -NCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\vcnl36821.lst) 
+                    -TABS(2) OBJECT(.\Output\vcnl36821.obj)
 
 line level    source
 
@@ -14,7 +14,7 @@ line level    source
    3          #include "htim.h"
    4          
    5          #define SYS_DIV 1
-   6          #define I2C_CLOCK 39 /* Setting I2C clock as 100K */
+   6          #define I2C_CLOCK 9 /* Setting I2C clock as 100K */
    7          
    8          #define EEPROM_SLA 0xC0
    9          #define EEPROM_WR 0
@@ -62,7 +62,7 @@ line level    source
   49          {
   50   1              /* Step1 */
   51   1              set_I2CON_STA; /* Send Start bit to I2C EEPROM */
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 2   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 2   
 
   52   1              clr_I2CON_SI;
   53   1              while (!SI)
@@ -126,7 +126,7 @@ line level    source
  111   2                      if (I2C_Reset_Flag)
  112   2                              goto Write_Error_Stop;
  113   2              }
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 3   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 3   
 
  114   1      
  115   1      Write_Error_Stop:
@@ -190,7 +190,7 @@ line level    source
  173   1              clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
  174   1              I2DAT = (EEPROM_SLA | EEPROM_RD); /* Send (SLA+R) to EEPROM */
  175   1              clr_I2CON_SI;
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 4   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 4   
 
  176   1              while (!SI)
  177   1                      ;
@@ -254,7 +254,7 @@ line level    source
  235   1              *rdata = u8data[1];
  236   1              *rdata = (*rdata * 256) + u8data[0];
  237   1              return res;
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 5   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 5   
 
  238   1      }
  239          
@@ -293,7 +293,7 @@ line level    source
  271          {
  272   1        // clean config bytes
  273   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
- 274   1        VCNL36821_Write_register(VCNL_PS_CONF2,0xC0,0xA0);
+ 274   1        VCNL36821_Write_register(VCNL_PS_CONF2,0xC0,0xD0);
  275   1        VCNL36821_Write_register(VCNL_PS_CONF3,0x00,0x0D);//config 3,4
  276   1        VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
  277   1        VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
@@ -318,7 +318,7 @@ line level    source
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    697    ----
-C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 11:32:46 PAGE 6   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         06/30/2023 20:38:14 PAGE 6   
 
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----      16

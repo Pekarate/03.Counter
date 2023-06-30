@@ -1,11 +1,11 @@
-C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 11:11:29 PAGE 1   
+C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 20:26:20 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE HTIM
 OBJECT MODULE PLACED IN .\Output\htim.obj
 COMPILER INVOKED BY: D:\00.SOFTWARE\03.KeilcC51\C51\BIN\C51.EXE ..\src\htim.c LARGE OMF2 OPTIMIZE(7,SPEED) BROWSE INCDIR
-                    -(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEBUG PRINT(.\lst\htim.lst) TABS(2) OBJECT(.\Output\htim.obj
-                    -)
+                    -(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\htim.lst) TABS(2) OB
+                    -JECT(.\Output\htim.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   38                                  unsigned char u8RH3, 
   39                                  unsigned char u8RL3)
   40          {
-C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 11:11:29 PAGE 2   
+C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 20:26:20 PAGE 2   
 
   41   1          clr_T3CON_TR3;
   42   1          SFRS = 0x00;

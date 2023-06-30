@@ -3,7 +3,7 @@
 #include "htim.h"
 
 #define SYS_DIV 1
-#define I2C_CLOCK 9 /* Setting I2C clock as 100K */
+#define I2C_CLOCK 4 /* Setting I2C clock as 100K */
 
 #define EEPROM_SLA 0xC0
 #define EEPROM_WR 0
@@ -289,6 +289,5 @@ void VCNL36821_Stop(void)
 	writeWord(VCNL_PS_CONF1,0x0001);
   writeWord(VCNL_PS_CONF2,0x0001);
 	writeWord(VCNL_PS_CONF3,0x0000);
-	
 
 }

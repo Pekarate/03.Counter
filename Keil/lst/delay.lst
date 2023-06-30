@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 20:26:21 PAGE 1   
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 21:20:15 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE DELAY
@@ -62,7 +62,7 @@ line level    source
   44   1      }
   45          
   46          /**
-C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 20:26:21 PAGE 2   
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 21:20:15 PAGE 2   
 
   47            * @brief Timer1 delay setting 
   48            * @param[in] u32SYSCLK define Fsys clock value. for example 24000000, use the real Fsys value.
@@ -126,7 +126,7 @@ line level    source
  102   2            case 1:T2MOD&=0x8F; break;
  103   2            case 4:T2MOD&=0x8F;T2MOD|=0x10; break;
  104   2            case 16:T2MOD&=0x8F;T2MOD|=0x20; break;
-C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 20:26:21 PAGE 3   
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 21:20:15 PAGE 3   
 
  105   2            case 32:T2MOD&=0x8F;T2MOD|=0x30; break;
  106   2            case 64:T2MOD&=0x8F;T2MOD|=0x40; break;
@@ -190,7 +190,7 @@ line level    source
  160   1          while (u16CNT != 0)
  161   1          {
  162   2            clr_T3CON_TF3;
-C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 20:26:21 PAGE 4   
+C51 COMPILER V9.60.7.0   DELAY                                                             06/30/2023 21:20:15 PAGE 4   
 
  163   2            RL3 = TL3TMP;
  164   2            RH3 = TH3TMP;

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 20:26:21 PAGE 1   
+C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 21:20:15 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE SYS
@@ -62,7 +62,7 @@ line level    source
   45   1          set_IAPTRG_IAPGO;
   46   1          hircmap1 = IAPFD;
   47   1      
-C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 20:26:21 PAGE 2   
+C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 21:20:15 PAGE 2   
 
   48   1          switch (u8HIRCSEL)
   49   1          { 
@@ -126,7 +126,7 @@ line level    source
  107   2              ClockSwitch(FSYS_LIRC);                 // LIRC always on switch system to LIRC
  108   2              clr_CKEN_HIRCEN;                        // Disable HIRC if needed 
  109   2          break;
-C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 20:26:21 PAGE 3   
+C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 21:20:15 PAGE 3   
 
  110   2          
  111   2          /***** ECLK enable part clock in with P3.0 *****/ 
@@ -190,7 +190,7 @@ line level    source
  169   2              clr_CKSWT_OSC0;
  170   2          break;
  171   2          /***** ECLK P30 Disable part ******/
-C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 20:26:21 PAGE 4   
+C51 COMPILER V9.60.7.0   SYS                                                               06/30/2023 21:20:15 PAGE 4   
 
  172   2          case FSYS_OSCIN_P30:
  173   2              set_CKSWT_ECLKST;

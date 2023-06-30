@@ -57,6 +57,7 @@ void system_shutdown(){
 		HAL_TIM_run();
 		HAL_Delay(150);
 		if(BUTTON_PRESSED){   //debound buton
+			while(BUTTON_PRESSED);
 			break;
 		}
 	}
@@ -100,7 +101,7 @@ void LCD_send_bytes(UINT8 *dt)
 		}
 	}
 	LCD_LAT_HIGH;
-	LCD_Delay(5);
+	LCD_Delay(10);
 	LCD_LAT_LOW;
 }
 
@@ -135,6 +136,7 @@ void LCD_show(UINT16 count)
 	LCD_Delay(10);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
 	LCD_send_bytes(lcd_data);
+	LCD_Delay(10);
 }
 
 
@@ -401,14 +403,20 @@ void main(void)
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
-	CKDIV = 2;
+	CKDIV = 4;
+	Sys_Mode = Check_system_mode();
+	
 	Init_I2C();
 	LCD_INIT();
-	Timer3_INT_Initial(DIV4, 0xFC, 0x18);
+	Timer3_INT_Initial(DIV2, 0xFC, 0x18);
+	if (Sys_Mode == SYS_MODE_A){
 	VCNL_initialize();
+	} else {
+		VCNL36821_Stop();
+	}
 	GPIO_Init();
 	
-	Sys_Mode = Check_system_mode();
+	
 //    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
 ////    ENABLE_WDT_INTERRUPT;
 ////		WDT_RUN_IN_POWERDOWN_DISABLE;
@@ -420,7 +428,9 @@ void main(void)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
 		BTN_process();
-		Process_VCNL36821S();
+		if (Sys_Mode == SYS_MODE_A){
+			Process_VCNL36821S();
+		}
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();
 	}

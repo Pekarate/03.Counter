@@ -33,7 +33,7 @@ UINT8 LCD_CODE[] = {0x7E, 0x48, 0x3D, 0x6D, 0x4B, 0x67, 0x77, 0x4C, 0x7F, 0x6F, 
 #define LCD_DATA_LOW P01 = 0
 
 #define BUTTON_PRESSED !P07
-#define IS_SYS_RUN_MOD_A 	P15
+#define IS_SYS_RUN_MOD_A 	P30
 #define TIMOUT_NON_DETECT_OBJ 1800000    //ms 
 
 UINT16 valueps;
@@ -51,8 +51,7 @@ void system_shutdown(){
 	while(1)
 	{
 		HAL_TIM_Pause();
-
-		clr_PCON_IDLE;
+		LCD_PWM_OFF;
 		set_PCON_PD;
 		HAL_TIM_run();
 		HAL_Delay(150);
@@ -405,7 +404,6 @@ void main(void)
 	/* Initial I2C function */
 	CKDIV = 4;
 	Sys_Mode = Check_system_mode();
-	
 	Init_I2C();
 	LCD_INIT();
 	Timer3_INT_Initial(DIV2, 0xFC, 0x18);
@@ -430,6 +428,10 @@ void main(void)
 		BTN_process();
 		if (Sys_Mode == SYS_MODE_A){
 			Process_VCNL36821S();
+		}
+		if(Sys_Mode != Check_system_mode())
+		{
+			set_SWRST;
 		}
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   44          void system_shutdown(){
   45   1        VCNL36821_Stop();
   46   1        BOD_DISABLE;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 2   
 
   47   1        ALL_GPIO_INPUT_MODE;
   48   1        ENABLE_BIT7_FALLINGEDGE_TRIG;
@@ -71,413 +71,418 @@ line level    source
   51   1        while(1)
   52   1        {
   53   2          HAL_TIM_Pause();
-  54   2          P0M1 &= ~0x20;  // 0b11000101;
-  55   2          P0M2 |= ~0x20; // 0b00111010;
-  56   2          LCD_PWM_OFF;
-  57   2          set_PCON_PD;
-  58   2          HAL_TIM_run();
-  59   2          HAL_Delay(150);
-  60   2          if(BUTTON_PRESSED){   //debound buton
-  61   3            while(BUTTON_PRESSED);
-  62   3            break;
-  63   3          }
-  64   2        }
-  65   1        set_SWRST;
-  66   1        
-  67   1      }
-  68          void LCD_INIT()
-  69          {
-  70   1        // P05 LCD_PW out
-  71   1        // P04 LCD_SCK out
-  72   1        // P03 LCD_LAT out
-  73   1        // P01 LCD_DATA out
-  74   1        P0M1 &= 0xC5;  // 0b11000101;
-  75   1        P0M2 |= ~0xC5; // 0b00111010;
-  76   1        LCD_PWM_ON;
-  77   1        LCD_SCK_LOW;
-  78   1        LCD_LAT_LOW;
-  79   1        LCD_DATA_LOW;
-  80   1      }
-  81          void LCD_Delay(UINT8 dl)
-  82          {
-  83   1        int i;
-  84   1        for (i = 0; i < dl; i++)
-  85   1        {
-  86   2        }
-  87   1      }
-  88          
-  89          void LCD_send_bytes(UINT8 *dt)
-  90          {
-  91   1        INT8 i, j;
-  92   1        LCD_LAT_LOW;
-  93   1        for (i = 2; i >= 0; i--)
-  94   1        {
-  95   2          for (j = 7; j >= 0; j--)
-  96   2          {
-  97   3            LCD_SCK_LOW;
-  98   3            LCD_DATA = ((dt[i] >> j) & 0x01);
+  54   2          LCD_PWM_OFF;
+  55   2          set_PCON_PD;
+  56   2          HAL_TIM_run();
+  57   2          HAL_Delay(150);
+  58   2          if(BUTTON_PRESSED){   //debound buton
+  59   3            while(BUTTON_PRESSED);
+  60   3            break;
+  61   3          }
+  62   2        }
+  63   1        set_SWRST;
+  64   1        
+  65   1      }
+  66          void LCD_INIT()
+  67          {
+  68   1        // P05 LCD_PW out
+  69   1        // P04 LCD_SCK out
+  70   1        // P03 LCD_LAT out
+  71   1        // P01 LCD_DATA out
+  72   1        P0M1 &= 0xC5;  // 0b11000101;
+  73   1        P0M2 |= ~0xC5; // 0b00111010;
+  74   1        LCD_PWM_ON;
+  75   1        LCD_SCK_LOW;
+  76   1        LCD_LAT_LOW;
+  77   1        LCD_DATA_LOW;
+  78   1      }
+  79          void LCD_Delay(UINT8 dl)
+  80          {
+  81   1        int i;
+  82   1        for (i = 0; i < dl; i++)
+  83   1        {
+  84   2        }
+  85   1      }
+  86          
+  87          void LCD_send_bytes(UINT8 *dt)
+  88          {
+  89   1        INT8 i, j;
+  90   1        LCD_LAT_LOW;
+  91   1        for (i = 2; i >= 0; i--)
+  92   1        {
+  93   2          for (j = 7; j >= 0; j--)
+  94   2          {
+  95   3            LCD_SCK_LOW;
+  96   3            LCD_DATA = ((dt[i] >> j) & 0x01);
+  97   3            LCD_Delay(5);
+  98   3            LCD_SCK_HIGH;
   99   3            LCD_Delay(5);
- 100   3            LCD_SCK_HIGH;
- 101   3            LCD_Delay(5);
- 102   3          }
- 103   2        }
- 104   1        LCD_LAT_HIGH;
- 105   1        LCD_Delay(10);
- 106   1        LCD_LAT_LOW;
- 107   1      }
- 108          
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 3   
+ 100   3          }
+ 101   2        }
+ 102   1        LCD_LAT_HIGH;
+ 103   1        LCD_Delay(10);
+ 104   1        LCD_LAT_LOW;
+ 105   1      }
+ 106          
+ 107          
+ 108          _Sys_Mode Sys_Mode = SYS_MODE_B;
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 3   
 
- 109          
- 110          _Sys_Mode Sys_Mode = SYS_MODE_B,Sys_Modeold = SYS_MODE_B;
- 111          void LCD_show(UINT16 count)
- 112          {
- 113   1        UINT8 lcd_data[3];
- 114   1        if (Sys_Mode == SYS_MODE_A)
- 115   1        {
- 116   2          count = (count % 198);
- 117   2          lcd_data[0] = LCD_CODE[(count + 1) / 20];
- 118   2          lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
- 119   2          lcd_data[2] = LCD_CODE[0];
- 120   2          if (count)
- 121   2          {
- 122   3            lcd_data[2] = LCD_CODE[2];
- 123   3            if (count % 2)
- 124   3            {
- 125   4              lcd_data[2] = LCD_CODE[1];
- 126   4            }
- 127   3          }
- 128   2        }
- 129   1        else
- 130   1        {
- 131   2          count = (count % 1000);
- 132   2          lcd_data[2] = LCD_CODE[count % 10];
- 133   2          lcd_data[1] = LCD_CODE[(count / 10) % 10];
- 134   2          lcd_data[0] = LCD_CODE[count / 100];
- 135   2        }
- 136   1        LCD_send_bytes(lcd_data);
- 137   1        LCD_Delay(10);
- 138   1        lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
- 139   1        LCD_send_bytes(lcd_data);
- 140   1        LCD_Delay(10);
- 141   1      }
+ 109          void LCD_show(UINT16 count)
+ 110          {
+ 111   1        UINT8 lcd_data[3];
+ 112   1        if (Sys_Mode == SYS_MODE_A)
+ 113   1        {
+ 114   2          count = (count % 198);
+ 115   2          lcd_data[0] = LCD_CODE[(count + 1) / 20];
+ 116   2          lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
+ 117   2          lcd_data[2] = LCD_CODE[0];
+ 118   2          if (count)
+ 119   2          {
+ 120   3            lcd_data[2] = LCD_CODE[2];
+ 121   3            if (count % 2)
+ 122   3            {
+ 123   4              lcd_data[2] = LCD_CODE[1];
+ 124   4            }
+ 125   3          }
+ 126   2        }
+ 127   1        else
+ 128   1        {
+ 129   2          count = (count % 1000);
+ 130   2          lcd_data[2] = LCD_CODE[count % 10];
+ 131   2          lcd_data[1] = LCD_CODE[(count / 10) % 10];
+ 132   2          lcd_data[0] = LCD_CODE[count / 100];
+ 133   2        }
+ 134   1        LCD_send_bytes(lcd_data);
+ 135   1        LCD_Delay(10);
+ 136   1        lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
+ 137   1        LCD_send_bytes(lcd_data);
+ 138   1        LCD_Delay(10);
+ 139   1      }
+ 140          
+ 141          
  142          
- 143          
- 144          
- 145          #define DETECT_THRESHOLD  20
- 146          #define NON_DETECT_COUNT 2
- 147          
- 148          #define TIME_COUNT_OFFJECT 1500  //ms
- 149          #define TIME_CHECK_OBJECT  400    //ms
- 150          #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT  
- 151          void reset_counter(){
- 152   1        obj_count = 0;
- 153   1      }
- 154          void Process_VCNL36821S(void) {
- 155   1          static UINT32 ttime = 0;
- 156   1          static UINT8 error = 0;
- 157   1          static UINT8 object_detected = 0;
- 158   1          static UINT8 non_object_detected = NON_DETECT_COUNT;
- 159   1          if (HAL_GetTick() > ttime)
- 160   1          {
- 161   2            ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
- 162   2            if(readWord(VCNL_PS_DATA,&valueps))
- 163   2            {
- 164   3              if(valueps > DETECT_THRESHOLD)
- 165   3              {
- 166   4                error = 0;
- 167   4                object_detected ++;
- 168   4                if(object_detected == OBJECT_INC_TIMES)
- 169   4                {
- 170   5                  if (Sys_Mode == SYS_MODE_A)
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 4   
+ 143          #define DETECT_THRESHOLD  20
+ 144          #define NON_DETECT_COUNT 2
+ 145          
+ 146          #define TIME_COUNT_OFFJECT 2000  //ms
+ 147          #define TIME_CHECK_OBJECT  400    //ms
+ 148          #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT  
+ 149          void reset_counter(){
+ 150   1        obj_count = 0;
+ 151   1      }
+ 152          void Process_VCNL36821S(void) {
+ 153   1          static UINT32 ttime = 0;
+ 154   1          static UINT8 error = 0;
+ 155   1          static UINT8 object_detected = 0;
+ 156   1          static UINT8 non_object_detected = NON_DETECT_COUNT;
+ 157   1          if (HAL_GetTick() > ttime)
+ 158   1          {
+ 159   2            ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
+ 160   2            if(readWord(VCNL_PS_DATA,&valueps))
+ 161   2            {
+ 162   3              if(valueps > DETECT_THRESHOLD)
+ 163   3              {
+ 164   4                error = 0;
+ 165   4                object_detected ++;
+ 166   4                if(object_detected == OBJECT_INC_TIMES)
+ 167   4                {
+ 168   5                  if (Sys_Mode == SYS_MODE_A)
+ 169   5                  { 
+ 170   6                    obj_count ++;
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 4   
 
- 171   5                  { 
- 172   6                    obj_count ++;
- 173   6                  }
- 174   5                }
- 175   4                if(object_detected > OBJECT_INC_TIMES)
- 176   4                {
- 177   5                  object_detected = OBJECT_INC_TIMES+1;
- 178   5                }
- 179   4              } else if(object_detected){
- 180   4                  non_object_detected --;
- 181   4                  if(!non_object_detected){
- 182   5                    object_detected = 0;
- 183   5                    non_object_detected = NON_DETECT_COUNT;
- 184   5                  }
- 185   4              }
- 186   3            }
- 187   2            else { 
- 188   3              error++;
- 189   3              if(error == 5){
- 190   4                
- 191   4              }
- 192   3            }
- 193   2            
- 194   2          }
- 195   1      }
- 196          
- 197          void GPIO_Init()
- 198          {
- 199   1        //P0.7 input
- 200   1          P0M1 |= 0x80;
- 201   1          P0M2 &= 0x7F;
- 202   1      }
- 203          typedef enum{
- 204            BTN_IDLE  = 0,
- 205            BTN_DEBOUND,
- 206            BTN_CLICKED,
- 207            BTN_PRESSED2S,
- 208            BTN_PRESSED2_5S,
- 209            BTN_PRESSED3S,
- 210            BTN_RELEASE
- 211          }_btn_state;
- 212          
- 213          void btn_time_2sec_callback()
- 214          {
- 215   1        if (Sys_Mode == SYS_MODE_B){
- 216   2          reset_counter();
- 217   2        }
- 218   1      }
- 219          void btn_time_2_5sec_callback()
- 220          {
- 221   1        if (Sys_Mode == SYS_MODE_A){
- 222   2          system_shutdown();
- 223   2        }
- 224   1      }
- 225          void btn_time_3sec_callback()
- 226          {
- 227   1        if (Sys_Mode == SYS_MODE_B){
- 228   2          system_shutdown();
- 229   2        }
- 230   1      }
- 231          void BTN_process()
- 232          {
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 5   
+ 171   6                  }
+ 172   5                }
+ 173   4                if(object_detected > OBJECT_INC_TIMES)
+ 174   4                {
+ 175   5                  object_detected = OBJECT_INC_TIMES+1;
+ 176   5                }
+ 177   4              } else if(object_detected){
+ 178   4                  non_object_detected --;
+ 179   4                  if(!non_object_detected){
+ 180   5                    object_detected = 0;
+ 181   5                    non_object_detected = NON_DETECT_COUNT;
+ 182   5                  }
+ 183   4              }
+ 184   3            }
+ 185   2            else { 
+ 186   3              error++;
+ 187   3              if(error == 5){
+ 188   4                
+ 189   4              }
+ 190   3            }
+ 191   2            
+ 192   2          }
+ 193   1      }
+ 194          
+ 195          void GPIO_Init()
+ 196          {
+ 197   1        //P0.7 input
+ 198   1          P0M1 |= 0x80;
+ 199   1          P0M2 &= 0x7F;
+ 200   1      }
+ 201          typedef enum{
+ 202            BTN_IDLE  = 0,
+ 203            BTN_DEBOUND,
+ 204            BTN_CLICKED,
+ 205            BTN_PRESSED2S,
+ 206            BTN_PRESSED2_5S,
+ 207            BTN_PRESSED3S,
+ 208            BTN_RELEASE
+ 209          }_btn_state;
+ 210          
+ 211          void btn_time_click_callback()
+ 212          {
+ 213   1        if (Sys_Mode == SYS_MODE_A){
+ 214   2          reset_counter();
+ 215   2        }
+ 216   1      }
+ 217          void btn_time_2sec_callback()
+ 218          {
+ 219   1        if (Sys_Mode == SYS_MODE_B){
+ 220   2          reset_counter();
+ 221   2        }
+ 222   1      }
+ 223          void btn_time_2_5sec_callback()
+ 224          {
+ 225   1        if (Sys_Mode == SYS_MODE_A){
+ 226   2          system_shutdown();
+ 227   2        }
+ 228   1      }
+ 229          void btn_time_3sec_callback()
+ 230          {
+ 231   1        if (Sys_Mode == SYS_MODE_B){
+ 232   2          system_shutdown();
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 5   
 
- 233   1        static UINT32 btn_time = 0;
- 234   1        static _btn_state btn_state= BTN_IDLE;
- 235   1        if(BUTTON_PRESSED) {
- 236   2          switch(btn_state) {
- 237   3            case BTN_IDLE:
- 238   3                btn_state = BTN_DEBOUND;
- 239   3                btn_time = HAL_GetTick() +25;
- 240   3              break;
- 241   3            case BTN_DEBOUND:
- 242   3              if(HAL_GetTick() >btn_time){
- 243   4                  btn_state = BTN_PRESSED2S;
- 244   4                  btn_time = HAL_GetTick() +2000 ;
- 245   4              }
- 246   3              break;
- 247   3            case BTN_PRESSED2S:
- 248   3              if(HAL_GetTick() >btn_time){
- 249   4                  btn_time_2sec_callback();
- 250   4                  btn_state = BTN_PRESSED2_5S;
- 251   4                  btn_time = HAL_GetTick() +500 ;
- 252   4              }
- 253   3              break;
- 254   3            case BTN_PRESSED2_5S:
- 255   3              if(HAL_GetTick() >btn_time){
- 256   4                  btn_time_2_5sec_callback();
- 257   4                  btn_state = BTN_PRESSED3S;
- 258   4                  btn_time = HAL_GetTick() +500 ;
- 259   4              }
- 260   3              break;
- 261   3            case BTN_PRESSED3S:
- 262   3              if(HAL_GetTick() >btn_time){
- 263   4                btn_time_3sec_callback();
+ 233   2        }
+ 234   1      }
+ 235          void BTN_process()
+ 236          {
+ 237   1        static UINT32 btn_time = 0;
+ 238   1        static _btn_state btn_state= BTN_IDLE;
+ 239   1        if(BUTTON_PRESSED) {
+ 240   2          switch(btn_state) {
+ 241   3            case BTN_IDLE:
+ 242   3                btn_state = BTN_DEBOUND;
+ 243   3                btn_time = HAL_GetTick() +25;
+ 244   3              break;
+ 245   3            case BTN_DEBOUND:
+ 246   3              if(HAL_GetTick() >btn_time){
+ 247   4                  btn_state = BTN_PRESSED2S;
+ 248   4                  btn_time_click_callback();
+ 249   4                  btn_time = HAL_GetTick() +2000 ;
+ 250   4              }
+ 251   3              break;
+ 252   3            case BTN_PRESSED2S:
+ 253   3              if(HAL_GetTick() >btn_time){
+ 254   4                  btn_time_2sec_callback();
+ 255   4                  btn_state = BTN_PRESSED2_5S;
+ 256   4                  btn_time = HAL_GetTick() +500 ;
+ 257   4              }
+ 258   3              break;
+ 259   3            case BTN_PRESSED2_5S:
+ 260   3              if(HAL_GetTick() >btn_time){
+ 261   4                  btn_time_2_5sec_callback();
+ 262   4                  btn_state = BTN_PRESSED3S;
+ 263   4                  btn_time = HAL_GetTick() +500 ;
  264   4              }
  265   3              break;
- 266   3            case BTN_RELEASE:
- 267   3              {
- 268   4                
+ 266   3            case BTN_PRESSED3S:
+ 267   3              if(HAL_GetTick() >btn_time){
+ 268   4                btn_time_3sec_callback();
  269   4              }
  270   3              break;
- 271   3            default:
- 272   3              break;
- 273   3          }
- 274   2        } else {
- 275   2          switch(btn_state)
- 276   2          {
- 277   3            case BTN_PRESSED2S:
- 278   3              if (Sys_Mode == SYS_MODE_B){
- 279   4                obj_count ++;
- 280   4              }
- 281   3              break;
- 282   3          }
- 283   2          btn_state = BTN_IDLE;
- 284   2        }
- 285   1      }
- 286          
- 287          void PinInterrupt_ISR (void) interrupt 7 
- 288          {
- 289   1        _push_(SFRS);
- 290   1        
- 291   1          SFRS = 0;
- 292   1          switch(PIF)
- 293   1          {
- 294   2          case (SET_BIT7):{
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 6   
+ 271   3            case BTN_RELEASE:
+ 272   3              {
+ 273   4                
+ 274   4              }
+ 275   3              break;
+ 276   3            default:
+ 277   3              break;
+ 278   3          }
+ 279   2        } else {
+ 280   2          switch(btn_state)
+ 281   2          {
+ 282   3            case BTN_PRESSED2S:
+ 283   3              if (Sys_Mode == SYS_MODE_B){
+ 284   4                obj_count ++;
+ 285   4              }
+ 286   3              break;
+ 287   3          }
+ 288   2          btn_state = BTN_IDLE;
+ 289   2        }
+ 290   1      }
+ 291          
+ 292          void PinInterrupt_ISR (void) interrupt 7 
+ 293          {
+ 294   1        _push_(SFRS);
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 6   
 
- 295   3                PIF&=CLR_BIT7; 
- 296   3                break;
- 297   3          } 
- 298   2          default: break;
- 299   2          }
- 300   1      
- 301   1        _pop_(SFRS);
- 302   1      }
- 303          
- 304          void check_non_obj_detect_timout(void)
- 305          {
- 306   1        static UINT16 old_obj_count = 0xFFFF; // dif obj_count
- 307   1        static xdata UINT32 timout =0;
- 308   1        if(old_obj_count != obj_count)
- 309   1        {
- 310   2          timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
- 311   2          old_obj_count =obj_count;
- 312   2        }
- 313   1        if(HAL_GetTick() > timout)
+ 295   1        
+ 296   1          SFRS = 0;
+ 297   1          switch(PIF)
+ 298   1          {
+ 299   2          case (SET_BIT7):{
+ 300   3                PIF&=CLR_BIT7; 
+ 301   3                break;
+ 302   3          } 
+ 303   2          default: break;
+ 304   2          }
+ 305   1      
+ 306   1        _pop_(SFRS);
+ 307   1      }
+ 308          
+ 309          void check_non_obj_detect_timout(void)
+ 310          {
+ 311   1        static UINT16 old_obj_count = 0xFFFF; // dif obj_count
+ 312   1        static xdata UINT32 timout =0;
+ 313   1        if(old_obj_count != obj_count)
  314   1        {
- 315   2          system_shutdown();
- 316   2        }
- 317   1        
- 318   1      }
- 319          
- 320          _Sys_Mode Check_system_mode()
- 321          {
- 322   1        if(IS_SYS_RUN_MOD_A)
- 323   1        {
- 324   2          return SYS_MODE_A;
- 325   2        } 
- 326   1        return SYS_MODE_B;
- 327   1      }
- 328          
- 329          void WDT_ISR (void)   interrupt 10
- 330          {
- 331   1      _push_(SFRS);
- 332   1      
- 333   1        /* Config Enable WDT reset and not clear couter trig reset */
- 334   1          WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 335   1          while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
- 336   1          P12 = ~P12;
+ 315   2          timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
+ 316   2          old_obj_count =obj_count;
+ 317   2        }
+ 318   1        if(HAL_GetTick() > timout)
+ 319   1        {
+ 320   2          system_shutdown();
+ 321   2        }
+ 322   1        
+ 323   1      }
+ 324          
+ 325          _Sys_Mode Check_system_mode()
+ 326          {
+ 327   1        if(IS_SYS_RUN_MOD_A)
+ 328   1        {
+ 329   2          return SYS_MODE_A;
+ 330   2        } 
+ 331   1        return SYS_MODE_B;
+ 332   1      }
+ 333          
+ 334          void WDT_ISR (void)   interrupt 10
+ 335          {
+ 336   1      _push_(SFRS);
  337   1      
- 338   1          CLEAR_WDT_INTERRUPT_FLAG;
- 339   1      _pop_(SFRS);
- 340   1      }
- 341          
- 342          
- 343          void Disable_WDT_Reset_Config(void)
- 344          {
- 345   1        UINT8 cf0,cf1,cf2,cf3,cf4;
- 346   1        
- 347   1          set_CHPCON_IAPEN;
- 348   1          IAPAL = 0x00;
- 349   1          IAPAH = 0x00;
- 350   1          IAPCN = BYTE_READ_CONFIG;
- 351   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
- 352   1          cf0 = IAPFD;
- 353   1          IAPAL = 0x01;
- 354   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
- 355   1          cf1 = IAPFD;
- 356   1          IAPAL = 0x02;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 7   
+ 338   1        /* Config Enable WDT reset and not clear couter trig reset */
+ 339   1          WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 340   1          while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
+ 341   1          P12 = ~P12;
+ 342   1      
+ 343   1          CLEAR_WDT_INTERRUPT_FLAG;
+ 344   1      _pop_(SFRS);
+ 345   1      }
+ 346          
+ 347          
+ 348          void Disable_WDT_Reset_Config(void)
+ 349          {
+ 350   1        UINT8 cf0,cf1,cf2,cf3,cf4;
+ 351   1        
+ 352   1          set_CHPCON_IAPEN;
+ 353   1          IAPAL = 0x00;
+ 354   1          IAPAH = 0x00;
+ 355   1          IAPCN = BYTE_READ_CONFIG;
+ 356   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 7   
 
- 357   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
- 358   1          cf2 = IAPFD;
- 359   1          IAPAL = 0x03;
- 360   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
- 361   1          cf3 = IAPFD;
- 362   1          IAPAL = 0x04;
- 363   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
- 364   1          cf4 = IAPFD;
- 365   1          cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
- 366   1          
- 367   1          set_IAPUEN_CFUEN;  
- 368   1          IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
- 369   1          IAPAH = 0x00;
- 370   1          IAPAL = 0x00;
- 371   1          IAPFD = 0xFF;
- 372   1          set_IAPTRG_IAPGO;
- 373   1          
- 374   1          IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
- 375   1          IAPFD = cf0;
- 376   1          set_IAPTRG_IAPGO;
- 377   1          IAPAL = 0x01;
- 378   1          IAPFD = cf1;
- 379   1          set_IAPTRG_IAPGO;
- 380   1          IAPAL = 0x02;
- 381   1          IAPFD = cf2;
- 382   1          set_IAPTRG_IAPGO;
- 383   1          IAPAL = 0x03;
- 384   1          IAPFD = cf3;
- 385   1          set_IAPTRG_IAPGO;
- 386   1          IAPAL = 0x04;
- 387   1          IAPFD = cf4;
- 388   1          set_IAPTRG_IAPGO;
- 389   1      
- 390   1          set_IAPUEN_CFUEN;
- 391   1          clr_CHPCON_IAPEN;
- 392   1          if (WDCON&SET_BIT3)
- 393   1          {
- 394   2            clr_WDCON_WDTRF;
- 395   2            set_CHPCON_SWRST;
- 396   2          }
- 397   1      }
- 398          
- 399          
- 400          void main(void)
- 401          {
- 402   1        UINT16 id = 0;
- 403   1        UINT32 ttime = 0;
- 404   1        ALL_GPIO_INPUT_MODE;
- 405   1        MODIFY_HIRC(HIRC_16);
- 406   1        /* Initial I2C function */
- 407   1        CKDIV = 4;
- 408   1        Sys_Mode = Check_system_mode();
- 409   1        Init_I2C();
- 410   1        LCD_INIT();
- 411   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18);
- 412   1        if (Sys_Mode == SYS_MODE_A){
- 413   2        VCNL_initialize();
- 414   2        } else {
- 415   2          VCNL36821_Stop();
- 416   2        }
- 417   1        GPIO_Init();
- 418   1        
-C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2023 23:20:11 PAGE 8   
+ 357   1          cf0 = IAPFD;
+ 358   1          IAPAL = 0x01;
+ 359   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
+ 360   1          cf1 = IAPFD;
+ 361   1          IAPAL = 0x02;
+ 362   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
+ 363   1          cf2 = IAPFD;
+ 364   1          IAPAL = 0x03;
+ 365   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
+ 366   1          cf3 = IAPFD;
+ 367   1          IAPAL = 0x04;
+ 368   1          set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
+ 369   1          cf4 = IAPFD;
+ 370   1          cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
+ 371   1          
+ 372   1          set_IAPUEN_CFUEN;  
+ 373   1          IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
+ 374   1          IAPAH = 0x00;
+ 375   1          IAPAL = 0x00;
+ 376   1          IAPFD = 0xFF;
+ 377   1          set_IAPTRG_IAPGO;
+ 378   1          
+ 379   1          IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
+ 380   1          IAPFD = cf0;
+ 381   1          set_IAPTRG_IAPGO;
+ 382   1          IAPAL = 0x01;
+ 383   1          IAPFD = cf1;
+ 384   1          set_IAPTRG_IAPGO;
+ 385   1          IAPAL = 0x02;
+ 386   1          IAPFD = cf2;
+ 387   1          set_IAPTRG_IAPGO;
+ 388   1          IAPAL = 0x03;
+ 389   1          IAPFD = cf3;
+ 390   1          set_IAPTRG_IAPGO;
+ 391   1          IAPAL = 0x04;
+ 392   1          IAPFD = cf4;
+ 393   1          set_IAPTRG_IAPGO;
+ 394   1      
+ 395   1          set_IAPUEN_CFUEN;
+ 396   1          clr_CHPCON_IAPEN;
+ 397   1          if (WDCON&SET_BIT3)
+ 398   1          {
+ 399   2            clr_WDCON_WDTRF;
+ 400   2            set_CHPCON_SWRST;
+ 401   2          }
+ 402   1      }
+ 403          
+ 404          
+ 405          void main(void)
+ 406          {
+ 407   1        UINT16 id = 0;
+ 408   1        UINT32 ttime = 0;
+ 409   1        ALL_GPIO_INPUT_MODE;
+ 410   1        MODIFY_HIRC(HIRC_16);
+ 411   1        /* Initial I2C function */
+ 412   1        CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
+ 413   1        Sys_Mode = Check_system_mode();
+ 414   1        Init_I2C();
+ 415   1        LCD_INIT();
+ 416   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18);
+ 417   1        if (Sys_Mode == SYS_MODE_A){
+ 418   2        VCNL_initialize();
+C51 COMPILER V9.60.7.0   MAIN                                                              07/26/2023 22:33:38 PAGE 8   
 
- 419   1        
- 420   1      //    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
- 421   1      ////    ENABLE_WDT_INTERRUPT;
- 422   1      ////    WDT_RUN_IN_POWERDOWN_DISABLE;
- 423   1      ////    WDT_RUN_IN_POWERDOWN_ENABLE;
- 424   1      ////    ENABLE_GLOBAL_INTERRUPT;
- 425   1      //    WDT_COUNTER_RUN;                       /* WDT start to run */
- 426   1      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 427   1        while (1)
- 428   1        {
- 429   2      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 430   2          BTN_process();
- 431   2          if (Sys_Mode == SYS_MODE_A){
- 432   3            Process_VCNL36821S();
- 433   3          }
- 434   2          if(Sys_Mode != Check_system_mode())
- 435   2          {
- 436   3            set_SWRST;
- 437   3          }
- 438   2          LCD_show(obj_count);
- 439   2          check_non_obj_detect_timout();
- 440   2        }
- 441   1        /* =================== */
- 442   1      }
+ 419   2        } else {
+ 420   2          VCNL36821_Stop();
+ 421   2        }
+ 422   1        GPIO_Init();
+ 423   1        
+ 424   1        
+ 425   1      //    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
+ 426   1      ////    ENABLE_WDT_INTERRUPT;
+ 427   1      ////    WDT_RUN_IN_POWERDOWN_DISABLE;
+ 428   1      ////    WDT_RUN_IN_POWERDOWN_ENABLE;
+ 429   1      ////    ENABLE_GLOBAL_INTERRUPT;
+ 430   1      //    WDT_COUNTER_RUN;                       /* WDT start to run */
+ 431   1      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 432   1        while (1)
+ 433   1        {
+ 434   2      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 435   2          BTN_process();
+ 436   2          if (Sys_Mode == SYS_MODE_A){
+ 437   3            Process_VCNL36821S();
+ 438   3          }
+ 439   2          if(Sys_Mode != Check_system_mode())
+ 440   2          {
+ 441   3            set_SWRST;
+ 442   3          }
+ 443   2          LCD_show(obj_count);
+ 444   2          check_non_obj_detect_timout();
+ 445   2        }
+ 446   1        /* =================== */
+ 447   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1793    ----
+   CODE SIZE        =   1800    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     40      14
+   XDATA SIZE       =     39      14
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

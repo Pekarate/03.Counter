@@ -143,7 +143,7 @@ void LCD_show(UINT16 count)
 #define DETECT_THRESHOLD  20
 #define NON_DETECT_COUNT 2
 
-#define TIME_COUNT_OFFJECT 1500  //ms
+#define TIME_COUNT_OFFJECT 2000  //ms
 #define TIME_CHECK_OBJECT  400		//ms
 #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT	
 void reset_counter(){
@@ -208,6 +208,12 @@ typedef enum{
 	BTN_RELEASE
 }_btn_state;
 
+void btn_time_click_callback()
+{
+	if (Sys_Mode == SYS_MODE_A){
+		reset_counter();
+	}
+}
 void btn_time_2sec_callback()
 {
 	if (Sys_Mode == SYS_MODE_B){
@@ -239,6 +245,7 @@ void BTN_process()
 			case BTN_DEBOUND:
 				if(HAL_GetTick() >btn_time){
 						btn_state = BTN_PRESSED2S;
+						btn_time_click_callback();
 						btn_time = HAL_GetTick() +2000 ;
 				}
 				break;
@@ -402,7 +409,7 @@ void main(void)
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
-	CKDIV = 4;
+	CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
 	Sys_Mode = Check_system_mode();
 	Init_I2C();
 	LCD_INIT();

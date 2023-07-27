@@ -143,8 +143,8 @@ void LCD_show(UINT16 count)
 #define DETECT_THRESHOLD  20
 #define NON_DETECT_COUNT 2
 
-#define TIME_COUNT_OFFJECT 2000  //ms
-#define TIME_CHECK_OBJECT  400		//ms
+#define TIME_COUNT_OFFJECT 1500  //ms
+#define TIME_CHECK_OBJECT  300		//ms
 #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT	
 void reset_counter(){
 	obj_count = 0;

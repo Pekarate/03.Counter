@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 21:20:14 PAGE 1   
+C51 COMPILER V9.60.7.0   HTIM                                                              07/29/2023 16:56:34 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE HTIM
@@ -62,7 +62,7 @@ line level    source
   38                                  unsigned char u8RH3, 
   39                                  unsigned char u8RL3)
   40          {
-C51 COMPILER V9.60.7.0   HTIM                                                              06/30/2023 21:20:14 PAGE 2   
+C51 COMPILER V9.60.7.0   HTIM                                                              07/29/2023 16:56:34 PAGE 2   
 
   41   1          clr_T3CON_TR3;
   42   1          SFRS = 0x00;

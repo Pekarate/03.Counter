@@ -131,5 +131,6 @@ int VCNL36821S_begin(void);
 int VCNL36821S_calib(void);
 void VCNL_initialize(void);
 void VCNL36821_Stop(void);
+void I2C_reset(void);
 #endif
 

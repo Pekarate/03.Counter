@@ -109,7 +109,7 @@ _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
 	UINT8 lcd_data[3];
-	if (Sys_Mode == SYS_MODE_A)
+	if (0)
 	{
 		count = (count % 198);
 		lcd_data[0] = LCD_CODE[(count + 1) / 20];
@@ -126,11 +126,23 @@ void LCD_show(UINT16 count)
 	}
 	else
 	{
-		count = (count % 1000);
-		lcd_data[2] = LCD_CODE[count % 10];
-		lcd_data[1] = LCD_CODE[(count / 10) % 10];
-		lcd_data[0] = LCD_CODE[count / 100];
+		UINT16 count_tmp = (count % 1000);
+		lcd_data[2] = LCD_CODE[count_tmp % 10];
+		lcd_data[1] = LCD_CODE[(count_tmp / 10) % 10];
+		lcd_data[0] = LCD_CODE[count_tmp / 100];
 	}
+	if(count > 4000) {
+		lcd_data[0] += LCD_DOT; 
+		lcd_data[1] += LCD_DOT;
+	} else if(count > 3000) {
+		lcd_data[1] += LCD_DOT; 
+	} else if(count > 2000){
+		lcd_data[2] += LCD_DOT; 
+	} else if(count > 1000)
+	{
+		lcd_data[0] += LCD_DOT; 
+	}
+	
 	LCD_send_bytes(lcd_data);
 	LCD_Delay(10);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
@@ -140,7 +152,7 @@ void LCD_show(UINT16 count)
 
 
 
-#define DETECT_THRESHOLD  20
+#define DETECT_THRESHOLD  155
 #define NON_DETECT_COUNT 2
 
 #define TIME_COUNT_OFFJECT 1500  //ms
@@ -450,7 +462,7 @@ void main(void)
 		{
 			set_SWRST;
 		}
-		LCD_show(obj_count);
+		LCD_show(valueps);
 		check_non_obj_detect_timout();
 	}
 	/* =================== */

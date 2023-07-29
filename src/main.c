@@ -146,14 +146,20 @@ void LCD_show(UINT16 count)
 #define TIME_COUNT_OFFJECT 1500  //ms
 #define TIME_CHECK_OBJECT  300		//ms
 #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT	
+
+static UINT32 ttime = 0;
+static UINT8 error = 0;
+static UINT8 object_detected = 0;
+static UINT8 non_object_detected = NON_DETECT_COUNT;
+
 void reset_counter(){
+	ttime = HAL_GetTick() + 500;
+	object_detected = 0;
 	obj_count = 0;
 }
+
 void Process_VCNL36821S(void) {
-		static UINT32 ttime = 0;
-		static UINT8 error = 0;
-		static UINT8 object_detected = 0;
-		static UINT8 non_object_detected = NON_DETECT_COUNT;
+		
 		if (HAL_GetTick() > ttime)
 		{
 			ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
@@ -245,7 +251,7 @@ void BTN_process()
 			case BTN_DEBOUND:
 				if(HAL_GetTick() >btn_time){
 						btn_state = BTN_PRESSED2S;
-						btn_time_click_callback();
+//						btn_time_click_callback();
 						btn_time = HAL_GetTick() +2000 ;
 				}
 				break;
@@ -282,7 +288,10 @@ void BTN_process()
 			case BTN_PRESSED2S:
 				if (Sys_Mode == SYS_MODE_B){
 					obj_count ++;
-				}
+				} else if (Sys_Mode == SYS_MODE_A){
+					reset_counter();
+				} 
+
 				break;
 		}
 		btn_state = BTN_IDLE;
@@ -433,6 +442,7 @@ void main(void)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
 		BTN_process();
+//		I2C_reset();
 		if (Sys_Mode == SYS_MODE_A){
 			Process_VCNL36821S();
 		}

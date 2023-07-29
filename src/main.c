@@ -39,6 +39,8 @@ UINT8 LCD_CODE[] = {0x7E, 0x48, 0x3D, 0x6D, 0x4B, 0x67, 0x77, 0x4C, 0x7F, 0x6F, 
 UINT16 valueps;
 UINT16 obj_count = 0;
 
+
+UINT8 isCablibmode = 0;
 void LCD_show(UINT16 count);
 
 void system_shutdown(){
@@ -109,7 +111,7 @@ _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
 	UINT8 lcd_data[3];
-	if (Sys_Mode == SYS_MODE_A)
+	if (Sys_Mode == SYS_MODE_A && (!isCablibmode))
 	{
 		count = (count % 198);
 		lcd_data[0] = LCD_CODE[(count + 1) / 20];
@@ -140,7 +142,7 @@ void LCD_show(UINT16 count)
 
 
 
-#define DETECT_THRESHOLD  20
+#define DETECT_THRESHOLD  225
 #define NON_DETECT_COUNT 2
 
 #define TIME_COUNT_OFFJECT 1500  //ms
@@ -238,9 +240,11 @@ void btn_time_3sec_callback()
 		system_shutdown();
 	}
 }
+static UINT32 last_btn_time = 0;
 void BTN_process()
 {
 	static UINT32 btn_time = 0;
+	
 	static _btn_state btn_state= BTN_IDLE;
 	if(BUTTON_PRESSED) {
 		switch(btn_state) {
@@ -285,13 +289,18 @@ void BTN_process()
 	} else {
 		switch(btn_state)
 		{
+			case BTN_PRESSED2_5S:
 			case BTN_PRESSED2S:
 				if (Sys_Mode == SYS_MODE_B){
 					obj_count ++;
 				} else if (Sys_Mode == SYS_MODE_A){
+					if(HAL_GetTick() < last_btn_time)
+					{
+						isCablibmode = 1- isCablibmode;
+					}
+					last_btn_time = HAL_GetTick()+500;
 					reset_counter();
 				} 
-
 				break;
 		}
 		btn_state = BTN_IDLE;
@@ -450,7 +459,11 @@ void main(void)
 		{
 			set_SWRST;
 		}
-		LCD_show(obj_count);
+		if(isCablibmode) {
+			LCD_show(valueps);
+		} else {
+			LCD_show(obj_count);
+		}
 		check_non_obj_detect_timout();
 	}
 	/* =================== */

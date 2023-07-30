@@ -140,7 +140,7 @@ void LCD_show(UINT16 count)
 
 
 
-#define DETECT_THRESHOLD  20
+#define DETECT_THRESHOLD  68
 #define NON_DETECT_COUNT 2
 
 #define TIME_COUNT_OFFJECT 1500  //ms

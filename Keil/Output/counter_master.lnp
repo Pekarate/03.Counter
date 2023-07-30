@@ -1,0 +1,12 @@
+".\Output\htim.obj",
+".\Output\main.obj",
+".\Output\vcnl36821.obj",
+".\Output\common.obj",
+".\Output\delay.obj",
+".\Output\sys.obj",
+".\Output\uart.obj",
+".\Output\STARTUP.obj" 
+TO ".\Output\counter_master" 
+
+PRINT(".\lst\counter_master.map") DISABLEWARNING (16) 
+REMOVEUNUSED 

@@ -38,7 +38,7 @@ UINT8 LCD_CODE[] = {0x7E, 0x48, 0x3D, 0x6D, 0x4B, 0x67, 0x77, 0x4C, 0x7F, 0x6F, 
 
 UINT16 valueps;
 UINT16 obj_count = 0;
-
+UINT16 ss_read_fail = 0;
 
 UINT8 isCablibmode = 0;
 void LCD_show(UINT16 count);
@@ -134,10 +134,10 @@ void LCD_show(UINT16 count)
 		lcd_data[0] = LCD_CODE[count / 100];
 	}
 	LCD_send_bytes(lcd_data);
-	LCD_Delay(10);
+	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
 	LCD_send_bytes(lcd_data);
-	LCD_Delay(10);
+	LCD_Delay(5);
 }
 
 
@@ -191,6 +191,7 @@ void Process_VCNL36821S(void) {
 				}
 			}
 			else { 
+				while(1);
 				error++;
 				if(error == 5){
 					
@@ -424,6 +425,14 @@ void main(void)
 {
 	UINT16 id = 0;
 	UINT32 ttime = 0;
+	
+	UINT32 Timm_tmp = 0;
+	UINT8 count_val = 0;
+	UINT16 total=0;
+	
+	UINT32 Timm = 0;
+
+	
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
@@ -447,6 +456,33 @@ void main(void)
 ////    ENABLE_GLOBAL_INTERRUPT;
 //    WDT_COUNTER_RUN;                       /* WDT start to run */
 //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+	isCablibmode = 1;
+	total = 0;
+	Timm = HAL_GetTick() + 1000;
+	readWord(VCNL_PS_ID,&valueps);
+	while(1)
+	{
+		if(HAL_GetTick() > Timm)
+		{
+			if(HAL_GetTick() > Timm_tmp) {
+				if(readWord(VCNL_PS_DATA,&valueps))
+				{
+					ss_read_fail = 0;
+					Timm_tmp = HAL_GetTick() + 300;
+					total += valueps;
+					count_val ++;
+					if(count_val == 10)
+						break;
+				} else {
+					Timm_tmp = HAL_GetTick() + 30;
+					ss_read_fail++;
+				}
+			}
+		}
+		LCD_show(valueps);
+	}
+	DETECT_THRESHOLD = (total / 10) + 5;
+	isCablibmode=0;
 	while (1)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */

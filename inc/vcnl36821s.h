@@ -125,6 +125,7 @@
 #define VCNL_PS_AC_DATA    0xFB
 
 void Init_I2C(void);
+void reset_I2C(void);
 UINT8 writeWord(UINT8 reg, UINT16 rdata);
 UINT8 readWord(UINT8 tmpreg, volatile UINT16 *rdata);
 int VCNL36821S_begin(void);

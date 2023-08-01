@@ -176,6 +176,12 @@ UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
 				}
         if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
         {
+								if(I2STAT == 0x48)
+								{
+									STO = 1;
+									AA = 1;
+
+								}
                 I2C_Reset_Flag = 1;
                 goto Read_Error_Stop;
         }
@@ -337,12 +343,14 @@ UINT8 set_PS_I_VCSEL(UINT8 i_vcsel)
 #define PS_AC_PERIOD (0)
 #define PS_AC_NUM (3 << 4)
 
+#define LEDI_144mA 0x0E
+#define LEDI_156mA 0x0F
 void VCNL_initialize(void)
 {
   // clean config bytes
   VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
-  VCNL36821_Write_register(VCNL_PS_CONF2,0xC0,0xD0);
-  VCNL36821_Write_register(VCNL_PS_CONF3,0x00,0x0D);//config 3,4
+  VCNL36821_Write_register(VCNL_PS_CONF2,0xF0,0xE0);
+  VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
   VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
   VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
   VCNL36821_Write_register(VCNL_PS_CANC,0x00,0x00);//

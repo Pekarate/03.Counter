@@ -191,7 +191,6 @@ void Process_VCNL36821S(void) {
 				}
 			}
 			else { 
-				while(1);
 				error++;
 				if(error == 5){
 					

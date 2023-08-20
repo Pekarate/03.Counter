@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -56,13 +56,13 @@ line level    source
   38          
   39          UINT16 valueps;
   40          UINT16 obj_count = 0;
-  41          
+  41          UINT16 ss_read_fail = 0;
   42          
   43          UINT8 isCablibmode = 0;
   44          void LCD_show(UINT16 count);
   45          
   46          void system_shutdown(){
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 2   
 
   47   1        VCNL36821_Stop();
   48   1        BOD_DISABLE;
@@ -126,7 +126,7 @@ line level    source
  106   1        LCD_LAT_LOW;
  107   1      }
  108          
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 3   
 
  109          
  110          _Sys_Mode Sys_Mode = SYS_MODE_B;
@@ -156,10 +156,10 @@ line level    source
  134   2          lcd_data[0] = LCD_CODE[count / 100];
  135   2        }
  136   1        LCD_send_bytes(lcd_data);
- 137   1        LCD_Delay(10);
+ 137   1        LCD_Delay(5);
  138   1        lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
  139   1        LCD_send_bytes(lcd_data);
- 140   1        LCD_Delay(10);
+ 140   1        LCD_Delay(5);
  141   1      }
  142          
  143          
@@ -190,7 +190,7 @@ line level    source
  168   2            if(readWord(VCNL_PS_DATA,&valueps))
  169   2            {
  170   3              if(valueps > DETECT_THRESHOLD)
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 4   
 
  171   3              {
  172   4                error = 0;
@@ -254,7 +254,7 @@ line level    source
  230   1      }
  231          void btn_time_2_5sec_callback()
  232          {
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 5   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 5   
 
  233   1        if (Sys_Mode == SYS_MODE_A){
  234   2          system_shutdown();
@@ -318,7 +318,7 @@ line level    source
  292   3            case BTN_PRESSED2_5S:
  293   3            case BTN_PRESSED2S:
  294   3              if (Sys_Mode == SYS_MODE_B){
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 6   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 6   
 
  295   4                obj_count ++;
  296   4              } else if (Sys_Mode == SYS_MODE_A){
@@ -382,7 +382,7 @@ line level    source
  354   1      _push_(SFRS);
  355   1      
  356   1        /* Config Enable WDT reset and not clear couter trig reset */
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 7   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 7   
 
  357   1          WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
  358   1          while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
@@ -446,7 +446,7 @@ line level    source
  416   1          {
  417   2            clr_WDCON_WDTRF;
  418   2            set_CHPCON_SWRST;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 8   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 8   
 
  419   2          }
  420   1      }
@@ -456,62 +456,97 @@ line level    source
  424          {
  425   1        UINT16 id = 0;
  426   1        UINT32 ttime = 0;
- 427   1        ALL_GPIO_INPUT_MODE;
- 428   1        MODIFY_HIRC(HIRC_16);
- 429   1        /* Initial I2C function */
- 430   1        CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
- 431   1        Sys_Mode = Check_system_mode();
- 432   1        Init_I2C();
- 433   1        LCD_INIT();
- 434   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18);
- 435   1        if (Sys_Mode == SYS_MODE_A){
- 436   2        VCNL_initialize();
- 437   2        } else {
- 438   2          VCNL36821_Stop();
- 439   2        }
- 440   1        GPIO_Init();
- 441   1        
- 442   1        
- 443   1      //    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
- 444   1      ////    ENABLE_WDT_INTERRUPT;
- 445   1      ////    WDT_RUN_IN_POWERDOWN_DISABLE;
- 446   1      ////    WDT_RUN_IN_POWERDOWN_ENABLE;
- 447   1      ////    ENABLE_GLOBAL_INTERRUPT;
- 448   1      //    WDT_COUNTER_RUN;                       /* WDT start to run */
- 449   1      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 450   1        while (1)
- 451   1        {
- 452   2      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 453   2          BTN_process();
- 454   2      //    I2C_reset();
- 455   2          if (Sys_Mode == SYS_MODE_A){
- 456   3            Process_VCNL36821S();
- 457   3          }
- 458   2          if(Sys_Mode != Check_system_mode())
- 459   2          {
- 460   3            set_SWRST;
- 461   3          }
- 462   2          if(isCablibmode) {
- 463   3            LCD_show(valueps);
- 464   3          } else {
- 465   3            LCD_show(obj_count);
- 466   3          }
- 467   2          check_non_obj_detect_timout();
- 468   2        }
- 469   1        /* =================== */
- 470   1      }
+ 427   1        
+ 428   1        UINT32 Timm_tmp = 0;
+ 429   1        UINT8 count_val = 0;
+ 430   1        UINT32 total=0;
+ 431   1        
+ 432   1        UINT32 Timm = 0;
+ 433   1      
+ 434   1        
+ 435   1        ALL_GPIO_INPUT_MODE;
+ 436   1        MODIFY_HIRC(HIRC_16);
+ 437   1        /* Initial I2C function */
+ 438   1        CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
+ 439   1        Sys_Mode = Check_system_mode();
+ 440   1        Init_I2C();
+ 441   1        LCD_INIT();
+ 442   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18);
+ 443   1        if (Sys_Mode == SYS_MODE_A){
+ 444   2        VCNL_initialize();
+ 445   2        } else {
+ 446   2          VCNL36821_Stop();
+ 447   2        }
+ 448   1        GPIO_Init();
+ 449   1        
+ 450   1        
+ 451   1      //    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
+ 452   1      ////    ENABLE_WDT_INTERRUPT;
+ 453   1      ////    WDT_RUN_IN_POWERDOWN_DISABLE;
+ 454   1      ////    WDT_RUN_IN_POWERDOWN_ENABLE;
+ 455   1      ////    ENABLE_GLOBAL_INTERRUPT;
+ 456   1      //    WDT_COUNTER_RUN;                       /* WDT start to run */
+ 457   1      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 458   1        isCablibmode = 1;
+ 459   1        total = 0;
+ 460   1        Timm = HAL_GetTick() + 1000;
+ 461   1        readWord(VCNL_PS_ID,&valueps);
+ 462   1        while(1)
+ 463   1        {
+ 464   2          if(HAL_GetTick() > Timm)
+ 465   2          {
+ 466   3            if(HAL_GetTick() > Timm_tmp) {
+ 467   4              if(readWord(VCNL_PS_DATA,&valueps))
+ 468   4              {
+ 469   5                ss_read_fail = 0;
+ 470   5                Timm_tmp = HAL_GetTick() + 200;
+ 471   5                total += valueps;
+ 472   5                count_val ++;
+ 473   5                if(count_val == 30)
+ 474   5                  break;
+ 475   5              } else {
+ 476   5                Timm_tmp = HAL_GetTick() + 30;
+ 477   5                ss_read_fail++;
+ 478   5              }
+ 479   4            }
+ 480   3          }
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 12:06:44 PAGE 9   
+
+ 481   2          LCD_show(valueps);
+ 482   2        }
+ 483   1        DETECT_THRESHOLD = (total / 30) + 15;
+ 484   1        isCablibmode=0;
+ 485   1        while (1)
+ 486   1        {
+ 487   2      //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 488   2          BTN_process();
+ 489   2      //    I2C_reset();
+ 490   2          if (Sys_Mode == SYS_MODE_A){
+ 491   3            Process_VCNL36821S();
+ 492   3          }
+ 493   2          if(Sys_Mode != Check_system_mode())
+ 494   2          {
+ 495   3            set_SWRST;
+ 496   3          }
+ 497   2          if(isCablibmode) {
+ 498   3            LCD_show(valueps);
+ 499   3          } else {
+ 500   3            LCD_show(obj_count);
+ 501   3          }
+ 502   2          check_non_obj_detect_timout();
+ 503   2        }
+ 504   1        /* =================== */
+ 505   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1931    ----
+   CODE SIZE        =   2257    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     46      14
+   XDATA SIZE       =     48      27
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
-C51 COMPILER V9.60.7.0   MAIN                                                              07/30/2023 12:13:18 PAGE 9   
-
    EDATA SIZE       =   ----    ----
    HDATA SIZE       =   ----    ----
    XDATA CONST SIZE =   ----    ----

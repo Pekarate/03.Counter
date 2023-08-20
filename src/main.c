@@ -427,7 +427,7 @@ void main(void)
 	
 	UINT32 Timm_tmp = 0;
 	UINT8 count_val = 0;
-	UINT16 total=0;
+	UINT32 total=0;
 	
 	UINT32 Timm = 0;
 
@@ -467,10 +467,10 @@ void main(void)
 				if(readWord(VCNL_PS_DATA,&valueps))
 				{
 					ss_read_fail = 0;
-					Timm_tmp = HAL_GetTick() + 300;
+					Timm_tmp = HAL_GetTick() + 200;
 					total += valueps;
 					count_val ++;
-					if(count_val == 10)
+					if(count_val == 30)
 						break;
 				} else {
 					Timm_tmp = HAL_GetTick() + 30;
@@ -480,7 +480,7 @@ void main(void)
 		}
 		LCD_show(valueps);
 	}
-	DETECT_THRESHOLD = (total / 10) + 5;
+	DETECT_THRESHOLD = (total / 30) + 15;
 	isCablibmode=0;
 	while (1)
 	{

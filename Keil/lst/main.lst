@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   44          void system_shutdown(){
   45   1        VCNL36821_Stop();
   46   1        BOD_DISABLE;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 2   
 
   47   1        ALL_GPIO_INPUT_MODE;
   48   1        ENABLE_BIT7_FALLINGEDGE_TRIG;
@@ -126,7 +126,7 @@ line level    source
  106          
  107          
  108          _Sys_Mode Sys_Mode = SYS_MODE_B;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 3   
 
  109          void LCD_show(UINT16 count)
  110          {
@@ -190,7 +190,7 @@ line level    source
  168   1        ttime = HAL_GetTick() + 500;
  169   1        object_detected = 0;
  170   1        obj_count = 0;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 4   
 
  171   1      }
  172          
@@ -254,7 +254,7 @@ line level    source
  230          {
  231   1        if (Sys_Mode == SYS_MODE_A){
  232   2          reset_counter();
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 5   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 5   
 
  233   2        }
  234   1      }
@@ -318,7 +318,7 @@ line level    source
  292   4              }
  293   3              break;
  294   3            default:
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 6   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 6   
 
  295   3              break;
  296   3          }
@@ -382,7 +382,7 @@ line level    source
  354          
  355          void WDT_ISR (void)   interrupt 10
  356          {
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 7   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 7   
 
  357   1      _push_(SFRS);
  358   1      
@@ -446,7 +446,7 @@ line level    source
  416   1          set_IAPUEN_CFUEN;
  417   1          clr_CHPCON_IAPEN;
  418   1          if (WDCON&SET_BIT3)
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 8   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 8   
 
  419   1          {
  420   2            clr_WDCON_WDTRF;
@@ -510,7 +510,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
-C51 COMPILER V9.60.7.0   MAIN                                                              07/29/2023 17:55:03 PAGE 9   
+C51 COMPILER V9.60.7.0   MAIN                                                              08/20/2023 13:54:47 PAGE 9   
 
    EDATA SIZE       =   ----    ----
    HDATA SIZE       =   ----    ----

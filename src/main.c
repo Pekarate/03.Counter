@@ -312,11 +312,11 @@ void BTN_process()
 				if (Sys_Mode == SYS_MODE_B){
 					obj_count ++;
 				} else if (Sys_Mode == SYS_MODE_A){
-					if(HAL_GetTick() < last_btn_time)
-					{
-						isCablibmode = 1- isCablibmode;
-					}
-					last_btn_time = HAL_GetTick()+500;
+//					if(HAL_GetTick() < last_btn_time)
+//					{
+//						isCablibmode = 1- isCablibmode;
+//					}
+//					last_btn_time = HAL_GetTick()+500;
 					reset_counter();
 				} 
 				break;
@@ -440,6 +440,7 @@ void Disable_WDT_Reset_Config(void)
 
 void main(void)
 {
+	UINT16 avg;
 	UINT16 id = 0;
 	UINT32 ttime = 0;
 	
@@ -490,8 +491,9 @@ void main(void)
 			}
 			LCD_show(valueps);
 		}
+		avg = (total / count_val);
 		//DETECT_THRESHOLD = (total / 30) + 15;
-		DETECT_THRESHOLD = DETECT_THRESHOLD+2;
+		DETECT_THRESHOLD = DETECT_THRESHOLD+1;
 		isCablibmode=0;
 	} else {
 		VCNL36821_Stop();

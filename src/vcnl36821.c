@@ -343,13 +343,39 @@ UINT8 set_PS_I_VCSEL(UINT8 i_vcsel)
 #define PS_AC_PERIOD (0)
 #define PS_AC_NUM (3 << 4)
 
+#define PS_Period_10ms 0x00
+#define PS_Period_20ms 0x40
+#define PS_Period_40ms 0x80
+#define PS_Period_80ms 0xC0
+
+#define PS_PERS_1 0x00
+#define PS_PERS_2 0x10
+#define PS_PERS_3 0x20
+#define PS_PERS_4 0x30
+
+#define PS_CONF2_LOW  (PS_PERS_4 |PS_Period_80ms)
+
+#define PS_IT_1T 0x00
+#define PS_IT_2T 0x40
+#define PS_IT_4T 0x80
+#define PS_IT_8T 0xC0
+
+#define PS_MPS_1 0x00
+#define PS_MPS_2 0x10
+#define PS_MPS_4 0x20
+#define PS_MPS_8 0x30
+
+#define PS_CONF2_HIGH  (PS_IT_8T |PS_MPS_8)
+
+#define LEDI_114mA 0x0C
+#define LEDI_130mA 0x0D
 #define LEDI_144mA 0x0E
 #define LEDI_156mA 0x0F
 void VCNL_initialize(void)
 {
   // clean config bytes
   VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
-  VCNL36821_Write_register(VCNL_PS_CONF2,0xF0,0xE0);
+  VCNL36821_Write_register(VCNL_PS_CONF2,PS_CONF2_LOW,PS_CONF2_HIGH);
   VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
   VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
   VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//

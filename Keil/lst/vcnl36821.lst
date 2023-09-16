@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 1   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE VCNL36821
@@ -62,7 +62,7 @@ line level    source
   49          void I2C_SI_Check(void)
   50          {
   51   1              if ((I2STAT == 0x00) || (I2STAT == 0x10)|| (I2TOC&SET_BIT0))
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 2   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 2   
 
   52   1              {
   53   2                      clr_I2TOC_I2TOF;
@@ -126,7 +126,7 @@ line level    source
  111   2              }
  112   1      
  113   1              /* Step3 */
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 3   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 3   
 
  114   1              I2DAT = u8low; /* Send EEPROM's High Byte Address */
  115   1      //        clr_I2CON_SI;
@@ -190,7 +190,7 @@ line level    source
  173   1              if(I2C_SI_WAIT()) {
  174   2                      I2C_Reset_Flag = 1;
  175   2                      goto Read_Error_Stop;
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 4   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 4   
 
  176   2              }
  177   1              if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
@@ -254,7 +254,7 @@ line level    source
  235   1              clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
  236   1              I2DAT = (EEPROM_SLA | EEPROM_RD); /* Send (SLA+R) to EEPROM */
  237   1      //        clr_I2CON_SI;
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 5   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 5   
 
  238   1      //        while (!SI)
  239   1      //                ;
@@ -318,7 +318,7 @@ line level    source
  297   1              {
  298   2                      I2C_SI_Check();
  299   2                      I2C_Reset_Flag = 0;
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 6   
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 6   
 
  300   2                      return 0;
  301   2              }
@@ -367,38 +367,64 @@ line level    source
  343          #define PS_AC_PERIOD (0)
  344          #define PS_AC_NUM (3 << 4)
  345          
- 346          #define LEDI_144mA 0x0E
- 347          #define LEDI_156mA 0x0F
- 348          void VCNL_initialize(void)
- 349          {
- 350   1        // clean config bytes
- 351   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
- 352   1        VCNL36821_Write_register(VCNL_PS_CONF2,0xF0,0xE0);
- 353   1        VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
- 354   1        VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
- 355   1        VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
- 356   1        VCNL36821_Write_register(VCNL_PS_CANC,0x00,0x00);//
- 357   1        VCNL36821_Write_register(VCNL_PS_AC_L,0x00,0x03);//
- 358   1      
- 359   1        
- 360   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x02,0x00);// PS_ON = 1
-C51 COMPILER V9.60.7.0   VCNL36821                                                         08/20/2023 12:05:06 PAGE 7   
+ 346          #define PS_Period_10ms 0x00
+ 347          #define PS_Period_20ms 0x04
+ 348          #define PS_Period_40ms 0x08
+ 349          #define PS_Period_80ms 0x0C
+ 350          
+ 351          #define PS_PERS_1 0x00
+ 352          #define PS_PERS_2 0x01
+ 353          #define PS_PERS_3 0x02
+ 354          #define PS_PERS_4 0x03
+ 355          
+ 356          #define PS_CONF2_LOW  (PS_PERS_4 |PS_Period_80ms)
+ 357          
+ 358          #define PS_IT_1T 0x00
+ 359          #define PS_IT_2T 0x04
+ 360          #define PS_IT_4T 0x08
+C51 COMPILER V9.60.7.0   VCNL36821                                                         09/16/2023 11:40:41 PAGE 7   
 
- 361   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x00);// PS_INIT=1
- 362   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x02);// set bit 1 of PS_CONF1, PS_ST = 0
- 363   1      
- 364   1      }
- 365          void VCNL36821_Stop(void)
- 366          {
- 367   1        writeWord(VCNL_PS_CONF1,0x0001);
- 368   1        writeWord(VCNL_PS_CONF2,0x0001);
- 369   1        writeWord(VCNL_PS_CONF3,0x0000);
- 370   1      
- 371   1      }
+ 361          #define PS_IT_8T 0x0C
+ 362          
+ 363          #define PS_MPS_1 0x00
+ 364          #define PS_MPS_2 0x01
+ 365          #define PS_MPS_4 0x02
+ 366          #define PS_MPS_8 0x03
+ 367          
+ 368          #define PS_CONF2_HIGH  (PS_IT_8T |PS_MPS_8)
+ 369          
+ 370          #define LEDI_114mA 0x0C
+ 371          #define LEDI_130mA 0x0D
+ 372          #define LEDI_144mA 0x0E
+ 373          #define LEDI_156mA 0x0F
+ 374          void VCNL_initialize(void)
+ 375          {
+ 376   1        // clean config bytes
+ 377   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
+ 378   1        VCNL36821_Write_register(VCNL_PS_CONF2,PS_CONF2_LOW,PS_CONF2_HIGH);
+ 379   1        VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
+ 380   1        VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
+ 381   1        VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
+ 382   1        VCNL36821_Write_register(VCNL_PS_CANC,0x00,0x00);//
+ 383   1        VCNL36821_Write_register(VCNL_PS_AC_L,0x00,0x03);//
+ 384   1      
+ 385   1        
+ 386   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x02,0x00);// PS_ON = 1
+ 387   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x00);// PS_INIT=1
+ 388   1        VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x02);// set bit 1 of PS_CONF1, PS_ST = 0
+ 389   1      
+ 390   1      }
+ 391          void VCNL36821_Stop(void)
+ 392          {
+ 393   1        writeWord(VCNL_PS_CONF1,0x0001);
+ 394   1        writeWord(VCNL_PS_CONF2,0x0001);
+ 395   1        writeWord(VCNL_PS_CONF3,0x0000);
+ 396   1      
+ 397   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    832    ----
+   CODE SIZE        =    830    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----      16
    PDATA SIZE       =   ----    ----

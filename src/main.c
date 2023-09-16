@@ -111,12 +111,24 @@ _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
 	UINT8 lcd_data[3];
-	if (Sys_Mode == SYS_MODE_A && (!isCablibmode))
-	{
+	
+	if(Sys_Mode == SYS_MODE_B) {
+		count = (count % 1000);
+		lcd_data[2] = LCD_CODE[count % 10];
+		lcd_data[1] = LCD_CODE[(count / 10) % 10];
+		lcd_data[0] = LCD_CODE[count / 100];
+		
+	} else if ( isCablibmode) {
+		lcd_data[0] = LCD_CODE[8];
+		lcd_data[1] = LCD_CODE[8]+ LCD_DOT;
+		lcd_data[2] = LCD_CODE[8];
+		
+	} else {
 		count = (count % 198);
 		lcd_data[0] = LCD_CODE[(count + 1) / 20];
 		lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
 		lcd_data[2] = LCD_CODE[0];
+		
 		if (count)
 		{
 			lcd_data[2] = LCD_CODE[2];
@@ -126,13 +138,7 @@ void LCD_show(UINT16 count)
 			}
 		}
 	}
-	else
-	{
-		count = (count % 1000);
-		lcd_data[2] = LCD_CODE[count % 10];
-		lcd_data[1] = LCD_CODE[(count / 10) % 10];
-		lcd_data[0] = LCD_CODE[count / 100];
-	}
+	
 	LCD_send_bytes(lcd_data);
 	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
@@ -142,12 +148,15 @@ void LCD_show(UINT16 count)
 
 
 
-UINT16 DETECT_THRESHOLD = 225;
-#define NON_DETECT_COUNT 2
+UINT16 DETECT_THRESHOLD = 0;
+
+#define TIME_CHECK_OBJECT  300		//ms
 
 #define TIME_COUNT_OFFJECT 1500  //ms
-#define TIME_CHECK_OBJECT  300		//ms
 #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT	
+
+#define TIME_COUNT_NON_OFFJECT 1500  //ms
+#define NON_DETECT_COUNT 5
 
 static UINT32 ttime = 0;
 static UINT8 error = 0;
@@ -164,9 +173,9 @@ void Process_VCNL36821S(void) {
 		
 		if (HAL_GetTick() > ttime)
 		{
-			ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
 			if(readWord(VCNL_PS_DATA,&valueps))
 			{
+				ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
 				if(valueps > DETECT_THRESHOLD)
 				{
 					error = 0;
@@ -190,7 +199,8 @@ void Process_VCNL36821S(void) {
 						}
 				}
 			}
-			else { 
+			else {
+				ttime = HAL_GetTick() + 10;
 				error++;
 				if(error == 5){
 					
@@ -436,52 +446,48 @@ void main(void)
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
 	CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
+	GPIO_Init();
 	Sys_Mode = Check_system_mode();
 	Init_I2C();
 	LCD_INIT();
 	Timer3_INT_Initial(DIV2, 0xFC, 0x18);
 	if (Sys_Mode == SYS_MODE_A){
-	VCNL_initialize();
+		VCNL_initialize();
+		isCablibmode = 1;
+		total = 0;
+		Timm = HAL_GetTick() + 1000;
+		readWord(VCNL_PS_ID,&valueps);
+		while(1)
+		{
+			if(HAL_GetTick() > Timm)
+			{
+				if(HAL_GetTick() > Timm_tmp) {
+					if(readWord(VCNL_PS_DATA,&valueps))
+					{
+						ss_read_fail = 0;
+						Timm_tmp = HAL_GetTick() + 200;
+						total += valueps;
+						count_val ++;
+						if(valueps > DETECT_THRESHOLD)
+						{
+							DETECT_THRESHOLD = valueps;
+						}
+						if(count_val == 15)
+							break;
+					} else {
+						Timm_tmp = HAL_GetTick() + 30;
+						ss_read_fail++;
+					}
+				}
+			}
+			LCD_show(valueps);
+		}
+		//DETECT_THRESHOLD = (total / 30) + 15;
+		DETECT_THRESHOLD = DETECT_THRESHOLD+2;
+		isCablibmode=0;
 	} else {
 		VCNL36821_Stop();
 	}
-	GPIO_Init();
-	
-	
-//    WDT_TIMEOUT_800MS;                     /* Setting WDT time out */
-////    ENABLE_WDT_INTERRUPT;
-////		WDT_RUN_IN_POWERDOWN_DISABLE;
-////	  WDT_RUN_IN_POWERDOWN_ENABLE;
-////    ENABLE_GLOBAL_INTERRUPT;
-//    WDT_COUNTER_RUN;                       /* WDT start to run */
-//    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
-	isCablibmode = 1;
-	total = 0;
-	Timm = HAL_GetTick() + 1000;
-	readWord(VCNL_PS_ID,&valueps);
-	while(1)
-	{
-		if(HAL_GetTick() > Timm)
-		{
-			if(HAL_GetTick() > Timm_tmp) {
-				if(readWord(VCNL_PS_DATA,&valueps))
-				{
-					ss_read_fail = 0;
-					Timm_tmp = HAL_GetTick() + 200;
-					total += valueps;
-					count_val ++;
-					if(count_val == 30)
-						break;
-				} else {
-					Timm_tmp = HAL_GetTick() + 30;
-					ss_read_fail++;
-				}
-			}
-		}
-		LCD_show(valueps);
-	}
-	DETECT_THRESHOLD = (total / 30) + 15;
-	isCablibmode=0;
 	while (1)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */

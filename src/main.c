@@ -162,33 +162,42 @@ static UINT32 ttime = 0;
 static UINT8 error = 0;
 static UINT8 object_detected = 0;
 static UINT8 non_object_detected = NON_DETECT_COUNT;
+static UINT32 time_new_obj = 0xFFFFFFFF;
 
 void reset_counter(){
 	ttime = HAL_GetTick() + 500;
 	object_detected = 0;
 	obj_count = 0;
+	time_new_obj = 0xFFFFFFFF;
 }
 
 void Process_VCNL36821S(void) {
-		
-		if (HAL_GetTick() > ttime)
-		{
-			if(readWord(VCNL_PS_DATA,&valueps))
-			{
+			
+		if(HAL_GetTick() > time_new_obj){
+			if(obj_count) {
+				obj_count --;
+			}
+			time_new_obj = 0xFFFFFFFF;
+		}
+	
+		if (HAL_GetTick() > ttime){
+			if(readWord(VCNL_PS_DATA,&valueps)) {
 				ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
-				if(valueps > DETECT_THRESHOLD)
-				{
+				
+				if(valueps > DETECT_THRESHOLD) {
 					error = 0;
 					object_detected ++;
-					if(object_detected == OBJECT_INC_TIMES)
-					{
-						if (Sys_Mode == SYS_MODE_A)
-						{	
+					
+					if(object_detected == OBJECT_INC_TIMES) {
 							obj_count ++;
-						}
+							if(obj_count %2) {   //end count is 1.1 2.1 3.1 ...
+								time_new_obj = HAL_GetTick() + 12000;
+							} else {
+								time_new_obj = 0xFFFFFFFF;
+							}
 					}
-					if(object_detected > OBJECT_INC_TIMES)
-					{
+					
+					if(object_detected > OBJECT_INC_TIMES){
 						object_detected = OBJECT_INC_TIMES+1;
 					}
 				} else if(object_detected){
@@ -206,7 +215,6 @@ void Process_VCNL36821S(void) {
 					
 				}
 			}
-			
 		}
 }
 
@@ -495,6 +503,7 @@ void main(void)
 //		I2C_reset();
 		if (Sys_Mode == SYS_MODE_A){
 			Process_VCNL36821S();
+			
 		}
 		if(Sys_Mode != Check_system_mode())
 		{

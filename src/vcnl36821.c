@@ -365,7 +365,7 @@ UINT8 set_PS_I_VCSEL(UINT8 i_vcsel)
 #define PS_MPS_4 0x20
 #define PS_MPS_8 0x30
 
-#define PS_CONF2_HIGH  (PS_IT_8T |PS_MPS_8)
+#define PS_CONF2_HIGH  (PS_IT_2T |PS_MPS_2)
 
 #define LEDI_114mA 0x0C
 #define LEDI_130mA 0x0D
@@ -376,7 +376,7 @@ void VCNL_initialize(void)
   // clean config bytes
   VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
   VCNL36821_Write_register(VCNL_PS_CONF2,PS_CONF2_LOW,PS_CONF2_HIGH);
-  VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
+  VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_130mA);//config 3,4
   VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
   VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
   VCNL36821_Write_register(VCNL_PS_CANC,0x00,0x00);//

@@ -160,7 +160,7 @@ UINT16 DETECT_THRESHOLD = 0;
 
 static UINT32 ttime = 0;
 static UINT8 error = 0;
-static UINT8 object_detected = 0;
+static UINT16 object_detected = 0;
 static UINT8 non_object_detected = NON_DETECT_COUNT;
 static UINT32 time_new_obj = 0xFFFFFFFF;
 
@@ -187,24 +187,20 @@ void Process_VCNL36821S(void) {
 				if(valueps > DETECT_THRESHOLD) {
 					error = 0;
 					object_detected ++;
-					
+					non_object_detected = NON_DETECT_COUNT;
 					if(object_detected == OBJECT_INC_TIMES) {
 							obj_count ++;
-							if(obj_count %2) {   //end count is 1.1 2.1 3.1 ...
-								time_new_obj = HAL_GetTick() + 12000;
-							} else {
-								time_new_obj = 0xFFFFFFFF;
-							}
 					}
-					
-					if(object_detected > OBJECT_INC_TIMES){
-						object_detected = OBJECT_INC_TIMES+1;
-					}
-				} else if(object_detected){
+				} else if(object_detected >= OBJECT_INC_TIMES ){
 						non_object_detected --;
 						if(!non_object_detected){
 							object_detected = 0;
 							non_object_detected = NON_DETECT_COUNT;
+							if(obj_count %2) {   //end count is 1.1 2.1 3.1 ...
+								time_new_obj = HAL_GetTick() + 15000;
+							} else {
+								time_new_obj = 0xFFFFFFFF;
+							}
 						}
 				}
 			}

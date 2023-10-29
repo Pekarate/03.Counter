@@ -149,14 +149,16 @@ void LCD_show(UINT16 count)
 
 
 UINT16 DETECT_THRESHOLD = 0;
-
+ 
 #define TIME_CHECK_OBJECT  300		//ms
 
 #define TIME_COUNT_OFFJECT 1500  //ms
 #define OBJECT_INC_TIMES  TIME_COUNT_OFFJECT/TIME_CHECK_OBJECT	
 
-#define TIME_COUNT_NON_OFFJECT 1500  //ms
+
 #define NON_DETECT_COUNT 5
+#define TIME_COUNT_NON_OFFJECT 1500  //ms (NON_DETECT_COUNT * TIME_CHECK_OBJECT)
+#define TIMEOUT_TO_DECREASE_VALUE (17000 - TIME_COUNT_NON_OFFJECT)
 
 static UINT32 ttime = 0;
 static UINT8 error = 0;
@@ -190,6 +192,7 @@ void Process_VCNL36821S(void) {
 					non_object_detected = NON_DETECT_COUNT;
 					if(object_detected == OBJECT_INC_TIMES) {
 							obj_count ++;
+							time_new_obj = 0xFFFFFFFF;
 					}
 				} else if(object_detected >= OBJECT_INC_TIMES ){
 						non_object_detected --;
@@ -197,7 +200,7 @@ void Process_VCNL36821S(void) {
 							object_detected = 0;
 							non_object_detected = NON_DETECT_COUNT;
 							if(obj_count %2) {   //end count is 1.1 2.1 3.1 ...
-								time_new_obj = HAL_GetTick() + 15000;
+								time_new_obj = HAL_GetTick() + TIMEOUT_TO_DECREASE_VALUE;
 							} else {
 								time_new_obj = 0xFFFFFFFF;
 							}
@@ -224,6 +227,7 @@ typedef enum{
 	BTN_IDLE  = 0,
 	BTN_DEBOUND,
 	BTN_CLICKED,
+	BTN_PRESSED1_5S,
 	BTN_PRESSED2S,
 	BTN_PRESSED2_5S,
 	BTN_PRESSED3S,
@@ -236,11 +240,18 @@ void btn_time_click_callback()
 		reset_counter();
 	}
 }
+void btn_time_1_5sec_callback()
+{
+//	if (Sys_Mode == SYS_MODE_A){
+//		reset_counter();
+//	}
+}
 void btn_time_2sec_callback()
 {
 	if (Sys_Mode == SYS_MODE_B){
 		reset_counter();
 	}
+		
 }
 void btn_time_2_5sec_callback()
 {
@@ -303,6 +314,7 @@ void BTN_process()
 	} else {
 		switch(btn_state)
 		{
+			case BTN_PRESSED1_5S:
 			case BTN_PRESSED2_5S:
 			case BTN_PRESSED2S:
 				if (Sys_Mode == SYS_MODE_B){
@@ -489,7 +501,7 @@ void main(void)
 		}
 		avg = (total / count_val);
 		//DETECT_THRESHOLD = (total / 30) + 15;
-		DETECT_THRESHOLD = DETECT_THRESHOLD+1;
+		DETECT_THRESHOLD = DETECT_THRESHOLD+3;
 		isCablibmode=0;
 	} else {
 		VCNL36821_Stop();

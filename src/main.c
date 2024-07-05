@@ -38,14 +38,79 @@ UINT8 LCD_CODE[] = {0x7E, 0x48, 0x3D, 0x6D, 0x4B, 0x67, 0x77, 0x4C, 0x7F, 0x6F, 
 
 UINT16 valueps;
 UINT16 obj_count = 0;
+UINT16 btn_count = 0;
 UINT16 ss_read_fail = 0;
-
 UINT8 isCablibmode = 0;
+static UINT32 non_dect_timout =0xFFFFFF;
+
+typedef enum {
+	SYSTEM_OK = 0,
+	ERROR_VCNL_CANT_READ
+}__error_code;
+
+UINT8 is_system_error;
+UINT8 system_error_code;
+
+void sys_set_err_code (UINT8 err) {
+	is_system_error = 1;
+	system_error_code = err;
+}
+
+void sys_clr_err_code () {
+	is_system_error = 0;
+	system_error_code = SYSTEM_OK;
+}
+
+static UINT16 old_obj_count = 0xFFFF; // dif obj_count
+
 void LCD_show(UINT16 count);
 
+#define EEPROM_ADDR 0x3882
+#define EEPROM_KEY 0x1234
+typedef struct {
+	UINT16 cnt_mode_A;
+	UINT16 cnt_mode_B;
+	UINT16 threshold;
+	UINT16 KEY;
+}__struct_data;
+
+__struct_data struct_data;
+
+void usr_read_eeprom_data(__struct_data *dt) {
+	Read_DATAFLASH_ARRAY(EEPROM_ADDR,dt,sizeof(__struct_data));
+}
+
+void usr_write_eeprom_data(__struct_data dt) {
+	Write_DATAFLASH_ARRAY(EEPROM_ADDR,(unsigned char *)&dt,sizeof(__struct_data));
+}
+
+int eeprom_data_init() {
+	usr_read_eeprom_data(&struct_data);
+	if(struct_data.KEY != EEPROM_KEY) {  //eeprom not init yet
+		struct_data.cnt_mode_A = 0;
+		struct_data.cnt_mode_B = 0;
+		struct_data.threshold = 0;
+		struct_data.KEY = EEPROM_KEY;
+		usr_write_eeprom_data(struct_data);
+		return 1;
+	}
+	return 0;
+}
+
+void system_reset() {
+	struct_data.cnt_mode_A = obj_count;
+	struct_data.cnt_mode_B = btn_count;
+	usr_write_eeprom_data(struct_data);
+	set_SWRST; 
+}
+
 void system_shutdown(){
+	
+	UINT16 cnt = 0;
+	
 	VCNL36821_Stop();
-	BOD_DISABLE;
+
+	BOD_DISABLE;  
 	ALL_GPIO_INPUT_MODE;
 	ENABLE_BIT7_FALLINGEDGE_TRIG;
 	ENABLE_PIN_INTERRUPT;
@@ -58,11 +123,18 @@ void system_shutdown(){
 		HAL_TIM_run();
 		HAL_Delay(150);
 		if(BUTTON_PRESSED){   //debound buton
-			while(BUTTON_PRESSED);
+			while(BUTTON_PRESSED){
+				HAL_Delay(100);
+				cnt ++;
+			}
+			if(cnt > 15 ) {
+					struct_data.KEY = EEPROM_KEY + 1;  //dif key to reset all to 0
+					usr_write_eeprom_data(struct_data);
+			}
 			break;
 		}
 	}
-	set_SWRST;
+	system_reset();
 	
 }
 void LCD_INIT()
@@ -111,34 +183,38 @@ _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
 	UINT8 lcd_data[3];
-	
-	if(Sys_Mode == SYS_MODE_B) {
-		count = (count % 1000);
-		lcd_data[2] = LCD_CODE[count % 10];
-		lcd_data[1] = LCD_CODE[(count / 10) % 10];
-		lcd_data[0] = LCD_CODE[count / 100];
-		
-	} else if ( isCablibmode) {
-		lcd_data[0] = LCD_CODE[8];
-		lcd_data[1] = LCD_CODE[8]+ LCD_DOT;
-		lcd_data[2] = LCD_CODE[8];
-		
+	if(is_system_error) {
+		lcd_data[0] = 0x79; //E
+		lcd_data[2] = LCD_CODE[system_error_code % 10];
+		lcd_data[1] = LCD_CODE[(system_error_code / 10) % 10];
 	} else {
-		count = (count % 198);
-		lcd_data[0] = LCD_CODE[(count + 1) / 20];
-		lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
-		lcd_data[2] = LCD_CODE[0];
-		
-		if (count)
-		{
-			lcd_data[2] = LCD_CODE[2];
-			if (count % 2)
+		if(Sys_Mode == SYS_MODE_B) {
+			btn_count = (btn_count % 1000);
+			lcd_data[2] = LCD_CODE[btn_count % 10];
+			lcd_data[1] = LCD_CODE[(btn_count / 10) % 10];
+			lcd_data[0] = LCD_CODE[btn_count / 100];
+			
+		} else if ( isCablibmode) {
+			lcd_data[0] = LCD_CODE[8];
+			lcd_data[1] = LCD_CODE[8]+ LCD_DOT;
+			lcd_data[2] = LCD_CODE[8];
+			
+		} else {
+			count = (count % 198);
+			lcd_data[0] = LCD_CODE[(count + 1) / 20];
+			lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
+			lcd_data[2] = LCD_CODE[0];
+			
+			if (count)
 			{
-				lcd_data[2] = LCD_CODE[1];
+				lcd_data[2] = LCD_CODE[2];
+				if (count % 2)
+				{
+					lcd_data[2] = LCD_CODE[1];
+				}
 			}
 		}
 	}
-	
 	LCD_send_bytes(lcd_data);
 	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
@@ -237,7 +313,7 @@ typedef enum{
 void btn_time_click_callback()
 {
 	if (Sys_Mode == SYS_MODE_A){
-		reset_counter();
+//		reset_counter();
 	}
 }
 void btn_time_1_5sec_callback()
@@ -249,7 +325,7 @@ void btn_time_1_5sec_callback()
 void btn_time_2sec_callback()
 {
 	if (Sys_Mode == SYS_MODE_B){
-		reset_counter();
+//		reset_counter();
 	}
 		
 }
@@ -318,7 +394,7 @@ void BTN_process()
 			case BTN_PRESSED2_5S:
 			case BTN_PRESSED2S:
 				if (Sys_Mode == SYS_MODE_B){
-					obj_count ++;
+					btn_count ++;
 				} else if (Sys_Mode == SYS_MODE_A){
 //					if(HAL_GetTick() < last_btn_time)
 //					{
@@ -352,14 +428,17 @@ void PinInterrupt_ISR (void) interrupt 7
 
 void check_non_obj_detect_timout(void)
 {
-	static UINT16 old_obj_count = 0xFFFF; // dif obj_count
-	static xdata UINT32 timout =0;
-	if(old_obj_count != obj_count)
+	
+	if(old_obj_count != (obj_count + btn_count)) // dif total 2 mode
 	{
-		timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
-		old_obj_count =obj_count;
+		non_dect_timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
+		old_obj_count =(obj_count + btn_count);
+	} else {  //save data when data changed
+		struct_data.cnt_mode_A = obj_count;
+		struct_data.cnt_mode_B = btn_count;
+		usr_write_eeprom_data(struct_data);
 	}
-	if(HAL_GetTick() > timout)
+	if(HAL_GetTick() > non_dect_timout)
 	{
 		system_shutdown();
 	}
@@ -372,7 +451,7 @@ _Sys_Mode Check_system_mode()
 	{
 		return SYS_MODE_A;
 	}	
-	return SYS_MODE_B;
+	return SYS_MODE_A;
 }
 
 void WDT_ISR (void)   interrupt 10
@@ -458,17 +537,28 @@ void main(void)
 	
 	UINT32 Timm = 0;
 
+	sys_clr_err_code();
 	
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
 	CKDIV = 4;    //2Mhz 16/(CKDIV*2) 
 	GPIO_Init();
-	Sys_Mode = Check_system_mode();
+
+	eeprom_data_init();   //read pre data from eeprom
+	obj_count = struct_data.cnt_mode_A;
+	btn_count = struct_data.cnt_mode_B;
+	old_obj_count = (obj_count + btn_count);
+	non_dect_timout = 0xFFFFFF;
+	Sys_Mode = Check_system_mode();  //check running mode by switch
+
 	Init_I2C();
+
 	LCD_INIT();
-	Timer3_INT_Initial(DIV2, 0xFC, 0x18);
-	if (Sys_Mode == SYS_MODE_A){
+
+	Timer3_INT_Initial(DIV2, 0xFC, 0x18); //init timer for system
+
+	if (Sys_Mode == SYS_MODE_A){  //calib mode
 		VCNL_initialize();
 		isCablibmode = 1;
 		total = 0;
@@ -494,6 +584,10 @@ void main(void)
 					} else {
 						Timm_tmp = HAL_GetTick() + 30;
 						ss_read_fail++;
+						if(ss_read_fail > 10) {
+							sys_set_err_code(ERROR_VCNL_CANT_READ);
+							break;
+						}
 					}
 				}
 			}
@@ -517,7 +611,7 @@ void main(void)
 		}
 		if(Sys_Mode != Check_system_mode())
 		{
-			set_SWRST;
+			system_reset();
 		}
 		if(isCablibmode) {
 			LCD_show(valueps);

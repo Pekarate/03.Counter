@@ -318,7 +318,7 @@ typedef enum{
 void btn_time_click_callback()
 {
 	if (Sys_Mode == SYS_MODE_A){
-		reset_counter();
+//		reset_counter();
 	}
 }
 void btn_time_1_5sec_callback()
@@ -330,7 +330,7 @@ void btn_time_1_5sec_callback()
 void btn_time_2sec_callback()
 {
 	if (Sys_Mode == SYS_MODE_B){
-		reset_counter();
+//		reset_counter();
 	}
 		
 }
@@ -456,7 +456,7 @@ _Sys_Mode Check_system_mode()
 	{
 		return SYS_MODE_A;
 	}	
-	return SYS_MODE_B;
+	return SYS_MODE_A;
 }
 
 void WDT_ISR (void)   interrupt 10

@@ -1,0 +1,344 @@
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USR_I2C
+OBJECT MODULE PLACED IN .\Output\usr_i2c.obj
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\src\usr_i2c.c LARGE OMF2 OPTIMIZE(7,SPEED) BROWSE INCD
+                    -IR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\usr_i2c.lst) TABS(
+                    -2) OBJECT(.\Output\usr_i2c.obj)
+
+line level    source
+
+   1          #include "usr_i2c.h"
+   2          #include "MS51_16K.H"
+   3          
+   4          
+   5          
+   6          void Init_I2C(void)
+   7          {
+   8   1      
+   9   1              clr_I2CON_I2CEN;
+  10   1              _delay_();
+  11   1              P13_OPENDRAIN_MODE; // Modify SCL pin to Open drain mode. don't forget the pull high resister in c
+             -ircuit
+  12   1              P14_OPENDRAIN_MODE; // Modify SDA pin to Open drain mode. don't forget the pull high resister in c
+             -ircuit
+  13   1      
+  14   1              /* Set I2C clock rate */
+  15   1              I2CLK = I2C_CLOCK;
+  16   1              /* Enable I2C time out divier as clock base is Fsys/4, the time out is about 4ms when Fsys = 16MHz
+             - */
+  17   1              set_I2TOC_I2TOCEN;
+  18   1              set_I2TOC_DIV;
+  19   1              clr_I2TOC_I2TOF;
+  20   1              /* Enable I2C */
+  21   1              set_I2CON_I2CEN;
+  22   1      }
+  23          
+  24          
+  25          bit I2C_Reset_Flag;
+  26          
+  27          //========================================================================================================
+  28          UINT8 I2C_SI_WAIT(void)
+  29          {
+  30   1              clr_I2CON_SI;
+  31   1              clr_I2TOC_I2TOF;
+  32   1              while (!SI){ 
+  33   2                 if ( I2TOC&SET_BIT0 ) {
+  34   3                   clr_I2TOC_I2TOF;
+  35   3                   return 1;
+  36   3                 }
+  37   2              }
+  38   1              return 0;
+  39   1      }
+  40          //========================================================================================================
+  41          void I2C_SI_Check(void)
+  42          {
+  43   1              if ((I2STAT == 0x00) || (I2STAT == 0x10)|| (I2TOC&SET_BIT0))
+  44   1              {
+  45   2                      clr_I2TOC_I2TOF;
+  46   2                      I2C_Reset_Flag = 1;
+  47   2                      set_I2CON_STO;
+  48   2                      SI = 0;
+  49   2                      if (SI)
+  50   2                      {
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 2   
+
+  51   3                          clr_I2CON_I2CEN;
+  52   3                          set_I2CON_I2CEN;
+  53   3                      }
+  54   2              }
+  55   1      }
+  56          //========================================================================================================
+  57          UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
+  58          {
+  59   1              UINT8 u8low;
+  60   1              UINT8 u8high;
+  61   1              u8low =  val;
+  62   1              u8high = (val >> 8);
+  63   1              /* Step1 */
+  64   1              set_I2CON_STA; /* Send Start bit to I2C EEPROM */
+  65   1      //        clr_I2CON_SI;
+  66   1      //        while (!SI)
+  67   1      //                ;
+  68   1              if(I2C_SI_WAIT()) {
+  69   2                      I2C_Reset_Flag = 1;
+  70   2                      goto Write_Error_Stop;
+  71   2              }
+  72   1              if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
+  73   1              {
+  74   2                      I2C_Reset_Flag = 1;
+  75   2                      goto Write_Error_Stop;
+  76   2              }
+  77   1      
+  78   1              /* Step2 */
+  79   1              clr_I2CON_STA;                  /* Clear STA and Keep SI value in I2CON */
+  80   1              I2DAT = VCNL_ADDR | I2C_WR_BIT; /* Send (SLA+W) to EEPROM */
+  81   1      //        clr_I2CON_SI;
+  82   1      //        while (!SI)
+  83   1      //                ;
+  84   1              if(I2C_SI_WAIT()) {
+  85   2                      I2C_Reset_Flag = 1;
+  86   2                      goto Write_Error_Stop;
+  87   2              }
+  88   1              if (I2STAT != 0x18) /* 0x18: SLA+W has been transmitted; ACK has been received */
+  89   1              {
+  90   2                      I2C_Reset_Flag = 1;
+  91   2                      goto Write_Error_Stop;
+  92   2              }
+  93   1      
+  94   1              /* Step3 */
+  95   1              I2DAT = reg; /* Send EEPROM's High Byte Address */
+  96   1      //        clr_I2CON_SI;
+  97   1      //        while (!SI)
+  98   1      //                ;
+  99   1              if(I2C_SI_WAIT()) {
+ 100   2                      I2C_Reset_Flag = 1;
+ 101   2                      goto Write_Error_Stop;
+ 102   2              }
+ 103   1              if (I2STAT != 0x28) /* 0x28:  Data byte in S1DAT has been transmitted; ACK has been received */
+ 104   1              {
+ 105   2                      I2C_Reset_Flag = 1;
+ 106   2                      goto Write_Error_Stop;
+ 107   2              }
+ 108   1      
+ 109   1              /* Step3 */
+ 110   1              I2DAT = u8low; /* Send EEPROM's High Byte Address */
+ 111   1      //        clr_I2CON_SI;
+ 112   1      //        while (!SI)
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 3   
+
+ 113   1      //                ;
+ 114   1              if(I2C_SI_WAIT()) {
+ 115   2                      I2C_Reset_Flag = 1;
+ 116   2                      goto Write_Error_Stop;
+ 117   2              }
+ 118   1              if (I2STAT != 0x28) /* 0x28:  Data byte in S1DAT has been transmitted; ACK has been received */
+ 119   1              {
+ 120   2                      I2C_Reset_Flag = 1;
+ 121   2                      goto Write_Error_Stop;
+ 122   2              }
+ 123   1      
+ 124   1              /* Step4 */
+ 125   1              I2DAT = u8high; /* Send EEPROM's Low Byte Address */
+ 126   1      //        clr_I2CON_SI;
+ 127   1      //        while (!SI)
+ 128   1      //                ;
+ 129   1              if(I2C_SI_WAIT()) {
+ 130   2                      I2C_Reset_Flag = 1;
+ 131   2                      goto Write_Error_Stop;
+ 132   2              }
+ 133   1              if (I2STAT != 0x28) /* 0x28:  Data byte in S1DAT has been transmitted; ACK has been received */
+ 134   1              {
+ 135   2                      I2C_Reset_Flag = 1;
+ 136   2                      goto Write_Error_Stop;
+ 137   2              }
+ 138   1              /* Step7 */
+ 139   1              set_I2CON_STO; /* Set STOP Bit to I2C EEPROM */
+ 140   1              clr_I2CON_SI;
+ 141   1              clr_I2TOC_I2TOF;
+ 142   1              while (STO) /* Check STOP signal */
+ 143   1              {
+ 144   2                      I2C_SI_Check();
+ 145   2                      if (I2C_Reset_Flag)
+ 146   2                              goto Write_Error_Stop;
+ 147   2              }
+ 148   1      
+ 149   1      Write_Error_Stop:
+ 150   1              clr_I2TOC_I2TOF;
+ 151   1              if (I2C_Reset_Flag)
+ 152   1              {
+ 153   2                      I2C_SI_Check();
+ 154   2                      I2C_Reset_Flag = 0;
+ 155   2                      return 0;
+ 156   2              }
+ 157   1              return 1;
+ 158   1      }
+ 159          //========================================================================================================
+ 160          
+ 161          UINT8 VCNL_Read_register(UINT8 reg,  UINT16 *val)
+ 162          {
+ 163   1              UINT8 u8DAT[2];
+ 164   1              UINT8 u8Count;
+ 165   1              /* Step1 */
+ 166   1              set_I2CON_STA; /* Send Start bit to I2C EEPROM */
+ 167   1      //        clr_I2CON_SI;
+ 168   1      //        while (!SI)
+ 169   1      //                ;
+ 170   1              if(I2C_SI_WAIT()) {
+ 171   2                      I2C_Reset_Flag = 1;
+ 172   2                      goto Read_Error_Stop;
+ 173   2              }
+ 174   1              if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 4   
+
+ 175   1              {
+ 176   2                      if(I2STAT == 0x48)
+ 177   2                      {
+ 178   3                        STO = 1;
+ 179   3                        AA = 1;
+ 180   3      
+ 181   3                      }
+ 182   2                      I2C_Reset_Flag = 1;
+ 183   2                      goto Read_Error_Stop;
+ 184   2              }
+ 185   1      
+ 186   1              /* Step2 */
+ 187   1              I2DAT = (VCNL_ADDR | I2C_WR_BIT); /* Send (SLA+W) to EEPROM */
+ 188   1              clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
+ 189   1      //        clr_I2CON_SI;
+ 190   1      //        while (!SI)
+ 191   1      //                ;
+ 192   1              if(I2C_SI_WAIT()) {
+ 193   2                      I2C_Reset_Flag = 1;
+ 194   2                      goto Read_Error_Stop;
+ 195   2              }
+ 196   1              if (I2STAT != 0x18) /* 0x18: SLA+W has been transmitted; ACK has been received */
+ 197   1              {
+ 198   2                      I2C_Reset_Flag = 1;
+ 199   2                      goto Read_Error_Stop;
+ 200   2              }
+ 201   1      
+ 202   1              /* Step3 */
+ 203   1              I2DAT = reg; /* Send I2C EEPROM's High Byte Address */
+ 204   1      //        clr_I2CON_SI;
+ 205   1      //        while (!SI)
+ 206   1      //                ;
+ 207   1              if(I2C_SI_WAIT()) {
+ 208   2                      I2C_Reset_Flag = 1;
+ 209   2                      goto Read_Error_Stop;
+ 210   2              }
+ 211   1              if (I2STAT != 0x28) /* 0x28:  Data byte in S1DAT has been transmitted; ACK has been received */
+ 212   1              {
+ 213   2                      I2C_Reset_Flag = 1;
+ 214   2                      goto Read_Error_Stop;
+ 215   2              }
+ 216   1              /* Step5 */
+ 217   1              set_I2CON_STA; /* Repeated START */
+ 218   1      //        clr_I2CON_SI;
+ 219   1      //        while (!SI)
+ 220   1      //                ;
+ 221   1              if(I2C_SI_WAIT()) {
+ 222   2                      I2C_Reset_Flag = 1;
+ 223   2                      goto Read_Error_Stop;
+ 224   2              }
+ 225   1              if (I2STAT != 0x10) /* 0x10: A repeated START condition has been transmitted */
+ 226   1              {
+ 227   2                      I2C_Reset_Flag = 1;
+ 228   2                      goto Read_Error_Stop;
+ 229   2              }
+ 230   1      
+ 231   1              /* Step6 */
+ 232   1              clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
+ 233   1              I2DAT = (VCNL_ADDR | I2C_RD_BIT); /* Send (SLA+R) to EEPROM */
+ 234   1      //        clr_I2CON_SI;
+ 235   1      //        while (!SI)
+ 236   1      //                ;
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 5   
+
+ 237   1              if(I2C_SI_WAIT()) {
+ 238   2                      I2C_Reset_Flag = 1;
+ 239   2                      goto Read_Error_Stop;
+ 240   2              }
+ 241   1              if (I2STAT != 0x40) /* 0x40:  SLA+R has been transmitted; ACK has been received */
+ 242   1              {
+ 243   2                      I2C_Reset_Flag = 1;
+ 244   2                      goto Read_Error_Stop;
+ 245   2              }
+ 246   1      
+ 247   1              /* Step7 */ /* Verify I2C EEPROM data */
+ 248   1              for (u8Count = 0; u8Count < 2; u8Count++)
+ 249   1              {
+ 250   2                      set_I2CON_AA; /* Set Assert Acknowledge Control Bit */
+ 251   2            //        clr_I2CON_SI;
+ 252   2            //        while (!SI)
+ 253   2            //                ;
+ 254   2                    if(I2C_SI_WAIT()) {
+ 255   3                            I2C_Reset_Flag = 1;
+ 256   3                            goto Read_Error_Stop;
+ 257   3                    }
+ 258   2                      if (I2STAT != 0x50) /* 0x50:Data byte has been received; NOT ACK has been returned */
+ 259   2                      {
+ 260   3                              I2C_Reset_Flag = 1;
+ 261   3                              goto Read_Error_Stop;
+ 262   3                      }
+ 263   2                      u8DAT[u8Count] = I2DAT;
+ 264   2              }
+ 265   1              *val = u8DAT[1];
+ 266   1              *val = (*val * 256)  + u8DAT[0];
+ 267   1              /* Step8 */
+ 268   1              clr_I2CON_AA; /* Send a NACK to disconnect 24xx64 */
+ 269   1      //        clr_I2CON_SI;
+ 270   1      //        while (!SI)
+ 271   1      //                ;
+ 272   1              if(I2C_SI_WAIT()) {
+ 273   2                      I2C_Reset_Flag = 1;
+ 274   2                      goto Read_Error_Stop;
+ 275   2              }
+ 276   1              if (I2STAT != 0x58) /* 0x58:Data byte has been received; ACK has been returned */
+ 277   1              {
+ 278   2                      I2C_Reset_Flag = 1;
+ 279   2                      goto Read_Error_Stop;
+ 280   2              }
+ 281   1      
+ 282   1              /* Step9 */
+ 283   1              clr_I2CON_SI;
+ 284   1              set_I2CON_STO;
+ 285   1              clr_I2TOC_I2TOF;
+ 286   1              while (STO) /* Check STOP signal */
+ 287   1              {
+ 288   2                      I2C_SI_Check();
+ 289   2                      if (I2C_Reset_Flag)
+ 290   2                              goto Read_Error_Stop;
+ 291   2              }
+ 292   1      
+ 293   1      Read_Error_Stop:
+ 294   1              clr_I2TOC_I2TOF;
+ 295   1              if (I2C_Reset_Flag)
+ 296   1              {
+ 297   2                      I2C_SI_Check();
+ 298   2                      I2C_Reset_Flag = 0;
+C51 COMPILER V9.60.7.0   USR_I2C                                                           09/21/2024 00:45:11 PAGE 6   
+
+ 299   2                      return 0;
+ 300   2              }
+ 301   1              return 1;
+ 302   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    575    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

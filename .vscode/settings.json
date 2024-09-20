@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "vcnl36821s.h": "c"
+        "vcnl36821s.h": "c",
+        "usr_i2c.h": "c",
+        "ms51_16k.h": "c",
+        "htim.h": "c"
     }
 }

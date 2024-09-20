@@ -8,7 +8,9 @@
 
 #include "MS51_16K.H"
 #include "htim.h"
-#include "vcnl36821s.h"
+#include "usr_i2c.h"
+#include "eeprom.h"
+#include "vcnl4040.h"
 
 typedef enum
 {
@@ -46,6 +48,7 @@ static UINT32 non_dect_timout =0xFFFFFF;
 
 typedef enum {
 	SYSTEM_OK = 0,
+	ERROR_VCNL_NOT_PRESENT,
 	ERROR_VCNL_CANT_READ
 }__error_code;
 
@@ -114,7 +117,8 @@ void system_shutdown(){
 	
 	UINT16 cnt = 0;
 	
-	VCNL36821_Stop();
+	//todo
+
 
 	BOD_DISABLE;  
 	ALL_GPIO_INPUT_MODE;
@@ -187,6 +191,7 @@ void LCD_send_bytes(UINT8 *dt)
 _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
+	
 	UINT8 lcd_data[3];
 	if(is_system_error) {
 		lcd_data[0] = 0x37; //E
@@ -254,7 +259,7 @@ void reset_counter(){
 	time_new_obj = 0xFFFFFFFF;
 }
 
-void Process_VCNL36821S(void) {
+void Process_VCNL(void) {
 			
 		if(HAL_GetTick() > time_new_obj){
 			if(obj_count) {
@@ -264,7 +269,7 @@ void Process_VCNL36821S(void) {
 		}
 	
 		if (HAL_GetTick() > ttime){
-			if(readWord(VCNL_PS_DATA,&valueps)) {
+			if( VCNL_getProximity(&valueps)) {
 				ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
 				
 				if(valueps > DETECT_THRESHOLD) {
@@ -564,11 +569,15 @@ void main(void)
 
 	Timer3_INT_Initial(DIV2, 0xFC, 0x18); //init timer for system
 
+	if(VCNL4040_init() == 0 ) {  // triger mode ,auto sleep
+		sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
+	}
+
 	if (Sys_Mode == SYS_MODE_A){  //calib mode
-		VCNL_initialize();
+
 		total = 0;
 		Timm = HAL_GetTick() + 1000;
-		readWord(VCNL_PS_ID,&valueps);
+		// readWord(VCNL_PS_ID,&valueps);
 		if(DETECT_THRESHOLD == DETECT_THRESHOLD_NOT_SET){
 			isCablibmode = 1;
 			while(1)
@@ -576,7 +585,7 @@ void main(void)
 				if(HAL_GetTick() > Timm)
 				{
 					if(HAL_GetTick() > Timm_tmp) {
-						if(readWord(VCNL_PS_DATA,&valueps))
+						if(VCNL_getProximity(&valueps))
 						{
 							ss_read_fail = 0;
 							Timm_tmp = HAL_GetTick() + 200;
@@ -604,29 +613,28 @@ void main(void)
 			if(!ss_read_fail) {
 				avg = (total / count_val);
 				//DETECT_THRESHOLD = (total / 30) + 15;
-				DETECT_THRESHOLD = DETECT_THRESHOLD+3;
+				DETECT_THRESHOLD = DETECT_THRESHOLD+2;
 				struct_data.threshold = DETECT_THRESHOLD;
 				usr_write_eeprom_data(struct_data);
 			}
 		} 
 		isCablibmode=0;
-	} else {
-		VCNL36821_Stop();
 	}
-
+	Timm = 0;
 	while (1)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
 		BTN_process();
-//		I2C_reset();
+		// I2C_reset();
 		if (Sys_Mode == SYS_MODE_A){
-			Process_VCNL36821S();
+			Process_VCNL();
 			
 		}
 		if(Sys_Mode != Check_system_mode())
 		{
 			system_reset();
 		}
+		
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();
 	}

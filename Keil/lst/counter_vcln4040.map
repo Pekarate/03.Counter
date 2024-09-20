@@ -1,11 +1,10 @@
-LX51 LINKER/LOCATER V4.66.100.0                                                         09/21/2024  00:49:48  PAGE 1
+LX51 LINKER/LOCATER V4.66.100.0                                                         09/21/2024  00:49:58  PAGE 1
 
 
 LX51 LINKER/LOCATER V4.66.100.0, INVOKED BY:
 D:\00.SOFTWARE\KEILC_8051\C51\BIN\LX51.EXE .\Output\htim.obj, .\Output\main.obj, .\Output\vcnl4040.obj, .\Output\usr_i2c
 >> .obj, .\Output\eeprom.obj, .\Output\common.obj, .\Output\delay.obj, .\Output\sys.obj, .\Output\uart.obj, .\Output\STA
->> RTUP.obj TO .\Output\counter_30times_thresh15 PRINT (.\lst\counter_30times_thresh15.map) DISABLEWARNING (16) REMOVEUN
->> USED
+>> RTUP.obj TO .\Output\counter_vcln4040 PRINT (.\lst\counter_vcln4040.map) DISABLEWARNING (16) REMOVEUNUSED
 
 
 CPU MODE:     8051 MODE
@@ -65,12 +64,12 @@ INPUT MODULES INCLUDED:
          COMMENT TYPE 1: A51 / ASM51 Assembler
 
 
-ACTIVE MEMORY CLASSES OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
-
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 2
-
+ACTIVE MEMORY CLASSES OF MODULE:  .\Output\counter_vcln4040 (HTIM)
 
 BASE        START       END         USED      MEMORY CLASS
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 2
+
+
 ==========================================================
 C:000000H   C:000000H   C:00FFFFH   001AD5H   CODE
 X:000000H   X:000000H   X:00FFFFH   0001C1H   XDATA
@@ -79,7 +78,7 @@ I:000000H   I:000000H   I:00007FH   00000FH   DATA
 I:000000H   I:000000H   I:0000FFH   000001H   IDATA
 
 
-MEMORY MAP OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
+MEMORY MAP OF MODULE:  .\Output\counter_vcln4040 (HTIM)
 
 
 START     STOP      LENGTH    ALIGN  RELOC    MEMORY CLASS   SEGMENT NAME
@@ -135,10 +134,10 @@ START     STOP      LENGTH    ALIGN  RELOC    MEMORY CLASS   SEGMENT NAME
 0017E7H   001831H   00004BH   BYTE   UNIT     CODE           ?PR?EEPROM_DATA_INIT?MAIN
 001832H   00187CH   00004BH   BYTE   UNIT     CODE           ?PR?_SETPROXINTEGRATIONTIME?VCNL4040
 00187DH   0018C0H   000044H   BYTE   UNIT     CODE           ?PR?_HAL_DELAY?HTIM
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 3
-
-
 0018C1H   0018F5H   000035H   BYTE   UNIT     CODE           ?PR?WDT_ISR?MAIN
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 3
+
+
 0018F6H   001924H   00002FH   BYTE   UNIT     CODE           ?PR?RESET_COUNTER?MAIN
 001925H   00194AH   000026H   BYTE   UNIT     CODE           ?PR?SERIAL_ISR?UART
 00194BH   001970H   000026H   BYTE   UNIT     CODE           ?PR?SERIALPORT1_ISR?UART
@@ -199,14 +198,14 @@ START     STOP      LENGTH    ALIGN  RELOC    MEMORY CLASS   SEGMENT NAME
 
 
 
-OVERLAY MAP OF MODULE:   .\Output\counter_30times_thresh15 (HTIM)
+OVERLAY MAP OF MODULE:   .\Output\counter_vcln4040 (HTIM)
 
 
 FUNCTION/MODULE                               DATA_GROUP   XDATA_GROUP
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 4
-
-
 --> CALLED FUNCTION/MODULE                    START  STOP  START  STOP
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 4
+
+
 ======================================================================
 TIMER3_ISR/HTIM                               ----- -----  ----- -----
 
@@ -271,10 +270,10 @@ USR_WRITE_EEPROM_DATA/MAIN                    ----- -----  0017H 001EH
   +--> _WRITE_DATAFLASH_ARRAY/EEPROM
 
 _WRITE_DATAFLASH_ARRAY/EEPROM                 ----- -----  001FH 0026H
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 5
-
-
   +--> _WRITEDATATOONEPAGE/EEPROM
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 5
+
+
 
 _WRITEDATATOONEPAGE/EEPROM                    ----- -----  0027H 00B0H
 
@@ -339,10 +338,10 @@ HAL_GETTICK/HTIM                              ----- -----  ----- -----
 
 _VCNL_GETPROXIMITY/VCNL4040                   ----- -----  0015H 0015H
   +--> _VCNL_READ_REGISTER/USR_I2C
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 6
-
-
   +--> _BITMASK/VCNL4040
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 6
+
+
 
 _LCD_SHOW/MAIN                                ----- -----  0015H 0017H
   +--> _LCD_SEND_BYTES/MAIN
@@ -401,16 +400,16 @@ CHECK_NON_OBJ_DETECT_TIMOUT/MAIN              ----- -----  ----- -----
 
 
 
-PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
+PUBLIC SYMBOLS OF MODULE:  .\Output\counter_vcln4040 (HTIM)
 
 
       VALUE       CLASS    TYPE      PUBLIC SYMBOL NAME
       =================================================
       02000017H   XDATA    BYTE      ?_bitMask?BYTE
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 7
-
-
       02000015H   XDATA    BYTE      ?_Read_DATAFLASH_ARRAY?BYTE
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 7
+
+
 *DEL*:00000000H   XDATA    BYTE      ?_Timer0_Delay?BYTE
 *DEL*:00000000H   XDATA    BYTE      ?_Timer1_Delay?BYTE
 *DEL*:00000000H   XDATA    BYTE      ?_Timer2_Delay?BYTE
@@ -475,10 +474,10 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 *SFR* 000000E0H   DATA     BYTE      ACC
 *SFR* 000000E8H   DATA     BYTE      ADCCON0
 *SFR* 000000E1H   DATA     BYTE      ADCCON1
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 8
-
-
 *SFR* 000000E2H   DATA     BYTE      ADCCON2
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 8
+
+
 *SFR* 000000E3H   DATA     BYTE      ADCDLY
 *SFR* 000000E8H.7 DATA     BIT       ADCF
 *SFR* 000000E8H.0 DATA     BIT       ADCHS0
@@ -543,10 +542,10 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 *DEL*:00000000H   CODE     ---       Enable_UART0_VCOM_printf_24M_115200
       01000026H   CODE     ---       enableSmartPersistance
 *SFR* 000000A8H.4 DATA     BIT       ES
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 9
-
-
 *SFR* 000000A8H.1 DATA     BIT       ET0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 9
+
+
 *SFR* 000000A8H.3 DATA     BIT       ET1
 *SFR* 000000E8H.4 DATA     BIT       ETGSEL0
 *SFR* 000000E8H.5 DATA     BIT       ETGSEL1
@@ -611,10 +610,10 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 *SFR* 000000B2H   DATA     BYTE      P0SR
 *SFR* 00000090H   DATA     BYTE      P1
 *SFR* 00000090H.0 DATA     BIT       P10
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 10
-
-
 *SFR* 00000090H.1 DATA     BIT       P11
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 10
+
+
 *SFR* 00000090H.2 DATA     BIT       P12
 *SFR* 00000090H.3 DATA     BIT       P13
 *SFR* 00000090H.4 DATA     BIT       P14
@@ -679,10 +678,10 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 *SFR* 000000B8H.0 DATA     BIT       PX0
 *SFR* 000000B8H.2 DATA     BIT       PX1
 *SFR* 00000098H.2 DATA     BIT       RB8
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 11
-
-
 *SFR* 000000F8H.2 DATA     BIT       RB8_1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 11
+
+
 *SFR* 000000CBH   DATA     BYTE      RCMP2H
 *SFR* 000000CAH   DATA     BYTE      RCMP2L
 *SFR* 00000084H   DATA     BYTE      RCTRIM0
@@ -747,10 +746,10 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 *SFR* 00000088H.7 DATA     BIT       TF1
 *SFR* 000000C8H.7 DATA     BIT       TF2
 *SFR* 0000008CH   DATA     BYTE      TH0
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 12
-
-
 *SFR* 0000008DH   DATA     BYTE      TH1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 12
+
+
 *SFR* 000000CDH   DATA     BYTE      TH2
 *SFR* 00000098H.1 DATA     BIT       TI
 *SFR* 000000F8H.1 DATA     BIT       TI_1
@@ -780,7 +779,7 @@ PUBLIC SYMBOLS OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 
 
 
-SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
+SYMBOL TABLE OF MODULE:  .\Output\counter_vcln4040 (HTIM)
 
       VALUE       REP       CLASS    TYPE      SYMBOL NAME
       ====================================================
@@ -815,10 +814,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000A8H.7 SFRSYM    DATA     BIT       EA
       000000D8H   SFRSYM    DATA     BYTE      PWMCON0
       000000DFH   SFRSYM    DATA     BYTE      PWMCON1
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 13
-
-
       00000098H.7 SFRSYM    DATA     BIT       FE
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 13
+
+
       000000A8H.6 SFRSYM    DATA     BIT       EADC
       000000D1H   SFRSYM    DATA     BYTE      PWMPH
       000000A8H   SFRSYM    DATA     BYTE      IE
@@ -883,10 +882,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000090H.5 SFRSYM    DATA     BIT       P15
       00000080H.7 SFRSYM    DATA     BIT       P07
       00000090H.6 SFRSYM    DATA     BIT       P16
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 14
-
-
       00000090H.7 SFRSYM    DATA     BIT       P17
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 14
+
+
       00000080H.0 SFRSYM    DATA     BIT       MOSI
       00000080H.1 SFRSYM    DATA     BIT       MISO
       000000F3H   SFRSYM    DATA     BYTE      SPCR
@@ -951,10 +950,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000ACH   SFRSYM    DATA     BYTE      P3S
       00000088H.6 SFRSYM    DATA     BIT       TR1
       000000D8H.4 SFRSYM    DATA     BIT       CLRPWM
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 15
-
-
       00000090H.4 SFRSYM    DATA     BIT       SDA
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 15
+
+
       000000B8H.0 SFRSYM    DATA     BIT       PX0
       000000C8H.2 SFRSYM    DATA     BIT       TR2
       000000FFH   SFRSYM    DATA     BYTE      EIPH1
@@ -1019,10 +1018,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000086H   SFRSYM    DATA     BYTE      RWK
       000000D0H.5 SFRSYM    DATA     BIT       F0
       000000CCH   SFRSYM    DATA     BYTE      PWM4L
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 16
-
-
       000000C0H.4 SFRSYM    DATA     BIT       STO
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 16
+
+
       000000E8H.4 SFRSYM    DATA     BIT       ETGSEL0
       000000F8H.4 SFRSYM    DATA     BIT       REN_1
       000000CDH   SFRSYM    DATA     BYTE      PWM5L
@@ -1087,10 +1086,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         BLOCKEND  ---      ---       LVL=0
 
       010019EDH   BLOCK     CODE     ---       LVL=0
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 17
-
-
       010019EDH   LINE      CODE     ---       #68
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 17
+
+
       010019EDH   LINE      CODE     ---       #69
       01001A03H   LINE      CODE     ---       #70
       ---         BLOCKEND  ---      ---       LVL=0
@@ -1155,10 +1154,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000090H   SFRSYM    DATA     BYTE      P1
       00000090H.6 SFRSYM    DATA     BIT       TXD_1
       000000C0H.2 SFRSYM    DATA     BIT       AA
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 18
-
-
       000000ACH   SFRSYM    DATA     BYTE      P3M1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 18
+
+
       000000A0H   SFRSYM    DATA     BYTE      P2
       000000B0H   SFRSYM    DATA     BYTE      P3
       000000ADH   SFRSYM    DATA     BYTE      P3M2
@@ -1223,10 +1222,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000090H.2 SFRSYM    DATA     BIT       P12
       000000B0H.0 SFRSYM    DATA     BIT       P30
       000000E3H   SFRSYM    DATA     BYTE      ADCDLY
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 19
-
-
       000000CEH   SFRSYM    DATA     BYTE      ADCMPL
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 19
+
+
       00000080H.4 SFRSYM    DATA     BIT       P04
       00000090H.3 SFRSYM    DATA     BIT       P13
       00000098H   SFRSYM    DATA     BYTE      SCON
@@ -1291,10 +1290,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000CCH   SFRSYM    DATA     BYTE      TL2
       000000B1H   SFRSYM    DATA     BYTE      P0S
       0000009BH   SFRSYM    DATA     BYTE      EIE
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 20
-
-
       000000B8H.1 SFRSYM    DATA     BIT       PT0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 20
+
+
       000000B3H   SFRSYM    DATA     BYTE      P1S
       000000B8H.3 SFRSYM    DATA     BIT       PT1
       000000D0H.3 SFRSYM    DATA     BIT       RS0
@@ -1359,10 +1358,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       0000008EH   SFRSYM    DATA     BYTE      CKCON
       00000080H.4 SFRSYM    DATA     BIT       STADC
       00000080H.6 SFRSYM    DATA     BIT       TXD
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 21
-
-
       000000D5H   SFRSYM    DATA     BYTE      PWM3H
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 21
+
+
       000000DAH   SFRSYM    DATA     BYTE      PWM0L
       000000C4H   SFRSYM    DATA     BYTE      PWM4H
       000000DBH   SFRSYM    DATA     BYTE      PWM1L
@@ -1427,10 +1426,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         BLOCKEND  ---      ---       LVL=0
 
       01000003H   BLOCK     CODE     ---       LVL=0
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 22
-
-
       01000003H   LINE      CODE     ---       #91
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 22
+
+
       01000003H   LINE      CODE     ---       #92
       0100000CH   LINE      CODE     ---       #93
       01000022H   LINE      CODE     ---       #94
@@ -1495,10 +1494,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01001A90H   LINE      CODE     ---       #150
       01001A90H   LINE      CODE     ---       #155
       01001A93H   LINE      CODE     ---       #156
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 23
-
-
       01001A96H   LINE      CODE     ---       #157
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 23
+
+
       01001A98H   LINE      CODE     ---       #158
       01001A9AH   LINE      CODE     ---       #159
       01001A9CH   LINE      CODE     ---       #160
@@ -1563,10 +1562,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01000B55H   LINE      CODE     ---       #205
       01000B73H   LINE      CODE     ---       #207
       01000B7CH   LINE      CODE     ---       #208
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 24
-
-
       01000B84H   LINE      CODE     ---       #209
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 24
+
+
       01000B88H   LINE      CODE     ---       #210
       01000B90H   LINE      CODE     ---       #212
       01000B92H   LINE      CODE     ---       #213
@@ -1631,10 +1630,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01000D4AH   LINE      CODE     ---       #292
       01000D4AH   LINE      CODE     ---       #293
       01000D4AH   LINE      CODE     ---       #294
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 25
-
-
       01000D4AH   LINE      CODE     ---       #295
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 25
+
+
       01000D4BH   LINE      CODE     ---       #296
       01000D4BH   LINE      CODE     ---       #297
       01000D61H   LINE      CODE     ---       #298
@@ -1699,10 +1698,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01000DE0H   LINE      CODE     ---       #371
       01000DE0H   LINE      CODE     ---       #372
       01000DE1H   LINE      CODE     ---       #373
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 26
-
-
       01000DE1H   LINE      CODE     ---       #374
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 26
+
+
       01000DFBH   LINE      CODE     ---       #375
       01000DFEH   LINE      CODE     ---       #376
       01000E04H   LINE      CODE     ---       #377
@@ -1767,10 +1766,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       010015FCH   LINE      CODE     ---       #442
       0100161CH   LINE      CODE     ---       #443
       0100161CH   LINE      CODE     ---       #444
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 27
-
-
       01001634H   LINE      CODE     ---       #445
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 27
+
+
       0100164EH   LINE      CODE     ---       #446
       0100164EH   LINE      CODE     ---       #450
       0100164EH   LINE      CODE     ---       #451
@@ -1835,10 +1834,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       0100071AH   LINE      CODE     ---       #563
       01000724H   LINE      CODE     ---       #564
       0100072CH   LINE      CODE     ---       #566
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 28
-
-
       0100072FH   LINE      CODE     ---       #568
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 28
+
+
       01000732H   LINE      CODE     ---       #570
       0100073BH   LINE      CODE     ---       #572
       01000742H   LINE      CODE     ---       #573
@@ -1903,10 +1902,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         BLOCKEND  ---      ---       LVL=0
 
       ---         MODULE    ---      ---       VCNL4040
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 29
-
-
       01001736H   PUBLIC    CODE     ---       VCNL4040_init
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 29
+
+
       01001971H   PUBLIC    CODE     ---       _VCNL_getProximity
       0100003EH   PUBLIC    CODE     ---       powerOnProximity
       01000026H   PUBLIC    CODE     ---       enableSmartPersistance
@@ -1971,10 +1970,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000D0H.2 SFRSYM    DATA     BIT       OV
       000000B7H   SFRSYM    DATA     BYTE      PWMINTC
       000000B8H.5 SFRSYM    DATA     BIT       PBOD
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 30
-
-
       000000B2H   SFRSYM    DATA     BYTE      P0SR
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 30
+
+
       000000F7H   SFRSYM    DATA     BYTE      EIPH
       000000B4H   SFRSYM    DATA     BYTE      P1SR
       000000ADH   SFRSYM    DATA     BYTE      P3SR
@@ -2039,10 +2038,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000088H.7 SFRSYM    DATA     BIT       TF1
       00000098H.2 SFRSYM    DATA     BIT       RB8
       000000C8H.7 SFRSYM    DATA     BIT       TF2
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 31
-
-
       000000D7H   SFRSYM    DATA     BYTE      FBD
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 31
+
+
       0000008CH   SFRSYM    DATA     BYTE      TH0
       00000088H.0 SFRSYM    DATA     BIT       IT0
       000000A8H.0 SFRSYM    DATA     BIT       EX0
@@ -2107,10 +2106,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000C9H   SFRSYM    DATA     BYTE      T2MOD
       000000C8H   SFRSYM    DATA     BYTE      T2CON
       000000C2H   SFRSYM    DATA     BYTE      ADCRL
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 32
-
-
       000000A3H   SFRSYM    DATA     BYTE      BODCON0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 32
+
+
       00000093H   SFRSYM    DATA     BYTE      CAPCON1
       000000C0H.5 SFRSYM    DATA     BIT       STA
       000000C4H   SFRSYM    DATA     BYTE      T3CON
@@ -2175,10 +2174,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       0200013FH   SYMBOL    XDATA    BYTE      VCNL4040_PS_IT_35T
       02000140H   SYMBOL    XDATA    BYTE      VCNL4040_INT_FLAG_CLOSE
       02000141H   SYMBOL    XDATA    BYTE      VCNL4040_PS_DUTY_320
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 33
-
-
       02000142H   SYMBOL    XDATA    BYTE      VCNL4040_PS_DUTY_160
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 33
+
+
       02000143H   SYMBOL    XDATA    BYTE      VCNL4040_ALS_SD_POWER_ON
       02000144H   SYMBOL    XDATA    BYTE      VCNL4040_PS_INT_DISABLE
       02000145H   SYMBOL    XDATA    BYTE      VCNL4040_PS_SD_POWER_OFF
@@ -2243,10 +2242,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01001A5CH   LINE      CODE     ---       #123
       01001A67H   LINE      CODE     ---       #124
       01001A6FH   LINE      CODE     ---       #125
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 34
-
-
       ---         BLOCKEND  ---      ---       LVL=0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 34
+
+
 
       0100140CH   BLOCK     CODE     ---       LVL=0
       02000017H   SYMBOL    XDATA    BYTE      commandAddress
@@ -2311,10 +2310,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       0100184CH   LINE      CODE     ---       #189
       01001859H   LINE      CODE     ---       #190
       01001866H   LINE      CODE     ---       #191
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 35
-
-
       0100186BH   LINE      CODE     ---       #193
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 35
+
+
       0100187CH   LINE      CODE     ---       #194
       ---         BLOCKEND  ---      ---       LVL=0
 
@@ -2379,10 +2378,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       010019B6H   PUBLIC    CODE     ---       I2C_SI_Check
       01001A32H   PUBLIC    CODE     ---       I2C_SI_WAIT
       01001790H   PUBLIC    CODE     ---       Init_I2C
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 36
-
-
       000000F6H   SFRSYM    DATA     BYTE      AINDIDS
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 36
+
+
       000000B1H   SFRSYM    DATA     BYTE      P0M1
       00000080H.2 SFRSYM    DATA     BIT       RXD_1
       000000B3H   SFRSYM    DATA     BYTE      P1M1
@@ -2447,10 +2446,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000080H.0 SFRSYM    DATA     BIT       P00
       00000080H.1 SFRSYM    DATA     BIT       P01
       00000090H.0 SFRSYM    DATA     BIT       P10
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 37
-
-
       000000FBH   SFRSYM    DATA     BYTE      PMEN
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 37
+
+
       00000099H   SFRSYM    DATA     BYTE      SBUF
       00000087H   SFRSYM    DATA     BYTE      PCON
       00000080H.2 SFRSYM    DATA     BIT       P02
@@ -2515,10 +2514,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000A8H.2 SFRSYM    DATA     BIT       EX1
       000000CDH   SFRSYM    DATA     BYTE      TH2
       000000D0H.0 SFRSYM    DATA     BIT       P
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 38
-
-
       000000FAH   SFRSYM    DATA     BYTE      PDTCNT
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 38
+
+
       00000098H.7 SFRSYM    DATA     BIT       SM0
       0000008AH   SFRSYM    DATA     BYTE      TL0
       00000098H.6 SFRSYM    DATA     BIT       SM1
@@ -2583,10 +2582,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000F2H   SFRSYM    DATA     BYTE      CAPCON4
       000000D8H.7 SFRSYM    DATA     BIT       PWMRUN
       000000F3H   SFRSYM    DATA     BYTE      SPCR2
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 39
-
-
       000000B9H   SFRSYM    DATA     BYTE      SADEN
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 39
+
+
       000000AFH   SFRSYM    DATA     BYTE      IAPCN
       000000D2H   SFRSYM    DATA     BYTE      PWM0H
       00000080H.7 SFRSYM    DATA     BIT       RXD
@@ -2651,10 +2650,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01001A37H   LINE      CODE     ---       #32
       01001A3AH   LINE      CODE     ---       #33
       01001A3FH   LINE      CODE     ---       #34
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 40
-
-
       01001A42H   LINE      CODE     ---       #35
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 40
+
+
       01001A45H   LINE      CODE     ---       #36
       01001A45H   LINE      CODE     ---       #37
       01001A45H   LINE      CODE     ---       #38
@@ -2719,10 +2718,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       0100127DH   LINE      CODE     ---       #102
       0100127DH   LINE      CODE     ---       #103
       01001283H   LINE      CODE     ---       #104
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 41
-
-
       01001283H   LINE      CODE     ---       #105
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 41
+
+
       01001285H   LINE      CODE     ---       #106
       01001287H   LINE      CODE     ---       #107
       01001287H   LINE      CODE     ---       #110
@@ -2787,10 +2786,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01000FCBH   LINE      CODE     ---       #177
       01000FCBH   LINE      CODE     ---       #178
       01000FCDH   LINE      CODE     ---       #179
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 42
-
-
       01000FCFH   LINE      CODE     ---       #181
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 42
+
+
       01000FCFH   LINE      CODE     ---       #182
       01000FD1H   LINE      CODE     ---       #183
       01000FD4H   LINE      CODE     ---       #184
@@ -2855,10 +2854,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01001083H   LINE      CODE     ---       #268
       01001085H   LINE      CODE     ---       #272
       0100108BH   LINE      CODE     ---       #273
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 43
-
-
       0100108DH   LINE      CODE     ---       #274
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 43
+
+
       0100108FH   LINE      CODE     ---       #275
       0100108FH   LINE      CODE     ---       #276
       01001095H   LINE      CODE     ---       #277
@@ -2923,10 +2922,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000A8H   SFRSYM    DATA     BYTE      IE
       00000096H   SFRSYM    DATA     BYTE      CKSWT
       000000E8H.7 SFRSYM    DATA     BIT       ADCF
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 44
-
-
       000000FEH   SFRSYM    DATA     BYTE      EIP1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 44
+
+
       000000D9H   SFRSYM    DATA     BYTE      PWMPL
       000000E8H.0 SFRSYM    DATA     BIT       ADCHS0
       000000C7H   SFRSYM    DATA     BYTE      TA
@@ -2991,10 +2990,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000F3H   SFRSYM    DATA     BYTE      SPCR
       000000BDH   SFRSYM    DATA     BYTE      I2STAT
       000000F5H   SFRSYM    DATA     BYTE      SPDR
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 45
-
-
       000000D8H.5 SFRSYM    DATA     BIT       PWMF
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 45
+
+
       000000E5H   SFRSYM    DATA     BYTE      C0H
       000000E7H   SFRSYM    DATA     BYTE      C1H
       000000EEH   SFRSYM    DATA     BYTE      C2H
@@ -3059,10 +3058,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000FFH   SFRSYM    DATA     BYTE      EIPH1
       000000B8H.2 SFRSYM    DATA     BIT       PX1
       000000E8H   SFRSYM    DATA     BYTE      ADCCON0
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 46
-
-
       000000E1H   SFRSYM    DATA     BYTE      ADCCON1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 46
+
+
       000000E2H   SFRSYM    DATA     BYTE      ADCCON2
       000000C0H   SFRSYM    DATA     BYTE      I2CON
       00000083H   SFRSYM    DATA     BYTE      DPH
@@ -3127,10 +3126,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000CDH   SFRSYM    DATA     BYTE      PWM5L
       000000E8H.5 SFRSYM    DATA     BIT       ETGSEL1
       000000E9H   SFRSYM    DATA     BYTE      PICON
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 47
-
-
       000000DEH   SFRSYM    DATA     BYTE      PIOCON0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 47
+
+
       000000D0H   SFRSYM    DATA     BYTE      PSW
       000000EAH   SFRSYM    DATA     BYTE      PINEN
       000000C6H   SFRSYM    DATA     BYTE      PIOCON1
@@ -3195,10 +3194,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         BLOCKEND  ---      ---       LVL=1
       0100042BH   LINE      CODE     ---       #89
       0100043CH   LINE      CODE     ---       #90
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 48
-
-
       0100043CH   LINE      CODE     ---       #95
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 48
+
+
       0100044FH   LINE      CODE     ---       #96
       01000462H   LINE      CODE     ---       #98
       01000471H   LINE      CODE     ---       #99
@@ -3263,10 +3262,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         MODULE    ---      ---       COMMON
       00000020H.4 PUBLIC    BIT      BIT       BIT_TMP
       000000F6H   SFRSYM    DATA     BYTE      AINDIDS
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 49
-
-
       000000B1H   SFRSYM    DATA     BYTE      P0M1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 49
+
+
       00000080H.2 SFRSYM    DATA     BIT       RXD_1
       000000B3H   SFRSYM    DATA     BYTE      P1M1
       000000B2H   SFRSYM    DATA     BYTE      P0M2
@@ -3331,10 +3330,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000080H.1 SFRSYM    DATA     BIT       P01
       00000090H.0 SFRSYM    DATA     BIT       P10
       000000FBH   SFRSYM    DATA     BYTE      PMEN
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 50
-
-
       00000099H   SFRSYM    DATA     BYTE      SBUF
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 50
+
+
       00000087H   SFRSYM    DATA     BYTE      PCON
       00000080H.2 SFRSYM    DATA     BIT       P02
       00000090H.1 SFRSYM    DATA     BIT       P11
@@ -3399,10 +3398,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000CDH   SFRSYM    DATA     BYTE      TH2
       000000D0H.0 SFRSYM    DATA     BIT       P
       000000FAH   SFRSYM    DATA     BYTE      PDTCNT
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 51
-
-
       00000098H.7 SFRSYM    DATA     BIT       SM0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 51
+
+
       0000008AH   SFRSYM    DATA     BYTE      TL0
       00000098H.6 SFRSYM    DATA     BIT       SM1
       000000C5H   SFRSYM    DATA     BYTE      RL3
@@ -3467,10 +3466,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000D8H.7 SFRSYM    DATA     BIT       PWMRUN
       000000F3H   SFRSYM    DATA     BYTE      SPCR2
       000000B9H   SFRSYM    DATA     BYTE      SADEN
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 52
-
-
       000000AFH   SFRSYM    DATA     BYTE      IAPCN
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 52
+
+
       000000D2H   SFRSYM    DATA     BYTE      PWM0H
       00000080H.7 SFRSYM    DATA     BIT       RXD
       000000D6H   SFRSYM    DATA     BYTE      PNP
@@ -3535,10 +3534,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000A8H.7 SFRSYM    DATA     BIT       EA
       000000D8H   SFRSYM    DATA     BYTE      PWMCON0
       000000DFH   SFRSYM    DATA     BYTE      PWMCON1
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 53
-
-
       00000098H.7 SFRSYM    DATA     BIT       FE
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 53
+
+
       000000A8H.6 SFRSYM    DATA     BIT       EADC
       000000D1H   SFRSYM    DATA     BYTE      PWMPH
       000000A8H   SFRSYM    DATA     BYTE      IE
@@ -3603,10 +3602,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000090H.5 SFRSYM    DATA     BIT       P15
       00000080H.7 SFRSYM    DATA     BIT       P07
       00000090H.6 SFRSYM    DATA     BIT       P16
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 54
-
-
       00000090H.7 SFRSYM    DATA     BIT       P17
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 54
+
+
       00000080H.0 SFRSYM    DATA     BIT       MOSI
       00000080H.1 SFRSYM    DATA     BIT       MISO
       000000F3H   SFRSYM    DATA     BYTE      SPCR
@@ -3671,10 +3670,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000ACH   SFRSYM    DATA     BYTE      P3S
       00000088H.6 SFRSYM    DATA     BIT       TR1
       000000D8H.4 SFRSYM    DATA     BIT       CLRPWM
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 55
-
-
       00000090H.4 SFRSYM    DATA     BIT       SDA
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 55
+
+
       000000B8H.0 SFRSYM    DATA     BIT       PX0
       000000C8H.2 SFRSYM    DATA     BIT       TR2
       000000FFH   SFRSYM    DATA     BYTE      EIPH1
@@ -3739,10 +3738,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000086H   SFRSYM    DATA     BYTE      RWK
       000000D0H.5 SFRSYM    DATA     BIT       F0
       000000CCH   SFRSYM    DATA     BYTE      PWM4L
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 56
-
-
       000000C0H.4 SFRSYM    DATA     BIT       STO
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 56
+
+
       000000E8H.4 SFRSYM    DATA     BIT       ETGSEL0
       000000F8H.4 SFRSYM    DATA     BIT       REN_1
       000000CDH   SFRSYM    DATA     BYTE      PWM5L
@@ -3807,10 +3806,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000C1H   SFRSYM    DATA     BYTE      I2ADDR
       000000B8H.6 SFRSYM    DATA     BIT       PADC
       000000B8H   SFRSYM    DATA     BYTE      IP
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 57
-
-
       00000098H.0 SFRSYM    DATA     BIT       RI
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 57
+
+
       000000A8H.5 SFRSYM    DATA     BIT       EBOD
       000000C0H.3 SFRSYM    DATA     BIT       SI
       000000D0H.7 SFRSYM    DATA     BIT       CY
@@ -3875,10 +3874,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000091H   SFRSYM    DATA     BYTE      SFRS
       000000E6H   SFRSYM    DATA     BYTE      C1L
       000000C8H.0 SFRSYM    DATA     BIT       CM_RL2
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 58
-
-
       000000F0H   SFRSYM    DATA     BYTE      B
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 58
+
+
       000000EDH   SFRSYM    DATA     BYTE      C2L
       0000009AH   SFRSYM    DATA     BYTE      SBUF_1
       000000A5H   SFRSYM    DATA     BYTE      IAPUEN
@@ -3943,10 +3942,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000082H   SFRSYM    DATA     BYTE      DPL
       000000F8H.7 SFRSYM    DATA     BIT       SM0_1
       000000FCH   SFRSYM    DATA     BYTE      PMD
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 59
-
-
       000000B7H   SFRSYM    DATA     BYTE      IPH
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 59
+
+
       00000090H.3 SFRSYM    DATA     BIT       SCL
       000000F8H.6 SFRSYM    DATA     BIT       SM1_1
       000000BFH   SFRSYM    DATA     BYTE      I2TOC
@@ -4011,10 +4010,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
 
       01000EA1H   BLOCK     CODE     ---       LVL=0
       00000007H   SYMBOL    DATA     BYTE      u8HIRCSEL
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 60
-
-
       01000EA1H   BLOCK     CODE     NEAR LAB  LVL=1
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 60
+
+
       00000008H   SYMBOL    DATA     BYTE      hircmap0
       00000009H   SYMBOL    DATA     BYTE      hircmap1
       0000000AH   SYMBOL    DATA     BYTE      offset
@@ -4079,10 +4078,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       ---         BLOCKEND  ---      ---       LVL=0
       00000007H   SYMBOL    DATA     BYTE      u8FsysMode
       00000007H   SYMBOL    DATA     BYTE      u8FsysMode
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 61
-
-
       00000007H   SYMBOL    DATA     BYTE      u8FsysMode
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 61
+
+
       00000007H   SYMBOL    DATA     BYTE      u8FsysMode
 
       ---         MODULE    ---      ---       UART
@@ -4147,10 +4146,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000D0H.2 SFRSYM    DATA     BIT       OV
       000000B7H   SFRSYM    DATA     BYTE      PWMINTC
       000000B8H.5 SFRSYM    DATA     BIT       PBOD
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 62
-
-
       000000B2H   SFRSYM    DATA     BYTE      P0SR
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 62
+
+
       000000F7H   SFRSYM    DATA     BYTE      EIPH
       000000B4H   SFRSYM    DATA     BYTE      P1SR
       000000ADH   SFRSYM    DATA     BYTE      P3SR
@@ -4215,10 +4214,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       00000088H.7 SFRSYM    DATA     BIT       TF1
       00000098H.2 SFRSYM    DATA     BIT       RB8
       000000C8H.7 SFRSYM    DATA     BIT       TF2
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 63
-
-
       000000D7H   SFRSYM    DATA     BYTE      FBD
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 63
+
+
       0000008CH   SFRSYM    DATA     BYTE      TH0
       00000088H.0 SFRSYM    DATA     BIT       IT0
       000000A8H.0 SFRSYM    DATA     BIT       EX0
@@ -4283,10 +4282,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       000000C9H   SFRSYM    DATA     BYTE      T2MOD
       000000C8H   SFRSYM    DATA     BYTE      T2CON
       000000C2H   SFRSYM    DATA     BYTE      ADCRL
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 64
-
-
       000000A3H   SFRSYM    DATA     BYTE      BODCON0
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 64
+
+
       00000093H   SFRSYM    DATA     BYTE      CAPCON1
       000000C0H.5 SFRSYM    DATA     BIT       STA
       000000C4H   SFRSYM    DATA     BYTE      T3CON
@@ -4351,10 +4350,10 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       01001940H   LINE      CODE     ---       #29
       01001942H   LINE      CODE     ---       #30
       01001942H   LINE      CODE     ---       #31
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 65
-
-
       01001942H   LINE      CODE     ---       #33
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 65
+
+
       01001944H   LINE      CODE     ---       #34
       ---         BLOCKEND  ---      ---       LVL=0
 
@@ -4419,8 +4418,8 @@ SYMBOL TABLE OF MODULE:  .\Output\counter_30times_thresh15 (HTIM)
       010012EEH   LINE      CODE     ---       #127
       010012F0H   LINE      CODE     ---       #161
       010012F3H   LINE      CODE     ---       #165
-LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:48  PAGE 66
 
+LX51 LINKER/LOCATER V4.66.100.0                                                       09/21/2024  00:49:58  PAGE 66
 
 
       ---         MODULE    ---      ---       ?C_INIT

@@ -1,0 +1,295 @@
+C51 COMPILER V9.60.7.0   VCNL4040                                                          09/21/2024 00:43:31 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE VCNL4040
+OBJECT MODULE PLACED IN .\Output\vcnl4040.obj
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\src\vcnl4040.c LARGE OMF2 OPTIMIZE(7,SPEED) BROWSE INC
+                    -DIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\vcnl4040.lst) TAB
+                    -S(2) OBJECT(.\Output\vcnl4040.obj)
+
+line level    source
+
+   1          
+   2          #include "MS51_16K.H"
+   3          #include "htim.h"
+   4          #include "vcnl4040.h"
+   5          #include "usr_i2c.h"
+   6          
+   7          
+   8          
+   9          
+  10          #define LED P3
+  11          #define EEPROM_PAGE_SIZE 32
+  12          #define PAGE_NUMBER 4
+  13          
+  14          #define ERROR_CODE 0x78
+  15          #define TEST_OK 0x00
+  16          
+  17          
+  18          // #define PS_CONF4 0x04
+  19          
+  20          
+  21          // /* Define constants */
+  22          #define VCNL4040_DEVICE_ID_VAL 0x0186
+  23          
+  24          #define LOWER 1
+  25          #define UPPER 0
+  26          
+  27          
+  28          static const UINT8 VCNL4040_ALS_IT_MASK = (UINT8)~((1 << 7) | (1 << 6));
+  29          static const UINT8 VCNL4040_ALS_IT_80MS = 0;
+  30          static const UINT8 VCNL4040_ALS_IT_160MS = (1 << 7);
+  31          static const UINT8 VCNL4040_ALS_IT_320MS = (1 << 6);
+  32          static const UINT8 VCNL4040_ALS_IT_640MS = (1 << 7) | (1 << 6);
+  33          
+  34          static const UINT8 VCNL4040_ALS_PERS_MASK = (UINT8)~((1 << 3) | (1 << 2));
+  35          static const UINT8 VCNL4040_ALS_PERS_1 = 0;
+  36          static const UINT8 VCNL4040_ALS_PERS_2 = (1 << 2);
+  37          static const UINT8 VCNL4040_ALS_PERS_4 = (1 << 3);
+  38          static const UINT8 VCNL4040_ALS_PERS_8 = (1 << 3) | (1 << 2);
+  39          
+  40          static const UINT8 VCNL4040_ALS_INT_EN_MASK = (UINT8)~((1 << 1));
+  41          static const UINT8 VCNL4040_ALS_INT_DISABLE = 0;
+  42          static const UINT8 VCNL4040_ALS_INT_ENABLE = (1 << 1);
+  43          
+  44          static const UINT8 VCNL4040_ALS_SD_MASK = (UINT8)~((1 << 0));
+  45          static const UINT8 VCNL4040_ALS_SD_POWER_ON = 0;
+  46          static const UINT8 VCNL4040_ALS_SD_POWER_OFF = (1 << 0);
+  47          
+  48          static const UINT8 VCNL4040_PS_DUTY_MASK = (UINT8)~((1 << 7) | (1 << 6));
+  49          static const UINT8 VCNL4040_PS_DUTY_40 = 0;
+  50          static const UINT8 VCNL4040_PS_DUTY_80 = (1 << 6);
+  51          static const UINT8 VCNL4040_PS_DUTY_160 = (1 << 7);
+  52          static const UINT8 VCNL4040_PS_DUTY_320 = (1 << 7) | (1 << 6);
+  53          
+C51 COMPILER V9.60.7.0   VCNL4040                                                          09/21/2024 00:43:31 PAGE 2   
+
+  54          static const UINT8 VCNL4040_PS_PERS_MASK = (UINT8)~((1 << 5) | (1 << 4));
+  55          static const UINT8 VCNL4040_PS_PERS_1 = 0;
+  56          static const UINT8 VCNL4040_PS_PERS_2 = (1 << 4);
+  57          static const UINT8 VCNL4040_PS_PERS_3 = (1 << 5);
+  58          static const UINT8 VCNL4040_PS_PERS_4 = (1 << 5) | (1 << 4);
+  59          
+  60          static const UINT8 VCNL4040_PS_IT_MASK = (UINT8)~((1 << 3) | (1 << 2) | (1 << 1));
+  61          static const UINT8 VCNL4040_PS_IT_1T = 0;
+  62          static const UINT8 VCNL4040_PS_IT_15T = (1 << 1);
+  63          static const UINT8 VCNL4040_PS_IT_2T = (1 << 2);
+  64          static const UINT8 VCNL4040_PS_IT_25T = (1 << 2) | (1 << 1);
+  65          static const UINT8 VCNL4040_PS_IT_3T = (1 << 3);
+  66          static const UINT8 VCNL4040_PS_IT_35T = (1 << 3) | (1 << 1);
+  67          static const UINT8 VCNL4040_PS_IT_4T = (1 << 3) | (1 << 2);
+  68          static const UINT8 VCNL4040_PS_IT_8T = (1 << 3) | (1 << 2) | (1 << 1);
+  69          
+  70          static const UINT8 VCNL4040_PS_SD_MASK = (UINT8)~((1 << 0));
+  71          static const UINT8 VCNL4040_PS_SD_POWER_ON = 0;
+  72          static const UINT8 VCNL4040_PS_SD_POWER_OFF = (1 << 0);
+  73          
+  74          static const UINT8 VCNL4040_PS_HD_MASK = (UINT8)~((1 << 3));
+  75          static const UINT8 VCNL4040_PS_HD_12_BIT = 0;
+  76          static const UINT8 VCNL4040_PS_HD_16_BIT = (1 << 3);
+  77          
+  78          static const UINT8 VCNL4040_PS_INT_MASK = (UINT8)~((1 << 1) | (1 << 0));
+  79          static const UINT8 VCNL4040_PS_INT_DISABLE = 0;
+  80          static const UINT8 VCNL4040_PS_INT_CLOSE = (1 << 0);
+  81          static const UINT8 VCNL4040_PS_INT_AWAY = (1 << 1);
+  82          static const UINT8 VCNL4040_PS_INT_BOTH = (1 << 1) | (1 << 0);
+  83          
+  84          static const UINT8 VCNL4040_PS_SMART_PERS_MASK = (UINT8)~((1 << 4));
+  85          static const UINT8 VCNL4040_PS_SMART_PERS_DISABLE = 0;
+  86          static const UINT8 VCNL4040_PS_SMART_PERS_ENABLE = (1 << 4);
+  87          
+  88          static const UINT8 VCNL4040_PS_AF_MASK = (UINT8)~((1 << 3));
+  89          static const UINT8 VCNL4040_PS_AF_DISABLE = 0;
+  90          static const UINT8 VCNL4040_PS_AF_ENABLE = (1 << 3);
+  91          
+  92          static const UINT8 VCNL4040_PS_TRIG_MASK = (UINT8)~((1 << 2));
+  93          static const UINT8 VCNL4040_PS_TRIG_TRIGGER = (1 << 2);
+  94          
+  95          static const UINT8 VCNL4040_WHITE_EN_MASK = (UINT8)~((1 << 7));
+  96          static const UINT8 VCNL4040_WHITE_ENABLE = 0;
+  97          static const UINT8 VCNL4040_WHITE_DISABLE = (1 << 7);
+  98          
+  99          static const UINT8 VCNL4040_PS_MS_MASK = (UINT8)~((1 << 6));
+ 100          static const UINT8 VCNL4040_PS_MS_DISABLE = 0;
+ 101          static const UINT8 VCNL4040_PS_MS_ENABLE = (1 << 6);
+ 102          
+ 103          static const UINT8 VCNL4040_LED_I_MASK = (UINT8)~((1 << 2) | (1 << 1) | (1 << 0));
+ 104          static const UINT8 VCNL4040_LED_50MA = 0;
+ 105          static const UINT8 VCNL4040_LED_75MA = (1 << 0);
+ 106          static const UINT8 VCNL4040_LED_100MA = (1 << 1);
+ 107          static const UINT8 VCNL4040_LED_120MA = (1 << 1) | (1 << 0);
+ 108          static const UINT8 VCNL4040_LED_140MA = (1 << 2);
+ 109          static const UINT8 VCNL4040_LED_160MA = (1 << 2) | (1 << 0);
+ 110          static const UINT8 VCNL4040_LED_180MA = (1 << 2) | (1 << 1);
+ 111          static const UINT8 VCNL4040_LED_200MA = (1 << 2) | (1 << 1) | (1 << 0);
+ 112          
+ 113          static const UINT8 VCNL4040_INT_FLAG_ALS_LOW = (1 << 5);
+ 114          static const UINT8 VCNL4040_INT_FLAG_ALS_HIGH = (1 << 4);
+ 115          static const UINT8 VCNL4040_INT_FLAG_CLOSE = (1 << 1);
+C51 COMPILER V9.60.7.0   VCNL4040                                                          09/21/2024 00:43:31 PAGE 3   
+
+ 116          static const UINT8 VCNL4040_INT_FLAG_AWAY = (1 << 0);
+ 117          
+ 118          
+ 119          
+ 120          
+ 121          UINT16 VCNL4040_read_id( ){
+ 122   1          UINT16 id;
+ 123   1          VCNL_Read_register(VCNL4040_ID,&id);
+ 124   1          return id;
+ 125   1      }
+ 126          
+ 127          void bitMask(uint8_t commandAddress, uint8_t commandHeight, uint8_t mask, uint8_t thing)
+ 128          {
+ 129   1      
+ 130   1          UINT16 val;
+ 131   1          uint8_t registerContents;
+ 132   1          VCNL_Read_register(commandAddress,&val);
+ 133   1      //   // Grab current register context
+ 134   1      //   
+ 135   1          if (commandHeight == LOWER) registerContents = val & 0x0F;
+ 136   1          else registerContents = val >>8;
+ 137   1      
+ 138   1      //   // Zero-out the portions of the register we're interested in
+ 139   1          registerContents &= mask;
+ 140   1      
+ 141   1      //   // Mask in new thing
+ 142   1         registerContents |= thing;
+ 143   1      
+ 144   1      //   // Change contents
+ 145   1          if (commandHeight == LOWER)  {
+ 146   2              val = (val & 0xFF00) + registerContents;
+ 147   2          }
+ 148   1          else {
+ 149   2              val = (val & 0x00FF) + ((UINT16)registerContents<< 8);
+ 150   2          }
+ 151   1          VCNL_Write_register(commandAddress,val);
+ 152   1      }
+ 153          
+ 154          
+ 155          void setLEDCurrent(uint8_t currentValue)
+ 156          {
+ 157   1        if(currentValue > 200 - 1) currentValue = VCNL4040_LED_200MA;
+ 158   1        else if(currentValue > 180 - 1) currentValue = VCNL4040_LED_180MA;
+ 159   1        else if(currentValue > 160 - 1) currentValue = VCNL4040_LED_160MA;
+ 160   1        else if(currentValue > 140 - 1) currentValue = VCNL4040_LED_140MA;
+ 161   1        else if(currentValue > 120 - 1) currentValue = VCNL4040_LED_120MA;
+ 162   1        else if(currentValue > 100 - 1) currentValue = VCNL4040_LED_100MA;
+ 163   1        else if(currentValue > 75 - 1) currentValue = VCNL4040_LED_75MA;
+ 164   1        else currentValue = VCNL4040_LED_50MA;
+ 165   1      
+ 166   1        bitMask(VCNL4040_PS_MS, UPPER, VCNL4040_LED_I_MASK, currentValue);
+ 167   1      }
+ 168          
+ 169          
+ 170          //Set the duty cycle of the IR LED. The higher the duty
+ 171          //ratio, the faster the response time achieved with higher power
+ 172          //consumption. For example, PS_Duty = 1/320, peak IRED current = 100 mA,
+ 173          //averaged current consumption is 100 mA/320 = 0.3125 mA.
+ 174          void setIRDutyCycle(uint16_t dutyValue)
+ 175          {
+ 176   1        if(dutyValue > 320 - 1) dutyValue = VCNL4040_PS_DUTY_320;
+ 177   1        else if(dutyValue > 160 - 1) dutyValue = VCNL4040_PS_DUTY_160;
+C51 COMPILER V9.60.7.0   VCNL4040                                                          09/21/2024 00:43:31 PAGE 4   
+
+ 178   1        else if(dutyValue > 80 - 1) dutyValue = VCNL4040_PS_DUTY_80;
+ 179   1        else dutyValue = VCNL4040_PS_DUTY_40;
+ 180   1        
+ 181   1        bitMask(VCNL4040_PS_CONF1, LOWER, VCNL4040_PS_DUTY_MASK, dutyValue);
+ 182   1      }
+ 183          
+ 184          //Sets the integration time for the proximity sensor
+ 185          void setProxIntegrationTime(uint8_t timeValue)
+ 186          {
+ 187   1        if(timeValue > 8 - 1) timeValue = VCNL4040_PS_IT_8T;
+ 188   1        else if(timeValue > 4 - 1) timeValue = VCNL4040_PS_IT_4T;
+ 189   1        else if(timeValue > 3 - 1) timeValue = VCNL4040_PS_IT_3T;
+ 190   1        else if(timeValue > 2 - 1) timeValue = VCNL4040_PS_IT_2T;
+ 191   1        else timeValue = VCNL4040_PS_IT_1T;
+ 192   1      
+ 193   1        bitMask(VCNL4040_PS_CONF1, LOWER, VCNL4040_PS_IT_MASK, timeValue);
+ 194   1      }
+ 195          
+ 196          //Sets the proximity resolution
+ 197          void setProxResolution(uint8_t resolutionValue)
+ 198          {
+ 199   1        if(resolutionValue > 16 - 1) resolutionValue = VCNL4040_PS_HD_16_BIT;
+ 200   1        else resolutionValue = VCNL4040_PS_HD_12_BIT;
+ 201   1        
+ 202   1        bitMask(VCNL4040_PS_CONF2, UPPER, VCNL4040_PS_HD_MASK, resolutionValue);
+ 203   1      }
+ 204          
+ 205          
+ 206          //Enable smart persistance
+ 207          //To accelerate the PS response time, smart
+ 208          //persistence prevents the misjudgment of proximity sensing
+ 209          //but also keeps a fast response time.
+ 210          void enableSmartPersistance(void)
+ 211          {
+ 212   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_ENABLE);
+ 213   1      }
+ 214          void disableSmartPersistance(void)
+ 215          {
+ 216   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_DISABLE);
+ 217   1      }
+ 218          
+ 219          
+ 220          //Power on the prox sensing portion of the device
+ 221          void powerOnProximity(void)
+ 222          {
+ 223   1        bitMask(VCNL4040_PS_CONF1, LOWER, VCNL4040_PS_SD_MASK, VCNL4040_PS_SD_POWER_ON);
+ 224   1      }
+ 225          
+ 226          
+ 227          UINT8 VCNL_getProximity(uint16_t *res )
+ 228          {
+ 229   1        UINT8 ret;
+ 230   1        ret =  VCNL_Read_register(VCNL4040_PS_DATA,res);
+ 231   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_TRIG_MASK, VCNL4040_PS_TRIG_TRIGGER);  // enable for next 
+             -convert
+ 232   1        return ret;
+ 233   1        
+ 234   1      }
+ 235          
+ 236          int VCNL4040_init() {
+ 237   1      //    Adafruit_BusIO_Register chip_id = Adafruit_BusIO_Register(sensor->i2c_dev, VCNL4040_DEVICE_ID, 2);
+ 238   1      
+C51 COMPILER V9.60.7.0   VCNL4040                                                          09/21/2024 00:43:31 PAGE 5   
+
+ 239   1         if (VCNL4040_read_id() != VCNL4040_DEVICE_ID_VAL) {
+ 240   2             return 0;
+ 241   2         }
+ 242   1        setLEDCurrent(140);
+ 243   1        setIRDutyCycle(160); //Set to highest duty cycle
+ 244   1      
+ 245   1        setProxIntegrationTime(8); //Set to max integration
+ 246   1      
+ 247   1        setProxResolution(16); //Set to 16-bit output
+ 248   1        
+ 249   1        enableSmartPersistance(); //Turn on smart presistance
+ 250   1        bitMask(VCNL4040_ALS_CONF, LOWER, VCNL4040_ALS_IT_MASK, VCNL4040_ALS_IT_160MS);
+ 251   1      
+ 252   1        powerOnProximity(); //Turn on prox sensing
+ 253   1      
+ 254   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_AF_MASK, VCNL4040_PS_AF_ENABLE);
+ 255   1         
+ 256   1        return 1;
+ 257   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    700    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     73      12
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

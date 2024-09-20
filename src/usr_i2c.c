@@ -1,37 +1,29 @@
-#include "vcnl36821s.h"
+#include "usr_i2c.h"
 #include "MS51_16K.H"
-#include "htim.h"
 
-#define SYS_DIV 1
-#define I2C_CLOCK 4 /* Setting I2C clock as 100K */
 
-#define EEPROM_SLA 0xC0
-#define EEPROM_WR 0
-#define EEPROM_RD 1
 
-#define LED P3
-#define EEPROM_PAGE_SIZE 32
-#define PAGE_NUMBER 4
-
-#define ERROR_CODE 0x78
-#define TEST_OK 0x00
-
-bit I2C_Reset_Flag;
-//========================================================================================================
 void Init_I2C(void)
 {
+
+        clr_I2CON_I2CEN;
+        _delay_();
         P13_OPENDRAIN_MODE; // Modify SCL pin to Open drain mode. don't forget the pull high resister in circuit
         P14_OPENDRAIN_MODE; // Modify SDA pin to Open drain mode. don't forget the pull high resister in circuit
 
         /* Set I2C clock rate */
         I2CLK = I2C_CLOCK;
-			 /* Enable I2C time out divier as clock base is Fsys/4, the time out is about 4ms when Fsys = 16MHz */
-				set_I2TOC_I2TOCEN;
-				set_I2TOC_DIV;
-				clr_I2TOC_I2TOF;
+        /* Enable I2C time out divier as clock base is Fsys/4, the time out is about 4ms when Fsys = 16MHz */
+        set_I2TOC_I2TOCEN;
+        set_I2TOC_DIV;
+        clr_I2TOC_I2TOF;
         /* Enable I2C */
         set_I2CON_I2CEN;
 }
+
+
+bit I2C_Reset_Flag;
+
 //========================================================================================================
 UINT8 I2C_SI_WAIT(void)
 {
@@ -62,8 +54,12 @@ void I2C_SI_Check(void)
         }
 }
 //========================================================================================================
-UINT8 VCNL36821_Write_register(UINT8 reg, UINT8 u8low, UINT8 u8high)
+UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
 {
+        UINT8 u8low;
+        UINT8 u8high;
+        u8low =  val;
+        u8high = (val >> 8);
         /* Step1 */
         set_I2CON_STA; /* Send Start bit to I2C EEPROM */
 //        clr_I2CON_SI;
@@ -81,7 +77,7 @@ UINT8 VCNL36821_Write_register(UINT8 reg, UINT8 u8low, UINT8 u8high)
 
         /* Step2 */
         clr_I2CON_STA;                  /* Clear STA and Keep SI value in I2CON */
-        I2DAT = EEPROM_SLA | EEPROM_WR; /* Send (SLA+W) to EEPROM */
+        I2DAT = VCNL_ADDR | I2C_WR_BIT; /* Send (SLA+W) to EEPROM */
 //        clr_I2CON_SI;
 //        while (!SI)
 //                ;
@@ -162,8 +158,9 @@ Write_Error_Stop:
 }
 //========================================================================================================
 
-UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
+UINT8 VCNL_Read_register(UINT8 reg,  UINT16 *val)
 {
+        UINT8 u8DAT[2];
         UINT8 u8Count;
         /* Step1 */
         set_I2CON_STA; /* Send Start bit to I2C EEPROM */
@@ -187,7 +184,7 @@ UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
         }
 
         /* Step2 */
-        I2DAT = (EEPROM_SLA | EEPROM_WR); /* Send (SLA+W) to EEPROM */
+        I2DAT = (VCNL_ADDR | I2C_WR_BIT); /* Send (SLA+W) to EEPROM */
         clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
 //        clr_I2CON_SI;
 //        while (!SI)
@@ -203,7 +200,7 @@ UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
         }
 
         /* Step3 */
-        I2DAT = command; /* Send I2C EEPROM's High Byte Address */
+        I2DAT = reg; /* Send I2C EEPROM's High Byte Address */
 //        clr_I2CON_SI;
 //        while (!SI)
 //                ;
@@ -233,7 +230,7 @@ UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
 
         /* Step6 */
         clr_I2CON_STA;                    /* Clear STA and Keep SI value in I2CON */
-        I2DAT = (EEPROM_SLA | EEPROM_RD); /* Send (SLA+R) to EEPROM */
+        I2DAT = (VCNL_ADDR | I2C_RD_BIT); /* Send (SLA+R) to EEPROM */
 //        clr_I2CON_SI;
 //        while (!SI)
 //                ;
@@ -265,6 +262,8 @@ UINT8 VCNL36821_Read_register(UINT8 command, UINT8 *u8DAT)
                 }
                 u8DAT[u8Count] = I2DAT;
         }
+        *val = u8DAT[1];
+        *val = (*val * 256)  + u8DAT[0];
         /* Step8 */
         clr_I2CON_AA; /* Send a NACK to disconnect 24xx64 */
 //        clr_I2CON_SI;
@@ -300,98 +299,4 @@ Read_Error_Stop:
                 return 0;
         }
         return 1;
-}
-#define PS_CONF4 0x04
-
-UINT8 readWord(UINT8 tmpreg, volatile UINT16 *rdata)
-{
-
-        UINT8 u8data[2];
-        UINT8 res = VCNL36821_Read_register(tmpreg, u8data);
-        *rdata = u8data[1];
-        *rdata = (*rdata * 256) + u8data[0];
-        return res;
-}
-
-UINT8 writeWord(UINT8 reg, UINT16 rdata)
-{
-        return VCNL36821_Write_register(reg, (UINT8)rdata, (UINT8)(rdata >> 8));
-}
-
-UINT8 bitsUpdate(UINT8 reg, UINT16 mask, UINT16 update)
-{
-        UINT16 value;
-
-        if (!readWord(reg, &value))
-        {
-                return 0;
-        }
-        value &= mask;
-        value |= update;
-        return writeWord(reg, value);
-}
-
-UINT8 set_PS_I_VCSEL(UINT8 i_vcsel)
-{
-        return bitsUpdate(VCNL36821S_REG_PS_CONF3, ~VCNL36821S_PS_I_VCSEL_MASK, i_vcsel << VCNL36821S_PS_I_VCSEL_SHIFT);
-}
-
-#define PS_IT_3 (3 << 6)
-#define PS_ITB_1 (1 << 11)
-#define PS_AF_1 (1 << 6)
-#define LED_I_15 (15 << 8)
-#define PS_AC_PERIOD (0)
-#define PS_AC_NUM (3 << 4)
-
-#define PS_Period_10ms 0x00
-#define PS_Period_20ms 0x40
-#define PS_Period_40ms 0x80
-#define PS_Period_80ms 0xC0
-
-#define PS_PERS_1 0x00
-#define PS_PERS_2 0x10
-#define PS_PERS_3 0x20
-#define PS_PERS_4 0x30
-
-#define PS_CONF2_LOW  (PS_PERS_4 |PS_Period_80ms)
-
-#define PS_IT_1T 0x00
-#define PS_IT_2T 0x40
-#define PS_IT_4T 0x80
-#define PS_IT_8T 0xC0
-
-#define PS_MPS_1 0x00
-#define PS_MPS_2 0x10
-#define PS_MPS_4 0x20
-#define PS_MPS_8 0x30
-
-#define PS_CONF2_HIGH  (PS_MPS_4 |PS_IT_4T)
-
-#define LEDI_114mA 0x0C
-#define LEDI_130mA 0x0D
-#define LEDI_144mA 0x0E
-#define LEDI_156mA 0x0F
-void VCNL_initialize(void)
-{
-  // clean config bytes
-  VCNL36821_Write_register(VCNL_PS_CONF1,0x01,0x00);
-  VCNL36821_Write_register(VCNL_PS_CONF2,PS_CONF2_LOW,PS_CONF2_HIGH);
-  VCNL36821_Write_register(VCNL_PS_CONF3,0x00,LEDI_156mA);//config 3,4
-  VCNL36821_Write_register(VCNL_PS_THDL,0x00,0x00);//
-  VCNL36821_Write_register(VCNL_PS_THDH,0xFF,0x0F);//
-  VCNL36821_Write_register(VCNL_PS_CANC,0x00,0x00);//
-  VCNL36821_Write_register(VCNL_PS_AC_L,0x00,0x03);//
-
-  
-  VCNL36821_Write_register(VCNL_PS_CONF1,0x02,0x00);// PS_ON = 1
-  VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x00);// PS_INIT=1
-  VCNL36821_Write_register(VCNL_PS_CONF1,0x82,0x02);// set bit 1 of PS_CONF1, PS_ST = 0
-
-}
-void VCNL36821_Stop(void)
-{
-	writeWord(VCNL_PS_CONF1,0x0001);
-  writeWord(VCNL_PS_CONF2,0x0001);
-	writeWord(VCNL_PS_CONF3,0x0000);
-
 }

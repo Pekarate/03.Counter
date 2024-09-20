@@ -1,0 +1,1 @@
+"..\src\usr_i2c.c" LARGE OMF2 OPTIMIZE (7,SPEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE (CLOCK="4000000") DEBUG PRINT(.\lst\usr_i2c.lst) TABS (2) OBJECT(.\Output\usr_i2c.obj)

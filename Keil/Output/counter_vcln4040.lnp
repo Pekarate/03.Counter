@@ -8,7 +8,7 @@
 ".\Output\sys.obj",
 ".\Output\uart.obj",
 ".\Output\STARTUP.obj" 
-TO ".\Output\counter_30times_thresh15" 
+TO ".\Output\counter_vcln4040" 
 
-PRINT(".\lst\counter_30times_thresh15.map") DISABLEWARNING (16) 
+PRINT(".\lst\counter_vcln4040.map") DISABLEWARNING (16) 
 REMOVEUNUSED 

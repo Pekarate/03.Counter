@@ -1,0 +1,1 @@
+"..\Library\StdDriver\src\eeprom.c" LARGE OMF2 OPTIMIZE (7,SPEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE (CLOCK="4000000") DEBUG PRINT(.\lst\eeprom.lst) TABS (2) OBJECT(.\Output\eeprom.obj)

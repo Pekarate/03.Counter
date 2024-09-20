@@ -1,11 +1,11 @@
-C51 COMPILER V9.60.7.0   UART                                                              07/29/2023 16:56:35 PAGE 1   
+C51 COMPILER V9.60.7.0   UART                                                              09/15/2024 01:03:48 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
 OBJECT MODULE PLACED IN .\Output\uart.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\03.KeilcC51\C51\BIN\C51.EXE ..\Library\StdDriver\src\uart.c LARGE OMF2 OPTIMIZE(7,SP
-                    -EED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\ua
-                    -rt.lst) TABS(2) OBJECT(.\Output\uart.obj)
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\uart.c LARGE OMF2 OPTIMIZE(7,SPE
+                    -ED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\uar
+                    -t.lst) TABS(2) OBJECT(.\Output\uart.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   45   2              uart1_receive_flag = 1;
   46   2              clr_SCON_1_RI_1;                             /* clear reception flag for next reception */
   47   2          }
-C51 COMPILER V9.60.7.0   UART                                                              07/29/2023 16:56:35 PAGE 2   
+C51 COMPILER V9.60.7.0   UART                                                              09/15/2024 01:03:48 PAGE 2   
 
   48   1      
   49   1          if (TI_1 == 1)
@@ -126,7 +126,7 @@ line level    source
                     case UART1:
                       while (!RI_1);
                       c = SBUF_1;
-C51 COMPILER V9.60.7.0   UART                                                              07/29/2023 16:56:35 PAGE 3   
+C51 COMPILER V9.60.7.0   UART                                                              09/15/2024 01:03:48 PAGE 3   
 
                       RI_1 = 0;
                     break;

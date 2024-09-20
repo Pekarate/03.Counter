@@ -1,0 +1,9 @@
+Build target 'Counter'
+linking...
+Program Size: data=16.5 xdata=449 const=0 code=6869
+creating hex file from ".\Output\counter_30times_thresh15"...
+User command #1: D:\00.SOFTWARE\KEILC_8051\\C51\NULink\Hex2Bin.exe .\output\counter_30times_thresh15.hex
+>>> counter_30times_thresh15.bin Checksum = 0x363B <<<
+>>> counter_30times_thresh15.bin CRC-8 Checksum = 0x2A <<<
+".\Output\counter_30times_thresh15" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:00

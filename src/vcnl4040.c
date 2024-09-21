@@ -226,7 +226,7 @@ void powerOnProximity(void)
 
 UINT8 VCNL_getProximity(uint16_t *res )
 {
-  UINT8 ret;
+  xdata UINT8 ret;
   ret =  VCNL_Read_register(VCNL4040_PS_DATA,res);
   bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_TRIG_MASK, VCNL4040_PS_TRIG_TRIGGER);  // enable for next convert
   return ret;

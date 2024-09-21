@@ -81,7 +81,7 @@ typedef struct {
 __struct_data struct_data;
 
 void usr_read_eeprom_data(__struct_data *dt) {
-	Read_DATAFLASH_ARRAY(EEPROM_ADDR,dt,sizeof(__struct_data));
+	Read_DATAFLASH_ARRAY(EEPROM_ADDR,(unsigned char *)dt,sizeof(__struct_data));
 }
 
 void usr_write_eeprom_data(__struct_data dt) {
@@ -191,7 +191,7 @@ void LCD_send_bytes(UINT8 *dt)
 _Sys_Mode Sys_Mode = SYS_MODE_B;
 void LCD_show(UINT16 count)
 {
-	
+	UINT8 i;
 	UINT8 lcd_data[3];
 	if(is_system_error) {
 		lcd_data[0] = 0x37; //E
@@ -225,6 +225,14 @@ void LCD_show(UINT16 count)
 			}
 		}
 	}
+	for(i =0; i< 2;i++) {
+		if(lcd_data[i] != LCD_CODE[0]) {
+			break;
+		}
+		lcd_data[i] = 0x00; //off;
+	}
+
+
 	LCD_send_bytes(lcd_data);
 	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
@@ -328,9 +336,9 @@ void btn_time_click_callback()
 }
 void btn_time_1_5sec_callback()
 {
-//	if (Sys_Mode == SYS_MODE_A){
-//		reset_counter();
-//	}
+	if (Sys_Mode == SYS_MODE_A){
+		system_shutdown();
+	}
 }
 void btn_time_2sec_callback()
 {
@@ -365,9 +373,16 @@ void BTN_process()
 				break;
 			case BTN_DEBOUND:
 				if(HAL_GetTick() >btn_time){
-						btn_state = BTN_PRESSED2S;
+						btn_state = BTN_PRESSED1_5S;
 //						btn_time_click_callback();
-						btn_time = HAL_GetTick() +2000 ;
+						btn_time = HAL_GetTick() + 1500 ;
+				}
+				break;
+			case BTN_PRESSED1_5S:
+				if(HAL_GetTick() >btn_time){
+						btn_time_1_5sec_callback();
+						btn_state = BTN_PRESSED2S;
+						btn_time = HAL_GetTick() +500 ;
 				}
 				break;
 			case BTN_PRESSED2S:
@@ -537,15 +552,15 @@ void Disable_WDT_Reset_Config(void)
 
 void main(void)
 {
-	UINT16 avg;
-	UINT16 id = 0;
-	UINT32 ttime = 0;
+	xdata  UINT16 avg;
+	xdata  UINT16 id = 0;
+	xdata  UINT32 ttime = 0;
 	
-	UINT32 Timm_tmp = 0;
-	UINT8 count_val = 0;
-	UINT32 total=0;
+	xdata  UINT32 Timm_tmp = 0;
+	xdata  UINT8 count_val = 0;
+	xdata  UINT32 total=0;
 	
-	UINT32 Timm = 0;
+	xdata  UINT32 Timm = 0;
 
 	sys_clr_err_code();
 	
@@ -571,7 +586,7 @@ void main(void)
 
 	if(VCNL4040_init() == 0 ) {  // triger mode ,auto sleep
 		sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
-	}
+	} else {
 
 	if (Sys_Mode == SYS_MODE_A){  //calib mode
 
@@ -598,7 +613,7 @@ void main(void)
 							if(count_val == 15)
 								break;
 						} else {
-							Timm_tmp = HAL_GetTick() + 30;
+							Timm_tmp = HAL_GetTick() + 100;
 							ss_read_fail++;
 							if(ss_read_fail > 10) {
 								sys_set_err_code(ERROR_VCNL_CANT_READ);
@@ -613,13 +628,13 @@ void main(void)
 			if(!ss_read_fail) {
 				avg = (total / count_val);
 				//DETECT_THRESHOLD = (total / 30) + 15;
-				DETECT_THRESHOLD = DETECT_THRESHOLD+2;
+				DETECT_THRESHOLD = DETECT_THRESHOLD+3;
 				struct_data.threshold = DETECT_THRESHOLD;
 				usr_write_eeprom_data(struct_data);
 			}
 		} 
 		isCablibmode=0;
-	}
+	}}
 	Timm = 0;
 	while (1)
 	{

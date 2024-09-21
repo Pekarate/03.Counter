@@ -132,16 +132,16 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>68</LineNumber>
+          <LineNumber>322</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-16777143</Address>
+          <Address>-16773335</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\01.Freelancer\03.Counter\Keil\src\vcnl4040.c</Filename>
+          <Filename>src\usr_i2c.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
@@ -186,6 +186,11 @@
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>last_btn_time</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>cnt,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

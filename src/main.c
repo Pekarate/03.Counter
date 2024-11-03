@@ -52,18 +52,18 @@ typedef enum {
 	ERROR_VCNL_CANT_READ
 }__error_code;
 
-UINT8 is_system_error;
-UINT8 system_error_code;
+// UINT8 is_system_error;
+// UINT8 system_error_code;
 
-void sys_set_err_code (UINT8 err) {
-	is_system_error = 1;
-	system_error_code = err;
-}
+// void sys_set_err_code (UINT8 err) {
+// 	is_system_error = 1;
+// 	system_error_code = err;
+// }
 
-void sys_clr_err_code () {
-	is_system_error = 0;
-	system_error_code = SYSTEM_OK;
-}
+// void sys_clr_err_code () {
+// 	is_system_error = 0;
+// 	system_error_code = SYSTEM_OK;
+// }
 
 static UINT16 old_obj_count = 0xFFFF; // dif obj_count
 
@@ -193,11 +193,12 @@ void LCD_show(UINT16 count)
 {
 	UINT8 i;
 	UINT8 lcd_data[3];
-	if(is_system_error) {
-		lcd_data[0] = 0x37; //E
-		lcd_data[2] = LCD_CODE[system_error_code % 10];
-		lcd_data[1] = LCD_CODE[(system_error_code / 10) % 10];
-	} else {
+	// if(is_system_error) {
+	// 	lcd_data[0] = 0x37; //E
+	// 	lcd_data[2] = LCD_CODE[system_error_code % 10];
+	// 	lcd_data[1] = LCD_CODE[(system_error_code / 10) % 10];
+	// } else 
+	{
 		if(Sys_Mode == SYS_MODE_B) {
 			btn_count = (btn_count % 1000);
 			lcd_data[2] = LCD_CODE[btn_count % 10];
@@ -255,7 +256,8 @@ UINT16 DETECT_THRESHOLD = 0;
 #define TIMEOUT_TO_DECREASE_VALUE (17000 - TIME_COUNT_NON_OFFJECT)
 
 static UINT32 ttime = 0;
-static UINT8 error = 0;
+static UINT16 cnt_error = 0;
+static UINT16 cnt_ok = 0;
 static UINT16 object_detected = 0;
 static UINT8 non_object_detected = NON_DETECT_COUNT;
 static UINT32 time_new_obj = 0xFFFFFFFF;
@@ -278,10 +280,9 @@ void Process_VCNL(void) {
 	
 		if (HAL_GetTick() > ttime){
 			if( VCNL_getProximity(&valueps)) {
-				ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
-				
+				cnt_ok++;
 				if(valueps > DETECT_THRESHOLD) {
-					error = 0;
+					cnt_error = 0;
 					object_detected ++;
 					non_object_detected = NON_DETECT_COUNT;
 					if(object_detected == OBJECT_INC_TIMES) {
@@ -302,12 +303,13 @@ void Process_VCNL(void) {
 				}
 			}
 			else {
-				ttime = HAL_GetTick() + 10;
-				error++;
-				if(error == 5){
-					
+				// ttime = HAL_GetTick() + 10;
+				cnt_error++;
+				if(cnt_error == 5){
+					VCNL4040_init();
 				}
 			}
+			ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
 		}
 }
 
@@ -479,75 +481,75 @@ _Sys_Mode Check_system_mode()
 	return SYS_MODE_A;
 }
 
-void WDT_ISR (void)   interrupt 10
-{
-_push_(SFRS);
+// void WDT_ISR (void)   interrupt 10
+// {
+// _push_(SFRS);
 
-  /* Config Enable WDT reset and not clear couter trig reset */
-    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
-    while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
-    P12 = ~P12;
+//   /* Config Enable WDT reset and not clear couter trig reset */
+//     WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+//     while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
+//     P12 = ~P12;
 
-    CLEAR_WDT_INTERRUPT_FLAG;
-_pop_(SFRS);
-}
+//     CLEAR_WDT_INTERRUPT_FLAG;
+// _pop_(SFRS);
+// }
 
 
-void Disable_WDT_Reset_Config(void)
-{
-  UINT8 cf0,cf1,cf2,cf3,cf4;
+// void Disable_WDT_Reset_Config(void)
+// {
+//   UINT8 cf0,cf1,cf2,cf3,cf4;
   
-    set_CHPCON_IAPEN;
-    IAPAL = 0x00;
-    IAPAH = 0x00;
-    IAPCN = BYTE_READ_CONFIG;
-    set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
-    cf0 = IAPFD;
-    IAPAL = 0x01;
-    set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
-    cf1 = IAPFD;
-    IAPAL = 0x02;
-    set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
-    cf2 = IAPFD;
-    IAPAL = 0x03;
-    set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
-    cf3 = IAPFD;
-    IAPAL = 0x04;
-    set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
-    cf4 = IAPFD;
-    cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
+//     set_CHPCON_IAPEN;
+//     IAPAL = 0x00;
+//     IAPAH = 0x00;
+//     IAPCN = BYTE_READ_CONFIG;
+//     set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
+//     cf0 = IAPFD;
+//     IAPAL = 0x01;
+//     set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
+//     cf1 = IAPFD;
+//     IAPAL = 0x02;
+//     set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
+//     cf2 = IAPFD;
+//     IAPAL = 0x03;
+//     set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
+//     cf3 = IAPFD;
+//     IAPAL = 0x04;
+//     set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
+//     cf4 = IAPFD;
+//     cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
     
-    set_IAPUEN_CFUEN;  
-    IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
-    IAPAH = 0x00;
-    IAPAL = 0x00;
-    IAPFD = 0xFF;
-    set_IAPTRG_IAPGO;
+//     set_IAPUEN_CFUEN;  
+//     IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
+//     IAPAH = 0x00;
+//     IAPAL = 0x00;
+//     IAPFD = 0xFF;
+//     set_IAPTRG_IAPGO;
     
-    IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
-    IAPFD = cf0;
-    set_IAPTRG_IAPGO;
-    IAPAL = 0x01;
-    IAPFD = cf1;
-    set_IAPTRG_IAPGO;
-    IAPAL = 0x02;
-    IAPFD = cf2;
-    set_IAPTRG_IAPGO;
-    IAPAL = 0x03;
-    IAPFD = cf3;
-    set_IAPTRG_IAPGO;
-    IAPAL = 0x04;
-    IAPFD = cf4;
-    set_IAPTRG_IAPGO;
+//     IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
+//     IAPFD = cf0;
+//     set_IAPTRG_IAPGO;
+//     IAPAL = 0x01;
+//     IAPFD = cf1;
+//     set_IAPTRG_IAPGO;
+//     IAPAL = 0x02;
+//     IAPFD = cf2;
+//     set_IAPTRG_IAPGO;
+//     IAPAL = 0x03;
+//     IAPFD = cf3;
+//     set_IAPTRG_IAPGO;
+//     IAPAL = 0x04;
+//     IAPFD = cf4;
+//     set_IAPTRG_IAPGO;
 
-    set_IAPUEN_CFUEN;
-    clr_CHPCON_IAPEN;
-    if (WDCON&SET_BIT3)
-    {
-      clr_WDCON_WDTRF;
-      set_CHPCON_SWRST;
-    }
-}
+//     set_IAPUEN_CFUEN;
+//     clr_CHPCON_IAPEN;
+//     if (WDCON&SET_BIT3)
+//     {
+//       clr_WDCON_WDTRF;
+//       set_CHPCON_SWRST;
+//     }
+// }
 
 
 void main(void)
@@ -562,7 +564,7 @@ void main(void)
 	
 	xdata  UINT32 Timm = 0;
 
-	sys_clr_err_code();
+	// sys_clr_err_code();
 	
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
@@ -585,7 +587,7 @@ void main(void)
 	Timer3_INT_Initial(DIV2, 0xFC, 0x18); //init timer for system
 
 	if(VCNL4040_init() == 0 ) {  // triger mode ,auto sleep
-		sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
+		// sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
 	} else {
 
 	if (Sys_Mode == SYS_MODE_A){  //calib mode
@@ -616,7 +618,7 @@ void main(void)
 							Timm_tmp = HAL_GetTick() + 100;
 							ss_read_fail++;
 							if(ss_read_fail > 10) {
-								sys_set_err_code(ERROR_VCNL_CANT_READ);
+								// sys_set_err_code(ERROR_VCNL_CANT_READ);
 								break;
 							}
 						}
@@ -628,7 +630,7 @@ void main(void)
 			if(!ss_read_fail) {
 				avg = (total / count_val);
 				//DETECT_THRESHOLD = (total / 30) + 15;
-				DETECT_THRESHOLD = DETECT_THRESHOLD+3;
+				DETECT_THRESHOLD = DETECT_THRESHOLD+1;
 				struct_data.threshold = DETECT_THRESHOLD;
 				usr_write_eeprom_data(struct_data);
 			}
@@ -636,9 +638,15 @@ void main(void)
 		isCablibmode=0;
 	}}
 	Timm = 0;
+	// obj_count = 20;
 	while (1)
 	{
 //		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+		// if(HAL_GetTick() > Timm)
+		// {
+		// 	Timm = HAL_GetTick() + 1000;
+		// 	obj_count++;
+		// }
 		BTN_process();
 		// I2C_reset();
 		if (Sys_Mode == SYS_MODE_A){

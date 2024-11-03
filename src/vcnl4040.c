@@ -239,8 +239,8 @@ int VCNL4040_init() {
    if (VCNL4040_read_id() != VCNL4040_DEVICE_ID_VAL) {
        return 0;
    }
-  setLEDCurrent(140);
-  setIRDutyCycle(160); //Set to highest duty cycle
+  setLEDCurrent(200);
+  setIRDutyCycle(320); //Set to highest duty cycle
 
   setProxIntegrationTime(8); //Set to max integration
 

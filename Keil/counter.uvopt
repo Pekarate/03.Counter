@@ -132,9 +132,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>322</LineNumber>
+          <LineNumber>35</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-16773335</Address>
+          <Address>-16770194</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -165,32 +165,37 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>I2STAT</ItemText>
+          <ItemText>cnt,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>I2TOC</ItemText>
+          <ItemText>ttime,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>I2CON</ItemText>
+          <ItemText>error,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>I2TOC</ItemText>
+          <ItemText>I2STAT</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>last_btn_time</ItemText>
+          <ItemText>SI</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>cnt,0x0A</ItemText>
+          <ItemText>cnt_error,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>cnt_ok,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

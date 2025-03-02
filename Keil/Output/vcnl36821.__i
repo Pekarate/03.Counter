@@ -1,1 +1,0 @@
-"..\src\vcnl36821.c" LARGE OMF2 OPTIMIZE (7,SPEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE (CLOCK="4000000") DEBUG PRINT(.\lst\vcnl36821.lst) TABS (2) OBJECT(.\Output\vcnl36821.obj)

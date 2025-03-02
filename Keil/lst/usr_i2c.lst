@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 1   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USR_I2C
@@ -62,7 +62,7 @@ line level    source
   48   2                      if (SI)
   49   2                      {
   50   3                              clr_I2CON_I2CEN;
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 2   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 2   
 
   51   3                              set_I2CON_I2CEN;
   52   3                      }
@@ -71,8 +71,8 @@ line level    source
   55          //========================================================================================================
   56          UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
   57          {
-  58   1              UINT8 u8low;
-  59   1              UINT8 u8high;
+  58   1              xdata UINT8 u8low;
+  59   1              xdata UINT8 u8high;
   60   1              u8low = val;
   61   1              u8high = (val >> 8);
   62   1              /* Step1 */
@@ -126,7 +126,7 @@ line level    source
  110   1      
  111   1              /* Step3 */
  112   1              I2DAT = u8low; /* Send EEPROM's High Byte Address */
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 3   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 3   
 
  113   1                             //        clr_I2CON_SI;
  114   1                             //        while (!SI)
@@ -182,15 +182,15 @@ line level    source
  164          UINT8 cnt = 0;
  165          UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
  166          {
- 167   1              UINT8 u8DAT[2];
- 168   1              UINT8 u8Count;
+ 167   1              xdata UINT8 u8DAT[2];
+ 168   1              xdata UINT8 u8Count;
  169   1              
  170   1              /* Step1 */
  171   1              set_I2CON_STA; /* Send Start bit to I2C EEPROM */
  172   1                             //        clr_I2CON_SI;
  173   1                             //        while (!SI)
  174   1                             //                ;
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 4   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 4   
 
  175   1              if (I2C_SI_WAIT())
  176   1              {
@@ -254,7 +254,7 @@ line level    source
  234   1              if (I2C_SI_WAIT())
  235   1              {
  236   2                      cnt = __LINE__;
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 5   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 5   
 
  237   2                      I2C_Reset_Flag = 1;
  238   2                      goto Read_Error_Stop;
@@ -318,7 +318,7 @@ line level    source
  296   2                      I2C_Reset_Flag = 1;
  297   2                      cnt = __LINE__;
  298   2                      goto Read_Error_Stop;
-C51 COMPILER V9.60.7.0   USR_I2C                                                           10/30/2024 20:02:28 PAGE 6   
+C51 COMPILER V9.60.7.0   USR_I2C                                                           03/02/2025 00:01:13 PAGE 6   
 
  299   2              }
  300   1              if (I2STAT != 0x58) /* 0x58:Data byte has been received; ACK has been returned */

@@ -55,8 +55,8 @@ void I2C_SI_Check(void)
 //========================================================================================================
 UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
 {
-        UINT8 u8low;
-        UINT8 u8high;
+        xdata UINT8 u8low;
+        xdata UINT8 u8high;
         u8low = val;
         u8high = (val >> 8);
         /* Step1 */
@@ -164,8 +164,8 @@ Write_Error_Stop:
 UINT8 cnt = 0;
 UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
 {
-        UINT8 u8DAT[2];
-        UINT8 u8Count;
+        xdata UINT8 u8DAT[2];
+        xdata UINT8 u8Count;
         
         /* Step1 */
         set_I2CON_STA; /* Send Start bit to I2C EEPROM */

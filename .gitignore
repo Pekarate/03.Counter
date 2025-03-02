@@ -2,3 +2,4 @@
 *.SBR
 *.obj
 *.obj
+Keil/Output/*

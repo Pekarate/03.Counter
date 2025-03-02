@@ -628,6 +628,7 @@ void cabib_process()
 					if(HAL_GetTick() > Timm_tmp) {
 						if(VCNL_getProximity(&valueps))
 						{
+							sys_clr_err_code();
 							ss_read_fail = 0;
 							Timm_tmp = HAL_GetTick() + 200;
 							total += valueps;
@@ -643,6 +644,7 @@ void cabib_process()
 							ss_read_fail++;
 							if(ss_read_fail > 10) {
 								sys_set_err_code(ERROR_VCNL_READ_FAIL);
+								VCNL4040_init();
 								break;
 							}
 						}
@@ -661,7 +663,7 @@ void cabib_process()
 		Timm_tmp = HAL_GetTick() + 500; 
 		while (Timm_tmp > HAL_GetTick())
 		{
-			LCD_show(valueps);
+			LCD_show(struct_data.threshold);
 		}
 		isCablibmode=0;
 	}

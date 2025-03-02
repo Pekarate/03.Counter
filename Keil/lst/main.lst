@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   45          
   46          #define NON_DETECT_COUNT 5
   47          #define TIME_COUNT_NON_OFFJECT 1500 // ms (NON_DETECT_COUNT * TIME_CHECK_OBJECT)
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 2   
 
   48          #define TIMEOUT_TO_DECREASE_VALUE (17000 - TIME_COUNT_NON_OFFJECT)
   49          
@@ -126,7 +126,7 @@ line level    source
  106          void usr_read_eeprom_data()
  107          {
  108   1        Read_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)&struct_data, sizeof(__struct_data));
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 3   
 
  109   1      }
  110          
@@ -190,7 +190,7 @@ line level    source
  168   4            }
  169   3            break;
  170   3          }
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 4   
 
  171   2        }
  172   1        system_reset();
@@ -254,7 +254,7 @@ line level    source
  230   3            btn_count = (btn_count % 1000);
  231   3            lcd_data[2] = LCD_CODE[btn_count % 10];
  232   3            lcd_data[1] = LCD_CODE[(btn_count / 10) % 10];
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 5   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 5   
 
  233   3            lcd_data[0] = LCD_CODE[btn_count / 100];
  234   3          }
@@ -318,7 +318,7 @@ line level    source
  292   1      
  293   1        if (HAL_GetTick() > time_new_obj)
  294   1        {
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 6   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 6   
 
  295   2          if (obj_count)
  296   2          {
@@ -382,7 +382,7 @@ line level    source
  354   1        P0M1 |= 0x80;
  355   1        P0M2 &= 0x7F;
  356   1      }
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 7   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 7   
 
  357          typedef enum
  358          {
@@ -446,7 +446,7 @@ line level    source
  416   3          case BTN_IDLE:
  417   3            btn_state = BTN_DEBOUND;
  418   3            btn_time = HAL_GetTick() + 25;
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 8   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 8   
 
  419   3            break;
  420   3          case BTN_DEBOUND:
@@ -510,7 +510,7 @@ line level    source
  478   3            {
  479   4              //          if(HAL_GetTick() < last_btn_time)
  480   4              //          {
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 9   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 9   
 
  481   4              //            isCablibmode = 1- isCablibmode;
  482   4              //          }
@@ -574,7 +574,7 @@ line level    source
  540          // void WDT_ISR (void)   interrupt 10
  541          // {
  542          // _push_(SFRS);
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 10  
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 10  
 
  543          
  544          //   /* Config Enable WDT reset and not clear couter trig reset */
@@ -638,7 +638,7 @@ line level    source
  602          //     if (WDCON&SET_BIT3)
  603          //     {
  604          //       clr_WDCON_WDTRF;
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 11  
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 11  
 
  605          //       set_CHPCON_SWRST;
  606          //     }
@@ -666,108 +666,110 @@ line level    source
  628   5                if(HAL_GetTick() > Timm_tmp) {
  629   6                  if(VCNL_getProximity(&valueps))
  630   6                  {
- 631   7                    ss_read_fail = 0;
- 632   7                    Timm_tmp = HAL_GetTick() + 200;
- 633   7                    total += valueps;
- 634   7                    count_val ++;
- 635   7                    if(valueps > DETECT_THRESHOLD)
- 636   7                    {
- 637   8                      DETECT_THRESHOLD = valueps;
- 638   8                    }
- 639   7                    if(count_val == 15)
- 640   7                      break;
- 641   7                  } else {
- 642   7                    Timm_tmp = HAL_GetTick() + 100;
- 643   7                    ss_read_fail++;
- 644   7                    if(ss_read_fail > 10) {
- 645   8                      sys_set_err_code(ERROR_VCNL_READ_FAIL);
- 646   8                      break;
- 647   8                    }
- 648   7                  }
- 649   6                }
- 650   5              }
- 651   4              LCD_show(valueps);
- 652   4            }
- 653   3            
- 654   3            if(!ss_read_fail) {
- 655   4              avg = (total / count_val);
- 656   4              struct_data.threshold = avg +1;
- 657   4              usr_write_eeprom_data();
- 658   4            }
- 659   3          } 
- 660   2          isCablibmode=2;
- 661   2          Timm_tmp = HAL_GetTick() + 500; 
- 662   2          while (Timm_tmp > HAL_GetTick())
- 663   2          {
- 664   3            LCD_show(valueps);
- 665   3          }
- 666   2          isCablibmode=0;
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 12  
+ 631   7                    sys_clr_err_code();
+ 632   7                    ss_read_fail = 0;
+ 633   7                    Timm_tmp = HAL_GetTick() + 200;
+ 634   7                    total += valueps;
+ 635   7                    count_val ++;
+ 636   7                    if(valueps > DETECT_THRESHOLD)
+ 637   7                    {
+ 638   8                      DETECT_THRESHOLD = valueps;
+ 639   8                    }
+ 640   7                    if(count_val == 15)
+ 641   7                      break;
+ 642   7                  } else {
+ 643   7                    Timm_tmp = HAL_GetTick() + 100;
+ 644   7                    ss_read_fail++;
+ 645   7                    if(ss_read_fail > 10) {
+ 646   8                      sys_set_err_code(ERROR_VCNL_READ_FAIL);
+ 647   8                      VCNL4040_init();
+ 648   8                      break;
+ 649   8                    }
+ 650   7                  }
+ 651   6                }
+ 652   5              }
+ 653   4              LCD_show(valueps);
+ 654   4            }
+ 655   3            
+ 656   3            if(!ss_read_fail) {
+ 657   4              avg = (total / count_val);
+ 658   4              struct_data.threshold = avg +1;
+ 659   4              usr_write_eeprom_data();
+ 660   4            }
+ 661   3          } 
+ 662   2          isCablibmode=2;
+ 663   2          Timm_tmp = HAL_GetTick() + 500; 
+ 664   2          while (Timm_tmp > HAL_GetTick())
+ 665   2          {
+ 666   3            LCD_show(struct_data.threshold);
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 12  
 
- 667   2        }
- 668   1      #endif
- 669   1      }
- 670          void main(void)
- 671          {
- 672   1        // sys_clr_err_code();
- 673   1      
- 674   1        ALL_GPIO_INPUT_MODE;
- 675   1        MODIFY_HIRC(HIRC_16);
- 676   1        /* Initial I2C function */
- 677   1        CKDIV = 4; // 2Mhz 16/(CKDIV*2)
- 678   1        GPIO_Init();
- 679   1      
- 680   1        non_dect_timout = 0xFFFFFF;
- 681   1        Sys_Mode = Check_system_mode(); // check running mode by switch
- 682   1      
- 683   1        Init_I2C();
+ 667   3          }
+ 668   2          isCablibmode=0;
+ 669   2        }
+ 670   1      #endif
+ 671   1      }
+ 672          void main(void)
+ 673          {
+ 674   1        // sys_clr_err_code();
+ 675   1      
+ 676   1        ALL_GPIO_INPUT_MODE;
+ 677   1        MODIFY_HIRC(HIRC_16);
+ 678   1        /* Initial I2C function */
+ 679   1        CKDIV = 4; // 2Mhz 16/(CKDIV*2)
+ 680   1        GPIO_Init();
+ 681   1      
+ 682   1        non_dect_timout = 0xFFFFFF;
+ 683   1        Sys_Mode = Check_system_mode(); // check running mode by switch
  684   1      
- 685   1        LCD_INIT();
+ 685   1        Init_I2C();
  686   1      
- 687   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
+ 687   1        LCD_INIT();
  688   1      
- 689   1        if (VCNL4040_init() == 0)
- 690   1        { // triger mode ,auto sleep
- 691   2          sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
- 692   2        }
- 693   1      
- 694   1        cabib_process();
- 695   1        DETECT_THRESHOLD = struct_data.threshold ;
- 696   1        
- 697   1        reset_counter();
- 698   1        while (1)
- 699   1        {
- 700   2          //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 701   2          // if(HAL_GetTick() > Timm)
- 702   2          // {
- 703   2          //  Timm = HAL_GetTick() + 1000;
- 704   2          //  obj_count++;
- 705   2          // }
- 706   2          BTN_process();
- 707   2          // I2C_reset();
- 708   2          if (Sys_Mode == SYS_MODE_A)
- 709   2          {
- 710   3            Process_VCNL();
- 711   3          }
- 712   2          if (Sys_Mode != Check_system_mode())
- 713   2          {
- 714   3            system_reset();
- 715   3          }
- 716   2      
- 717   2          LCD_show(obj_count);
- 718   2          check_non_obj_detect_timout();
- 719   2        }
- 720   1        /* =================== */
- 721   1      }
+ 689   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
+ 690   1      
+ 691   1        if (VCNL4040_init() == 0)
+ 692   1        { // triger mode ,auto sleep
+ 693   2          sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
+ 694   2        }
+ 695   1      
+ 696   1        cabib_process();
+ 697   1        DETECT_THRESHOLD = struct_data.threshold ;
+ 698   1        
+ 699   1        reset_counter();
+ 700   1        while (1)
+ 701   1        {
+ 702   2          //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 703   2          // if(HAL_GetTick() > Timm)
+ 704   2          // {
+ 705   2          //  Timm = HAL_GetTick() + 1000;
+ 706   2          //  obj_count++;
+ 707   2          // }
+ 708   2          BTN_process();
+ 709   2          // I2C_reset();
+ 710   2          if (Sys_Mode == SYS_MODE_A)
+ 711   2          {
+ 712   3            Process_VCNL();
+ 713   3          }
+ 714   2          if (Sys_Mode != Check_system_mode())
+ 715   2          {
+ 716   3            system_reset();
+ 717   3          }
+ 718   2      
+ 719   2          LCD_show(obj_count);
+ 720   2          check_non_obj_detect_timout();
+ 721   2        }
+ 722   1        /* =================== */
+ 723   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1980    ----
+   CODE SIZE        =   1989    ----
    CONSTANT SIZE    =     16    ----
+C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 13  
+
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 14:05:40 PAGE 13  
-
    DATA SIZE        =     48      13
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----

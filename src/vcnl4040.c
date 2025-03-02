@@ -109,9 +109,10 @@
 #define VCNL4040_INT_FLAG_CLOSE    (1 << 1)
 #define VCNL4040_INT_FLAG_AWAY     (1 << 0)
 
-UINT16 VCNL4040_id;
+
 UINT16 VCNL4040_read_id()
 {
+  data UINT16 VCNL4040_id;
   VCNL_Read_register(VCNL4040_ID, &VCNL4040_id);
   return VCNL4040_id;
 }
@@ -119,8 +120,8 @@ UINT16 VCNL4040_read_id()
 void bitMask(uint8_t commandAddress, uint8_t commandHeight, uint8_t mask, uint8_t thing)
 {
 
-  xdata UINT16 val;
-  xdata uint8_t registerContents;
+  UINT16 val;
+  uint8_t registerContents;
   VCNL_Read_register(commandAddress, &val);
   //   // Grab current register context
   //
@@ -258,7 +259,7 @@ int VCNL4040_init()
   setProxResolution(16); // Set to 16-bit output
 
   enableSmartPersistance(); // Turn on smart presistance
-  bitMask(VCNL4040_ALS_CONF, LOWER, VCNL4040_ALS_IT_MASK, VCNL4040_ALS_IT_160MS);
+  bitMask(VCNL4040_ALS_CONF, LOWER, VCNL4040_ALS_IT_MASK, VCNL4040_ALS_IT_640MS);
 
   powerOnProximity(); // Turn on prox sensing
 

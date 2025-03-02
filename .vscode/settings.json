@@ -3,7 +3,8 @@
     "vcnl36821s.h": "c",
     "usr_i2c.h": "c",
     "ms51_16k.h": "c",
-    "htim.h": "c"
+    "htim.h": "c",
+    "vcnl4040.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

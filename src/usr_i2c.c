@@ -164,8 +164,8 @@ Write_Error_Stop:
 UINT8 cnt = 0;
 UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
 {
-        xdata UINT8 u8DAT[2];
-        xdata UINT8 u8Count;
+        UINT8 u8DAT[2];
+        UINT8 u8Count;
         
         /* Step1 */
         set_I2CON_STA; /* Send Start bit to I2C EEPROM */

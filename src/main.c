@@ -11,7 +11,7 @@
 #include "eeprom.h"
 #include "vcnl4040.h"
 
-#define CALIBRATION_ENABLE 0
+#define CALIBRATION_ENABLE 1
 #define SYS_MODE_A 0
 #define SYS_MODE_B 1
 #define _Sys_Mode UINT8
@@ -77,12 +77,7 @@ data _Sys_Mode Sys_Mode = SYS_MODE_B;
 data UINT8 lcd_data[3];
 
 
-#if CALIBRATION_ENABLE
-data UINT16 avg;
-data UINT32 Timm_tmp = 0;
-data UINT8 count_val = 0;
-data UINT32 total = 0;
-#endif
+
 data UINT32 Timm = 0;
 
 void sys_set_err_code(UINT8 err)
@@ -98,48 +93,44 @@ void sys_clr_err_code()
 
 void LCD_show(UINT16 count);
 
-// #define EEPROM_ADDR 0x3882
-// #define EEPROM_KEY 0x5A5A
-// typedef struct
-// {
-// 	UINT16 cnt_mode_A;
-// 	UINT16 cnt_mode_B;
-// 	UINT16 threshold;
-// 	UINT16 KEY;
-// } __struct_data;
+#define EEPROM_ADDR 0x3882
+#define EEPROM_KEY 0x5A
+typedef struct
+{
+	UINT16 threshold;
+	UINT8 KEY;
+} __struct_data;
 
-// __struct_data struct_data;
+data __struct_data struct_data;
 
-// void usr_read_eeprom_data(__struct_data *dt)
-// {
-// 	Read_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)dt, sizeof(__struct_data));
-// }
+void usr_read_eeprom_data()
+{
+	Read_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)&struct_data, sizeof(__struct_data));
+}
 
-// void usr_write_eeprom_data(__struct_data dt)
-// {
-// 	Write_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)&dt, sizeof(__struct_data));
-// }
+void usr_write_eeprom_data()
+{
+	Write_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)&struct_data, sizeof(__struct_data));
+}
 
-// void usr_reset_eeprom_data()
-// {
-// 	struct_data.KEY = EEPROM_KEY + 1; // dif key to reset all to 0
-// 	usr_write_eeprom_data(struct_data);
-// }
+void usr_reset_eeprom_data()
+{
+	struct_data.KEY = EEPROM_KEY + 1; // dif key to reset all to 0
+	usr_write_eeprom_data();
+}
 
-// int eeprom_data_init()
-// {
-// 	usr_read_eeprom_data(&struct_data);
-// 	if (struct_data.KEY != EEPROM_KEY)
-// 	{ // eeprom not init yet
-// 		struct_data.cnt_mode_A = 0;
-// 		struct_data.cnt_mode_B = 0;
-// 		struct_data.threshold = 0;
-// 		struct_data.KEY = EEPROM_KEY;
-// 		usr_write_eeprom_data(struct_data);
-// 		return 1;
-// 	}
-// 	return 0;
-// }
+int eeprom_data_init()
+{
+	usr_read_eeprom_data();
+	if (struct_data.KEY != EEPROM_KEY)
+	{ // eeprom not init yet
+		struct_data.threshold = 0;
+		struct_data.KEY = EEPROM_KEY;
+		usr_write_eeprom_data();
+		return 1;
+	}
+	return 0;
+}
 
 void system_reset()
 {
@@ -151,7 +142,7 @@ void system_reset()
 
 void system_shutdown()
 {
-	UINT8 system_shutdown_cnt = 0;
+	data UINT8 system_shutdown_cnt = 0;
 	BOD_DISABLE;
 	ALL_GPIO_INPUT_MODE;
 	ENABLE_BIT7_FALLINGEDGE_TRIG;
@@ -173,7 +164,7 @@ void system_shutdown()
 			}
 			if (system_shutdown_cnt > 15)
 			{
-				// usr_reset_eeprom_data();
+				usr_reset_eeprom_data();
 			}
 			break;
 		}
@@ -201,7 +192,7 @@ void LCD_Delay(UINT8 dl)
 	}
 }
 
-void LCD_send_bytes(UINT8 *dt)
+void LCD_send_bytes()
 {
 	xdata INT8 i, j;
 	LCD_LAT_LOW;
@@ -210,7 +201,7 @@ void LCD_send_bytes(UINT8 *dt)
 		for (j = 7; j >= 0; j--)
 		{
 			LCD_SCK_LOW;
-			LCD_DATA = ((dt[i] >> j) & 0x01);
+			LCD_DATA = ((lcd_data[i] >> j) & 0x01);
 			LCD_Delay(5);
 			LCD_SCK_HIGH;
 			LCD_Delay(5);
@@ -241,11 +232,18 @@ void LCD_show(UINT16 count)
 			lcd_data[1] = LCD_CODE[(btn_count / 10) % 10];
 			lcd_data[0] = LCD_CODE[btn_count / 100];
 		}
-		else if (isCablibmode)
+		else if (isCablibmode == 1)
 		{
 			lcd_data[0] = LCD_CODE[8];
 			lcd_data[1] = LCD_CODE[8] + LCD_DOT;
 			lcd_data[2] = LCD_CODE[8];
+		}
+		else if (isCablibmode == 2)
+		{
+			count = (count % 1000);
+			lcd_data[2] = LCD_CODE[count % 10];
+			lcd_data[1] = LCD_CODE[(count / 10) % 10];
+			lcd_data[0] = LCD_CODE[count / 100];
 		}
 		else
 		{
@@ -273,16 +271,17 @@ void LCD_show(UINT16 count)
 		lcd_data[i] = 0x00; // off;
 	}
 
-	LCD_send_bytes(lcd_data);
+	LCD_send_bytes();
 	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
-	LCD_send_bytes(lcd_data);
+	LCD_send_bytes();
 	LCD_Delay(5);
 }
 
 void reset_counter()
-{
-	ttime = HAL_GetTick() + 500;
+{	
+	ss_read_fail = 0;
+	ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
 	object_detected = 0;
 	obj_count = 0;
 	time_new_obj = 0xFFFFFFFF;
@@ -319,9 +318,10 @@ void Process_VCNL(void)
 			else if (object_detected >= OBJECT_INC_TIMES)
 			{
 				non_object_detected--;
+				object_detected = 0;
 				if (!non_object_detected)
 				{
-					object_detected = 0;
+					
 					non_object_detected = NON_DETECT_COUNT;
 					if (obj_count % 2)
 					{ // end count is 1.1 2.1 3.1 ...
@@ -402,11 +402,13 @@ void btn_time_3sec_callback()
 	}
 }
 
+data _btn_state btn_state = BTN_IDLE;
+
 void BTN_process()
 {
 	
 
-	static _btn_state btn_state = BTN_IDLE;
+	
 	if (BUTTON_PRESSED)
 	{
 		switch (btn_state)
@@ -604,45 +606,20 @@ _Sys_Mode Check_system_mode()
 //     }
 // }
 
-
-void main(void)
+void cabib_process()
 {
-	// sys_clr_err_code();
-
-	ALL_GPIO_INPUT_MODE;
-	MODIFY_HIRC(HIRC_16);
-	/* Initial I2C function */
-	CKDIV = 4; // 2Mhz 16/(CKDIV*2)
-	GPIO_Init();
-
-	// eeprom_data_init(); // read pre data from eeprom
-	//	obj_count = struct_data.cnt_mode_A;
-	//	btn_count = struct_data.cnt_mode_B;
-	//	old_obj_count = (obj_count + btn_count);
-	// DETECT_THRESHOLD = struct_data.threshold;
-	DETECT_THRESHOLD = DETECT_THRESHOLD_NOT_SET;
-	non_dect_timout = 0xFFFFFF;
-	Sys_Mode = Check_system_mode(); // check running mode by switch
-
-	Init_I2C();
-
-	LCD_INIT();
-
-	Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
-
-	if (VCNL4040_init() == 0)
-	{ // triger mode ,auto sleep
-	  // sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
-	}
-	else
-	{
 #if CALIBRATION_ENABLE
+	data UINT16 avg;
+	data UINT32 Timm_tmp = 0;
+	data UINT8 count_val = 0;
+	data UINT32 total = 0;
+	eeprom_data_init(); // read pre data from eeprom
 	if (Sys_Mode == SYS_MODE_A){  //calib mode
 
 		total = 0;
 		Timm = HAL_GetTick() + 1000;
 		// readWord(VCNL_PS_ID,&valueps);
-		if(DETECT_THRESHOLD == DETECT_THRESHOLD_NOT_SET){
+		if(struct_data.threshold == DETECT_THRESHOLD_NOT_SET){
 			isCablibmode = 1;
 			while(1)
 			{
@@ -676,20 +653,48 @@ void main(void)
 			
 			if(!ss_read_fail) {
 				avg = (total / count_val);
-				//DETECT_THRESHOLD = (total / 30) + 15;
-				DETECT_THRESHOLD = DETECT_THRESHOLD;
-				// struct_data.threshold = DETECT_THRESHOLD;
-				// usr_write_eeprom_data(struct_data);
+				struct_data.threshold = avg +1;
+				usr_write_eeprom_data();
 			}
 		} 
+		isCablibmode=2;
+		Timm_tmp = HAL_GetTick() + 500; 
+		while (Timm_tmp > HAL_GetTick())
+		{
+			LCD_show(valueps);
+		}
 		isCablibmode=0;
 	}
-#else
-		DETECT_THRESHOLD = 2;
 #endif
+}
+void main(void)
+{
+	// sys_clr_err_code();
+
+	ALL_GPIO_INPUT_MODE;
+	MODIFY_HIRC(HIRC_16);
+	/* Initial I2C function */
+	CKDIV = 4; // 2Mhz 16/(CKDIV*2)
+	GPIO_Init();
+
+	non_dect_timout = 0xFFFFFF;
+	Sys_Mode = Check_system_mode(); // check running mode by switch
+
+	Init_I2C();
+
+	LCD_INIT();
+
+	Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
+
+	if (VCNL4040_init() == 0)
+	{ // triger mode ,auto sleep
+	  sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
 	}
 
-	ss_read_fail = 0;
+	cabib_process();
+	DETECT_THRESHOLD = struct_data.threshold ;
+	
+	reset_counter();
 	while (1)
 	{
 		//		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   45          
   46          #define NON_DETECT_COUNT 5
   47          #define TIME_COUNT_NON_OFFJECT 1500 // ms (NON_DETECT_COUNT * TIME_CHECK_OBJECT)
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 2   
 
   48          #define TIMEOUT_TO_DECREASE_VALUE (17000 - TIME_COUNT_NON_OFFJECT)
   49          
@@ -126,7 +126,7 @@ line level    source
  106          void usr_read_eeprom_data()
  107          {
  108   1        Read_DATAFLASH_ARRAY(EEPROM_ADDR, (unsigned char *)&struct_data, sizeof(__struct_data));
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 3   
 
  109   1      }
  110          
@@ -190,7 +190,7 @@ line level    source
  168   4            }
  169   3            break;
  170   3          }
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 4   
 
  171   2        }
  172   1        system_reset();
@@ -254,7 +254,7 @@ line level    source
  230   3            btn_count = (btn_count % 1000);
  231   3            lcd_data[2] = LCD_CODE[btn_count % 10];
  232   3            lcd_data[1] = LCD_CODE[(btn_count / 10) % 10];
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 5   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 5   
 
  233   3            lcd_data[0] = LCD_CODE[btn_count / 100];
  234   3          }
@@ -318,7 +318,7 @@ line level    source
  292   1      
  293   1        if (HAL_GetTick() > time_new_obj)
  294   1        {
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 6   
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 6   
 
  295   2          if (obj_count)
  296   2          {
@@ -332,442 +332,443 @@ line level    source
  304   2          if (VCNL_getProximity(&valueps))
  305   2          {
  306   3            // cnt_ok++;
- 307   3            if (valueps > DETECT_THRESHOLD)
- 308   3            {
- 309   4              ss_read_fail = 0;
- 310   4              object_detected++;
- 311   4              non_object_detected = NON_DETECT_COUNT;
- 312   4              if (object_detected == OBJECT_INC_TIMES)
- 313   4              {
- 314   5                obj_count++;
- 315   5                time_new_obj = 0xFFFFFFFF;
- 316   5              }
- 317   4            }
- 318   3            else if (object_detected >= OBJECT_INC_TIMES)
- 319   3            {
- 320   4              non_object_detected--;
- 321   4              object_detected = 0;
- 322   4              if (!non_object_detected)
- 323   4              {
- 324   5                
- 325   5                non_object_detected = NON_DETECT_COUNT;
- 326   5                if (obj_count % 2)
- 327   5                { // end count is 1.1 2.1 3.1 ...
- 328   6                  time_new_obj = HAL_GetTick() + TIMEOUT_TO_DECREASE_VALUE;
- 329   6                }
- 330   5                else
- 331   5                {
- 332   6                  time_new_obj = 0xFFFFFFFF;
- 333   6                }
- 334   5              }
- 335   4            }
- 336   3          }
- 337   2          else
- 338   2          {
- 339   3            // ttime = HAL_GetTick() + 10;
- 340   3            ss_read_fail++;
- 341   3            if (ss_read_fail == 10)
- 342   3            {
- 343   4              // VCNL4040_init();
- 344   4              sys_set_err_code(ERROR_VCNL_READ_FAIL);
- 345   4            }
- 346   3          }
- 347   2          ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
- 348   2        }
- 349   1      }
- 350          
- 351          void GPIO_Init()
- 352          {
- 353   1        // P0.7 input
- 354   1        P0M1 |= 0x80;
- 355   1        P0M2 &= 0x7F;
- 356   1      }
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 7   
+ 307   3            sys_clr_err_code();
+ 308   3            if (valueps > DETECT_THRESHOLD)
+ 309   3            {
+ 310   4              ss_read_fail = 0;
+ 311   4              object_detected++;
+ 312   4              non_object_detected = NON_DETECT_COUNT;
+ 313   4              if (object_detected == OBJECT_INC_TIMES)
+ 314   4              {
+ 315   5                obj_count++;
+ 316   5                time_new_obj = 0xFFFFFFFF;
+ 317   5              }
+ 318   4            }
+ 319   3            else if (object_detected >= OBJECT_INC_TIMES)
+ 320   3            {
+ 321   4              non_object_detected--;
+ 322   4              object_detected = 0;
+ 323   4              if (!non_object_detected)
+ 324   4              {
+ 325   5                
+ 326   5                non_object_detected = NON_DETECT_COUNT;
+ 327   5                if (obj_count % 2)
+ 328   5                { // end count is 1.1 2.1 3.1 ...
+ 329   6                  time_new_obj = HAL_GetTick() + TIMEOUT_TO_DECREASE_VALUE;
+ 330   6                }
+ 331   5                else
+ 332   5                {
+ 333   6                  time_new_obj = 0xFFFFFFFF;
+ 334   6                }
+ 335   5              }
+ 336   4            }
+ 337   3          }
+ 338   2          else
+ 339   2          {
+ 340   3            ttime = HAL_GetTick() + 100;
+ 341   3            ss_read_fail++;
+ 342   3            if (ss_read_fail == 10)
+ 343   3            {
+ 344   4              VCNL4040_init();
+ 345   4              sys_set_err_code(ERROR_VCNL_READ_FAIL);
+ 346   4            }
+ 347   3          }
+ 348   2          ttime = HAL_GetTick() + TIME_CHECK_OBJECT;
+ 349   2        }
+ 350   1      }
+ 351          
+ 352          void GPIO_Init()
+ 353          {
+ 354   1        // P0.7 input
+ 355   1        P0M1 |= 0x80;
+ 356   1        P0M2 &= 0x7F;
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 7   
 
- 357          typedef enum
- 358          {
- 359            BTN_IDLE = 0,
- 360            BTN_DEBOUND,
- 361            BTN_CLICKED,
- 362            BTN_PRESSED1_5S,
- 363            BTN_PRESSED2S,
- 364            BTN_PRESSED2_5S,
- 365            BTN_PRESSED3S,
- 366            BTN_RELEASE
- 367          } _btn_state;
- 368          
- 369          void btn_time_click_callback()
- 370          {
- 371   1        if (Sys_Mode == SYS_MODE_A)
- 372   1        {
- 373   2          //    reset_counter();
- 374   2        }
- 375   1      }
- 376          void btn_time_1_5sec_callback()
- 377          {
- 378   1        if (Sys_Mode == SYS_MODE_A)
- 379   1        {
- 380   2          system_shutdown();
- 381   2        }
- 382   1      }
- 383          void btn_time_2sec_callback()
- 384          {
- 385   1        if (Sys_Mode == SYS_MODE_B)
- 386   1        {
- 387   2          //    reset_counter();
- 388   2        }
- 389   1      }
- 390          void btn_time_2_5sec_callback()
- 391          {
- 392   1        if (Sys_Mode == SYS_MODE_A)
- 393   1        {
- 394   2          system_shutdown();
- 395   2        }
- 396   1      }
- 397          void btn_time_3sec_callback()
- 398          {
- 399   1        if (Sys_Mode == SYS_MODE_B)
- 400   1        {
- 401   2          system_shutdown();
- 402   2        }
- 403   1      }
- 404          
- 405          data _btn_state btn_state = BTN_IDLE;
- 406          
- 407          void BTN_process()
- 408          {
- 409   1        
- 410   1      
- 411   1        
- 412   1        if (BUTTON_PRESSED)
- 413   1        {
- 414   2          switch (btn_state)
- 415   2          {
- 416   3          case BTN_IDLE:
- 417   3            btn_state = BTN_DEBOUND;
- 418   3            btn_time = HAL_GetTick() + 25;
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 8   
+ 357   1      }
+ 358          typedef enum
+ 359          {
+ 360            BTN_IDLE = 0,
+ 361            BTN_DEBOUND,
+ 362            BTN_CLICKED,
+ 363            BTN_PRESSED1_5S,
+ 364            BTN_PRESSED2S,
+ 365            BTN_PRESSED2_5S,
+ 366            BTN_PRESSED3S,
+ 367            BTN_RELEASE
+ 368          } _btn_state;
+ 369          
+ 370          void btn_time_click_callback()
+ 371          {
+ 372   1        if (Sys_Mode == SYS_MODE_A)
+ 373   1        {
+ 374   2          //    reset_counter();
+ 375   2        }
+ 376   1      }
+ 377          void btn_time_1_5sec_callback()
+ 378          {
+ 379   1        if (Sys_Mode == SYS_MODE_A)
+ 380   1        {
+ 381   2          system_shutdown();
+ 382   2        }
+ 383   1      }
+ 384          void btn_time_2sec_callback()
+ 385          {
+ 386   1        if (Sys_Mode == SYS_MODE_B)
+ 387   1        {
+ 388   2          //    reset_counter();
+ 389   2        }
+ 390   1      }
+ 391          void btn_time_2_5sec_callback()
+ 392          {
+ 393   1        if (Sys_Mode == SYS_MODE_A)
+ 394   1        {
+ 395   2          system_shutdown();
+ 396   2        }
+ 397   1      }
+ 398          void btn_time_3sec_callback()
+ 399          {
+ 400   1        if (Sys_Mode == SYS_MODE_B)
+ 401   1        {
+ 402   2          system_shutdown();
+ 403   2        }
+ 404   1      }
+ 405          
+ 406          data _btn_state btn_state = BTN_IDLE;
+ 407          
+ 408          void BTN_process()
+ 409          {
+ 410   1        
+ 411   1      
+ 412   1        
+ 413   1        if (BUTTON_PRESSED)
+ 414   1        {
+ 415   2          switch (btn_state)
+ 416   2          {
+ 417   3          case BTN_IDLE:
+ 418   3            btn_state = BTN_DEBOUND;
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 8   
 
- 419   3            break;
- 420   3          case BTN_DEBOUND:
- 421   3            if (HAL_GetTick() > btn_time)
- 422   3            {
- 423   4              btn_state = BTN_PRESSED1_5S;
- 424   4              //            btn_time_click_callback();
- 425   4              btn_time = HAL_GetTick() + 1500;
- 426   4            }
- 427   3            break;
- 428   3          case BTN_PRESSED1_5S:
- 429   3            if (HAL_GetTick() > btn_time)
- 430   3            {
- 431   4              btn_time_1_5sec_callback();
- 432   4              btn_state = BTN_PRESSED2S;
- 433   4              btn_time = HAL_GetTick() + 500;
- 434   4            }
- 435   3            break;
- 436   3          case BTN_PRESSED2S:
- 437   3            if (HAL_GetTick() > btn_time)
- 438   3            {
- 439   4              btn_time_2sec_callback();
- 440   4              btn_state = BTN_PRESSED2_5S;
- 441   4              btn_time = HAL_GetTick() + 500;
- 442   4            }
- 443   3            break;
- 444   3          case BTN_PRESSED2_5S:
- 445   3            if (HAL_GetTick() > btn_time)
- 446   3            {
- 447   4              btn_time_2_5sec_callback();
- 448   4              btn_state = BTN_PRESSED3S;
- 449   4              btn_time = HAL_GetTick() + 500;
- 450   4            }
- 451   3            break;
- 452   3          case BTN_PRESSED3S:
- 453   3            if (HAL_GetTick() > btn_time)
- 454   3            {
- 455   4              btn_time_3sec_callback();
- 456   4            }
- 457   3            break;
- 458   3          case BTN_RELEASE:
- 459   3          {
- 460   4          }
- 461   3          break;
- 462   3          default:
- 463   3            break;
- 464   3          }
- 465   2        }
- 466   1        else
- 467   1        {
- 468   2          switch (btn_state)
- 469   2          {
- 470   3          case BTN_PRESSED1_5S:
- 471   3          case BTN_PRESSED2_5S:
- 472   3          case BTN_PRESSED2S:
- 473   3            if (Sys_Mode == SYS_MODE_B)
- 474   3            {
- 475   4              btn_count++;
- 476   4            }
- 477   3            else if (Sys_Mode == SYS_MODE_A)
- 478   3            {
- 479   4              //          if(HAL_GetTick() < last_btn_time)
- 480   4              //          {
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 9   
+ 419   3            btn_time = HAL_GetTick() + 25;
+ 420   3            break;
+ 421   3          case BTN_DEBOUND:
+ 422   3            if (HAL_GetTick() > btn_time)
+ 423   3            {
+ 424   4              btn_state = BTN_PRESSED1_5S;
+ 425   4              //            btn_time_click_callback();
+ 426   4              btn_time = HAL_GetTick() + 1500;
+ 427   4            }
+ 428   3            break;
+ 429   3          case BTN_PRESSED1_5S:
+ 430   3            if (HAL_GetTick() > btn_time)
+ 431   3            {
+ 432   4              btn_time_1_5sec_callback();
+ 433   4              btn_state = BTN_PRESSED2S;
+ 434   4              btn_time = HAL_GetTick() + 500;
+ 435   4            }
+ 436   3            break;
+ 437   3          case BTN_PRESSED2S:
+ 438   3            if (HAL_GetTick() > btn_time)
+ 439   3            {
+ 440   4              btn_time_2sec_callback();
+ 441   4              btn_state = BTN_PRESSED2_5S;
+ 442   4              btn_time = HAL_GetTick() + 500;
+ 443   4            }
+ 444   3            break;
+ 445   3          case BTN_PRESSED2_5S:
+ 446   3            if (HAL_GetTick() > btn_time)
+ 447   3            {
+ 448   4              btn_time_2_5sec_callback();
+ 449   4              btn_state = BTN_PRESSED3S;
+ 450   4              btn_time = HAL_GetTick() + 500;
+ 451   4            }
+ 452   3            break;
+ 453   3          case BTN_PRESSED3S:
+ 454   3            if (HAL_GetTick() > btn_time)
+ 455   3            {
+ 456   4              btn_time_3sec_callback();
+ 457   4            }
+ 458   3            break;
+ 459   3          case BTN_RELEASE:
+ 460   3          {
+ 461   4          }
+ 462   3          break;
+ 463   3          default:
+ 464   3            break;
+ 465   3          }
+ 466   2        }
+ 467   1        else
+ 468   1        {
+ 469   2          switch (btn_state)
+ 470   2          {
+ 471   3          case BTN_PRESSED1_5S:
+ 472   3          case BTN_PRESSED2_5S:
+ 473   3          case BTN_PRESSED2S:
+ 474   3            if (Sys_Mode == SYS_MODE_B)
+ 475   3            {
+ 476   4              btn_count++;
+ 477   4            }
+ 478   3            else if (Sys_Mode == SYS_MODE_A)
+ 479   3            {
+ 480   4              //          if(HAL_GetTick() < last_btn_time)
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 9   
 
- 481   4              //            isCablibmode = 1- isCablibmode;
- 482   4              //          }
- 483   4              //          last_btn_time = HAL_GetTick()+500;
- 484   4              reset_counter();
- 485   4            }
- 486   3            break;
- 487   3          }
- 488   2          btn_state = BTN_IDLE;
- 489   2        }
- 490   1      }
- 491          
- 492          void PinInterrupt_ISR(void) interrupt 7
- 493          {
- 494   1        _push_(SFRS);
- 495   1      
- 496   1        SFRS = 0;
- 497   1        switch (PIF)
- 498   1        {
- 499   2        case (SET_BIT7):
- 500   2        {
- 501   3          PIF &= CLR_BIT7;
- 502   3          break;
- 503   3        }
- 504   2        default:
- 505   2          break;
- 506   2        }
- 507   1      
- 508   1        _pop_(SFRS);
- 509   1      }
- 510          
- 511          void check_non_obj_detect_timout(void)
- 512          {
- 513   1      
- 514   1        if (old_obj_count != (obj_count + btn_count)) // dif total 2 mode
- 515   1        {
- 516   2          non_dect_timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
- 517   2          old_obj_count = (obj_count + btn_count);
- 518   2        }
- 519   1        else
- 520   1        { // save data when data changed
- 521   2          //    struct_data.cnt_mode_A = obj_count;
- 522   2          //    struct_data.cnt_mode_B = btn_count;
- 523   2          //    usr_write_eeprom_data(struct_data);
- 524   2        }
- 525   1        if (HAL_GetTick() > non_dect_timout)
- 526   1        {
- 527   2          system_shutdown();
- 528   2        }
- 529   1      }
- 530          
- 531          _Sys_Mode Check_system_mode()
- 532          {
- 533   1        if (IS_SYS_RUN_MOD_A)
- 534   1        {
- 535   2          return SYS_MODE_A;
- 536   2        }
- 537   1        return SYS_MODE_A;
- 538   1      }
- 539          
- 540          // void WDT_ISR (void)   interrupt 10
- 541          // {
- 542          // _push_(SFRS);
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 10  
+ 481   4              //          {
+ 482   4              //            isCablibmode = 1- isCablibmode;
+ 483   4              //          }
+ 484   4              //          last_btn_time = HAL_GetTick()+500;
+ 485   4              reset_counter();
+ 486   4            }
+ 487   3            break;
+ 488   3          }
+ 489   2          btn_state = BTN_IDLE;
+ 490   2        }
+ 491   1      }
+ 492          
+ 493          void PinInterrupt_ISR(void) interrupt 7
+ 494          {
+ 495   1        _push_(SFRS);
+ 496   1      
+ 497   1        SFRS = 0;
+ 498   1        switch (PIF)
+ 499   1        {
+ 500   2        case (SET_BIT7):
+ 501   2        {
+ 502   3          PIF &= CLR_BIT7;
+ 503   3          break;
+ 504   3        }
+ 505   2        default:
+ 506   2          break;
+ 507   2        }
+ 508   1      
+ 509   1        _pop_(SFRS);
+ 510   1      }
+ 511          
+ 512          void check_non_obj_detect_timout(void)
+ 513          {
+ 514   1      
+ 515   1        if (old_obj_count != (obj_count + btn_count)) // dif total 2 mode
+ 516   1        {
+ 517   2          non_dect_timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
+ 518   2          old_obj_count = (obj_count + btn_count);
+ 519   2        }
+ 520   1        else
+ 521   1        { // save data when data changed
+ 522   2          //    struct_data.cnt_mode_A = obj_count;
+ 523   2          //    struct_data.cnt_mode_B = btn_count;
+ 524   2          //    usr_write_eeprom_data(struct_data);
+ 525   2        }
+ 526   1        if (HAL_GetTick() > non_dect_timout)
+ 527   1        {
+ 528   2          system_shutdown();
+ 529   2        }
+ 530   1      }
+ 531          
+ 532          _Sys_Mode Check_system_mode()
+ 533          {
+ 534   1        if (IS_SYS_RUN_MOD_A)
+ 535   1        {
+ 536   2          return SYS_MODE_A;
+ 537   2        }
+ 538   1        return SYS_MODE_A;
+ 539   1      }
+ 540          
+ 541          // void WDT_ISR (void)   interrupt 10
+ 542          // {
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 10  
 
- 543          
- 544          //   /* Config Enable WDT reset and not clear couter trig reset */
- 545          //     WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 546          //     while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
- 547          //     P12 = ~P12;
- 548          
- 549          //     CLEAR_WDT_INTERRUPT_FLAG;
- 550          // _pop_(SFRS);
- 551          // }
- 552          
- 553          // void Disable_WDT_Reset_Config(void)
- 554          // {
- 555          //   UINT8 cf0,cf1,cf2,cf3,cf4;
- 556          
- 557          //     set_CHPCON_IAPEN;
- 558          //     IAPAL = 0x00;
- 559          //     IAPAH = 0x00;
- 560          //     IAPCN = BYTE_READ_CONFIG;
- 561          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
- 562          //     cf0 = IAPFD;
- 563          //     IAPAL = 0x01;
- 564          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
- 565          //     cf1 = IAPFD;
- 566          //     IAPAL = 0x02;
- 567          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
- 568          //     cf2 = IAPFD;
- 569          //     IAPAL = 0x03;
- 570          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
- 571          //     cf3 = IAPFD;
- 572          //     IAPAL = 0x04;
- 573          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
- 574          //     cf4 = IAPFD;
- 575          //     cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
- 576          
- 577          //     set_IAPUEN_CFUEN;
- 578          //     IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
- 579          //     IAPAH = 0x00;
- 580          //     IAPAL = 0x00;
- 581          //     IAPFD = 0xFF;
- 582          //     set_IAPTRG_IAPGO;
- 583          
- 584          //     IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
- 585          //     IAPFD = cf0;
- 586          //     set_IAPTRG_IAPGO;
- 587          //     IAPAL = 0x01;
- 588          //     IAPFD = cf1;
- 589          //     set_IAPTRG_IAPGO;
- 590          //     IAPAL = 0x02;
- 591          //     IAPFD = cf2;
- 592          //     set_IAPTRG_IAPGO;
- 593          //     IAPAL = 0x03;
- 594          //     IAPFD = cf3;
- 595          //     set_IAPTRG_IAPGO;
- 596          //     IAPAL = 0x04;
- 597          //     IAPFD = cf4;
- 598          //     set_IAPTRG_IAPGO;
- 599          
- 600          //     set_IAPUEN_CFUEN;
- 601          //     clr_CHPCON_IAPEN;
- 602          //     if (WDCON&SET_BIT3)
- 603          //     {
- 604          //       clr_WDCON_WDTRF;
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 11  
+ 543          // _push_(SFRS);
+ 544          
+ 545          //   /* Config Enable WDT reset and not clear couter trig reset */
+ 546          //     WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 547          //     while(!(WDCON&=SET_BIT6));             /* Check for the WDT counter cleared */
+ 548          //     P12 = ~P12;
+ 549          
+ 550          //     CLEAR_WDT_INTERRUPT_FLAG;
+ 551          // _pop_(SFRS);
+ 552          // }
+ 553          
+ 554          // void Disable_WDT_Reset_Config(void)
+ 555          // {
+ 556          //   UINT8 cf0,cf1,cf2,cf3,cf4;
+ 557          
+ 558          //     set_CHPCON_IAPEN;
+ 559          //     IAPAL = 0x00;
+ 560          //     IAPAH = 0x00;
+ 561          //     IAPCN = BYTE_READ_CONFIG;
+ 562          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG0 data
+ 563          //     cf0 = IAPFD;
+ 564          //     IAPAL = 0x01;
+ 565          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG1 data
+ 566          //     cf1 = IAPFD;
+ 567          //     IAPAL = 0x02;
+ 568          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG2 data
+ 569          //     cf2 = IAPFD;
+ 570          //     IAPAL = 0x03;
+ 571          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG3 data
+ 572          //     cf3 = IAPFD;
+ 573          //     IAPAL = 0x04;
+ 574          //     set_IAPTRG_IAPGO;                                  //Storage CONFIG4 data
+ 575          //     cf4 = IAPFD;
+ 576          //     cf4 |= 0xF0;                                      //Moidfy Storage CONFIG4 data disable WDT reset
+ 577          
+ 578          //     set_IAPUEN_CFUEN;
+ 579          //     IAPCN = PAGE_ERASE_CONFIG;                        //Erase CONFIG all
+ 580          //     IAPAH = 0x00;
+ 581          //     IAPAL = 0x00;
+ 582          //     IAPFD = 0xFF;
+ 583          //     set_IAPTRG_IAPGO;
+ 584          
+ 585          //     IAPCN = BYTE_PROGRAM_CONFIG;                    //Write CONFIG
+ 586          //     IAPFD = cf0;
+ 587          //     set_IAPTRG_IAPGO;
+ 588          //     IAPAL = 0x01;
+ 589          //     IAPFD = cf1;
+ 590          //     set_IAPTRG_IAPGO;
+ 591          //     IAPAL = 0x02;
+ 592          //     IAPFD = cf2;
+ 593          //     set_IAPTRG_IAPGO;
+ 594          //     IAPAL = 0x03;
+ 595          //     IAPFD = cf3;
+ 596          //     set_IAPTRG_IAPGO;
+ 597          //     IAPAL = 0x04;
+ 598          //     IAPFD = cf4;
+ 599          //     set_IAPTRG_IAPGO;
+ 600          
+ 601          //     set_IAPUEN_CFUEN;
+ 602          //     clr_CHPCON_IAPEN;
+ 603          //     if (WDCON&SET_BIT3)
+ 604          //     {
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 11  
 
- 605          //       set_CHPCON_SWRST;
- 606          //     }
- 607          // }
- 608          
- 609          void cabib_process()
- 610          {
- 611   1      #if CALIBRATION_ENABLE
- 612   1        data UINT16 avg;
- 613   1        data UINT32 Timm_tmp = 0;
- 614   1        data UINT8 count_val = 0;
- 615   1        data UINT32 total = 0;
- 616   1        eeprom_data_init(); // read pre data from eeprom
- 617   1        if (Sys_Mode == SYS_MODE_A){  //calib mode
- 618   2      
- 619   2          total = 0;
- 620   2          Timm = HAL_GetTick() + 1000;
- 621   2          // readWord(VCNL_PS_ID,&valueps);
- 622   2          if(struct_data.threshold == DETECT_THRESHOLD_NOT_SET){
- 623   3            isCablibmode = 1;
- 624   3            while(1)
- 625   3            {
- 626   4              if(HAL_GetTick() > Timm)
- 627   4              {
- 628   5                if(HAL_GetTick() > Timm_tmp) {
- 629   6                  if(VCNL_getProximity(&valueps))
- 630   6                  {
- 631   7                    sys_clr_err_code();
- 632   7                    ss_read_fail = 0;
- 633   7                    Timm_tmp = HAL_GetTick() + 200;
- 634   7                    total += valueps;
- 635   7                    count_val ++;
- 636   7                    if(valueps > DETECT_THRESHOLD)
- 637   7                    {
- 638   8                      DETECT_THRESHOLD = valueps;
- 639   8                    }
- 640   7                    if(count_val == 15)
- 641   7                      break;
- 642   7                  } else {
- 643   7                    Timm_tmp = HAL_GetTick() + 100;
- 644   7                    ss_read_fail++;
- 645   7                    if(ss_read_fail > 10) {
- 646   8                      sys_set_err_code(ERROR_VCNL_READ_FAIL);
- 647   8                      VCNL4040_init();
- 648   8                      break;
- 649   8                    }
- 650   7                  }
- 651   6                }
- 652   5              }
- 653   4              LCD_show(valueps);
- 654   4            }
- 655   3            
- 656   3            if(!ss_read_fail) {
- 657   4              avg = (total / count_val);
- 658   4              struct_data.threshold = avg +1;
- 659   4              usr_write_eeprom_data();
- 660   4            }
- 661   3          } 
- 662   2          isCablibmode=2;
- 663   2          Timm_tmp = HAL_GetTick() + 500; 
- 664   2          while (Timm_tmp > HAL_GetTick())
- 665   2          {
- 666   3            LCD_show(struct_data.threshold);
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 12  
+ 605          //       clr_WDCON_WDTRF;
+ 606          //       set_CHPCON_SWRST;
+ 607          //     }
+ 608          // }
+ 609          
+ 610          void cabib_process()
+ 611          {
+ 612   1      #if CALIBRATION_ENABLE
+ 613   1        data UINT16 avg;
+ 614   1        data UINT32 Timm_tmp = 0;
+ 615   1        data UINT8 count_val = 0;
+ 616   1        data UINT32 total = 0;
+ 617   1        eeprom_data_init(); // read pre data from eeprom
+ 618   1        if (Sys_Mode == SYS_MODE_A){  //calib mode
+ 619   2      
+ 620   2          total = 0;
+ 621   2          Timm = HAL_GetTick() + 1000;
+ 622   2          // readWord(VCNL_PS_ID,&valueps);
+ 623   2          if(struct_data.threshold == DETECT_THRESHOLD_NOT_SET){
+ 624   3            isCablibmode = 1;
+ 625   3            while(1)
+ 626   3            {
+ 627   4              if(HAL_GetTick() > Timm)
+ 628   4              {
+ 629   5                if(HAL_GetTick() > Timm_tmp) {
+ 630   6                  if(VCNL_getProximity(&valueps))
+ 631   6                  {
+ 632   7                    sys_clr_err_code();
+ 633   7                    ss_read_fail = 0;
+ 634   7                    Timm_tmp = HAL_GetTick() + 200;
+ 635   7                    total += valueps;
+ 636   7                    count_val ++;
+ 637   7                    if(valueps > DETECT_THRESHOLD)
+ 638   7                    {
+ 639   8                      DETECT_THRESHOLD = valueps;
+ 640   8                    }
+ 641   7                    if(count_val == 15)
+ 642   7                      break;
+ 643   7                  } else {
+ 644   7                    Timm_tmp = HAL_GetTick() + 100;
+ 645   7                    ss_read_fail++;
+ 646   7                    if(ss_read_fail > 10) {
+ 647   8                      sys_set_err_code(ERROR_VCNL_READ_FAIL);
+ 648   8                      VCNL4040_init();
+ 649   8                      break;
+ 650   8                    }
+ 651   7                  }
+ 652   6                }
+ 653   5              }
+ 654   4              LCD_show(valueps);
+ 655   4            }
+ 656   3            
+ 657   3            if(!ss_read_fail) {
+ 658   4              avg = (total / count_val);
+ 659   4              struct_data.threshold = avg +1;
+ 660   4              usr_write_eeprom_data();
+ 661   4            }
+ 662   3          } 
+ 663   2          isCablibmode=2;
+ 664   2          Timm_tmp = HAL_GetTick() + 500; 
+ 665   2          while (Timm_tmp > HAL_GetTick())
+ 666   2          {
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 12  
 
- 667   3          }
- 668   2          isCablibmode=0;
- 669   2        }
- 670   1      #endif
- 671   1      }
- 672          void main(void)
- 673          {
- 674   1        // sys_clr_err_code();
- 675   1      
- 676   1        ALL_GPIO_INPUT_MODE;
- 677   1        MODIFY_HIRC(HIRC_16);
- 678   1        /* Initial I2C function */
- 679   1        CKDIV = 4; // 2Mhz 16/(CKDIV*2)
- 680   1        GPIO_Init();
- 681   1      
- 682   1        non_dect_timout = 0xFFFFFF;
- 683   1        Sys_Mode = Check_system_mode(); // check running mode by switch
- 684   1      
- 685   1        Init_I2C();
- 686   1      
- 687   1        LCD_INIT();
- 688   1      
- 689   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
- 690   1      
- 691   1        if (VCNL4040_init() == 0)
- 692   1        { // triger mode ,auto sleep
- 693   2          sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
- 694   2        }
- 695   1      
- 696   1        cabib_process();
- 697   1        DETECT_THRESHOLD = struct_data.threshold ;
- 698   1        
- 699   1        reset_counter();
- 700   1        while (1)
- 701   1        {
- 702   2          //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
- 703   2          // if(HAL_GetTick() > Timm)
- 704   2          // {
- 705   2          //  Timm = HAL_GetTick() + 1000;
- 706   2          //  obj_count++;
- 707   2          // }
- 708   2          BTN_process();
- 709   2          // I2C_reset();
- 710   2          if (Sys_Mode == SYS_MODE_A)
- 711   2          {
- 712   3            Process_VCNL();
- 713   3          }
- 714   2          if (Sys_Mode != Check_system_mode())
- 715   2          {
- 716   3            system_reset();
- 717   3          }
- 718   2      
- 719   2          LCD_show(obj_count);
- 720   2          check_non_obj_detect_timout();
- 721   2        }
- 722   1        /* =================== */
- 723   1      }
+ 667   3            LCD_show(struct_data.threshold);
+ 668   3          }
+ 669   2          isCablibmode=0;
+ 670   2        }
+ 671   1      #endif
+ 672   1      }
+ 673          void main(void)
+ 674          {
+ 675   1        // sys_clr_err_code();
+ 676   1      
+ 677   1        ALL_GPIO_INPUT_MODE;
+ 678   1        MODIFY_HIRC(HIRC_16);
+ 679   1        /* Initial I2C function */
+ 680   1        CKDIV = 4; // 2Mhz 16/(CKDIV*2)
+ 681   1        GPIO_Init();
+ 682   1      
+ 683   1        non_dect_timout = 0xFFFFFF;
+ 684   1        Sys_Mode = Check_system_mode(); // check running mode by switch
+ 685   1      
+ 686   1        Init_I2C();
+ 687   1      
+ 688   1        LCD_INIT();
+ 689   1      
+ 690   1        Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
+ 691   1      
+ 692   1        if (VCNL4040_init() == 0)
+ 693   1        { // triger mode ,auto sleep
+ 694   2          sys_set_err_code(ERROR_VCNL_NOT_PRESENT);
+ 695   2        }
+ 696   1      
+ 697   1        cabib_process();
+ 698   1        DETECT_THRESHOLD = struct_data.threshold ;
+ 699   1        
+ 700   1        reset_counter();
+ 701   1        while (1)
+ 702   1        {
+ 703   2          //    WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+ 704   2          // if(HAL_GetTick() > Timm)
+ 705   2          // {
+ 706   2          //  Timm = HAL_GetTick() + 1000;
+ 707   2          //  obj_count++;
+ 708   2          // }
+ 709   2          BTN_process();
+ 710   2          // I2C_reset();
+ 711   2          if (Sys_Mode == SYS_MODE_A)
+ 712   2          {
+ 713   3            Process_VCNL();
+ 714   3          }
+ 715   2          if (Sys_Mode != Check_system_mode())
+ 716   2          {
+ 717   3            system_reset();
+ 718   3          }
+ 719   2      
+ 720   2          LCD_show(obj_count);
+ 721   2          // check_non_obj_detect_timout();
+ 722   2        }
+ 723   1        /* =================== */
+ 724   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1989    ----
-   CONSTANT SIZE    =     16    ----
-C51 COMPILER V9.60.7.0   MAIN                                                              03/02/2025 23:10:51 PAGE 13  
+   CODE SIZE        =   2012    ----
+C51 COMPILER V9.60.7.0   MAIN                                                              03/03/2025 23:20:18 PAGE 13  
 
+   CONSTANT SIZE    =     16    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =     48      13

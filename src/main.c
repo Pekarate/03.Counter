@@ -304,6 +304,7 @@ void Process_VCNL(void)
 		if (VCNL_getProximity(&valueps))
 		{
 			// cnt_ok++;
+			sys_clr_err_code();
 			if (valueps > DETECT_THRESHOLD)
 			{
 				ss_read_fail = 0;
@@ -336,11 +337,11 @@ void Process_VCNL(void)
 		}
 		else
 		{
-			// ttime = HAL_GetTick() + 10;
+			ttime = HAL_GetTick() + 100;
 			ss_read_fail++;
 			if (ss_read_fail == 10)
 			{
-				// VCNL4040_init();
+				VCNL4040_init();
 				sys_set_err_code(ERROR_VCNL_READ_FAIL);
 			}
 		}
@@ -717,7 +718,7 @@ void main(void)
 		}
 
 		LCD_show(obj_count);
-		check_non_obj_detect_timout();
+		// check_non_obj_detect_timout();
 	}
 	/* =================== */
 }

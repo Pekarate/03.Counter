@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.7.0   UART                                                              03/02/2025 23:10:15 PAGE 1   
+C51 COMPILER V9.60.7.0   UART                                                              03/17/2025 11:09:30 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
 OBJECT MODULE PLACED IN .\Output\uart.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\uart.c LARGE OMF2 OPTIMIZE(7,SPE
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\uart.c LARGE OMF2 OPTIMIZE(0,SPE
                     -ED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\uar
                     -t.lst) TABS(2) OBJECT(.\Output\uart.obj)
 
@@ -62,7 +62,7 @@ line level    source
   45   2              uart1_receive_flag = 1;
   46   2              clr_SCON_1_RI_1;                             /* clear reception flag for next reception */
   47   2          }
-C51 COMPILER V9.60.7.0   UART                                                              03/02/2025 23:10:15 PAGE 2   
+C51 COMPILER V9.60.7.0   UART                                                              03/17/2025 11:09:30 PAGE 2   
 
   48   1      
   49   1          if (TI_1 == 1)
@@ -82,6 +82,7 @@ line level    source
   63   1        switch(u8UARTPort)
   64   1        {
   65   2          case UART0_Timer1:
+*** ERROR C202 IN LINE 65 OF ..\Library\StdDriver\src\uart.c: 'UART0_Timer1': undefined identifier
   66   2                SCON = 0x50;       //UART0 Mode1,REN=1,TI=1
   67   2                TMOD |= 0x20;      //Timer1 Mode1
   68   2                set_PCON_SMOD;          //UART0 Double Rate Enable
@@ -92,6 +93,7 @@ line level    source
   73   2            break;
   74   2            
   75   2            case UART0_Timer3:
+*** ERROR C202 IN LINE 75 OF ..\Library\StdDriver\src\uart.c: 'UART0_Timer3': undefined identifier
   76   2                SCON = 0x50;     //UART0 Mode1,REN=1,TI=1
   77   2                set_PCON_SMOD;        //UART0 Double Rate Enable
   78   2                T3CON &= 0xF8;   //T3PS2=0,T3PS1=0,T3PS0=0(Prescale=1)
@@ -102,6 +104,7 @@ line level    source
   83   2            break;
   84   2            
   85   2            case UART1_Timer3:
+*** ERROR C202 IN LINE 85 OF ..\Library\StdDriver\src\uart.c: 'UART1_Timer3': undefined identifier
   86   2                SCON_1 = 0x50;     //UART1 Mode1,REN_1=1,TI_1=1
   87   2                T3CON = 0x80;     //T3PS2=0,T3PS1=0,T3PS0=0(Prescale=1), UART1 in MODE 1
   88   2                RH3    = HIBYTE(65536 - (u32SysClock/16/u32Baudrate));  
@@ -123,11 +126,11 @@ line level    source
                       c = SBUF;
                       RI = 0;
                     break;
+C51 COMPILER V9.60.7.0   UART                                                              03/17/2025 11:09:30 PAGE 3   
+
                     case UART1:
                       while (!RI_1);
                       c = SBUF_1;
-C51 COMPILER V9.60.7.0   UART                                                              03/02/2025 23:10:15 PAGE 3   
-
                       RI_1 = 0;
                     break;
                   }
@@ -142,11 +145,13 @@ line level    source
  120   1          switch (UARTPort)
  121   1          {
  122   2              case UART0:
+*** ERROR C202 IN LINE 122 OF ..\Library\StdDriver\src\uart.c: 'UART0': undefined identifier
  123   2                TI=0;
  124   2                SBUF = c;
  125   2                while(!TI);
  126   2              break;
  127   2              case UART1:
+*** ERROR C202 IN LINE 127 OF ..\Library\StdDriver\src\uart.c: 'UART1': undefined identifier
  128   2                TI_1=0;
  129   2                SBUF_1 = c;
  130   2                while(TI_1);
@@ -159,23 +164,8 @@ line level    source
  137          {
  138   1          P06_QUASI_MODE;
  139   1          UART_Open(24000000,UART0_Timer1,115200);
+*** ERROR C202 IN LINE 139 OF ..\Library\StdDriver\src\uart.c: 'UART0_Timer1': undefined identifier
  140   1          ENABLE_UART0_PRINTF;
  141   1      }
 
-
-MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    595    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =      2       9
-   PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
-   IDATA SIZE       =   ----    ----
-   BIT SIZE         =      3    ----
-   EDATA SIZE       =   ----    ----
-   HDATA SIZE       =   ----    ----
-   XDATA CONST SIZE =   ----    ----
-   FAR CONST SIZE   =   ----    ----
-END OF MODULE INFORMATION.
-
-
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  6 ERROR(S)

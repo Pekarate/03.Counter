@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.7.0   EEPROM                                                            03/02/2025 23:10:14 PAGE 1   
+C51 COMPILER V9.60.7.0   EEPROM                                                            03/17/2025 11:09:30 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EEPROM
 OBJECT MODULE PLACED IN .\Output\eeprom.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\eeprom.c LARGE OMF2 OPTIMIZE(7,S
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\eeprom.c LARGE OMF2 OPTIMIZE(0,S
                     -PEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\e
                     -eprom.lst) TABS(2) OBJECT(.\Output\eeprom.obj)
 
@@ -62,7 +62,7 @@ line level    source
   43   1           set_IAPTRG_IAPGO; 
   44   1          
   45   1      //Save changed RAM data to APROM DATAFLASH
-C51 COMPILER V9.60.7.0   EEPROM                                                            03/02/2025 23:10:14 PAGE 2   
+C51 COMPILER V9.60.7.0   EEPROM                                                            03/17/2025 11:09:30 PAGE 2   
 
   46   1          set_CHPCON_IAPEN; 
   47   1          set_IAPUEN_APUEN;
@@ -126,7 +126,7 @@ line level    source
  104   2          if(pCode[i]!=0xFF)break;
  105   2        }
  106   1        if(i==num)
-C51 COMPILER V9.60.7.0   EEPROM                                                            03/02/2025 23:10:14 PAGE 3   
+C51 COMPILER V9.60.7.0   EEPROM                                                            03/17/2025 11:09:30 PAGE 3   
 
  107   1        {
  108   2          IAPCN =BYTE_PROGRAM_APROM;
@@ -184,13 +184,13 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1285    ----
+   CODE SIZE        =   1522    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    128     161
+   XDATA SIZE       =    293    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
-C51 COMPILER V9.60.7.0   EEPROM                                                            03/02/2025 23:10:14 PAGE 4   
+C51 COMPILER V9.60.7.0   EEPROM                                                            03/17/2025 11:09:30 PAGE 4   
 
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

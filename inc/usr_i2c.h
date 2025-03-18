@@ -10,7 +10,7 @@
 
 void Init_I2C(void);
 
-UINT8 VCNL_Write_register(UINT8 reg, UINT16 val);
-UINT8 VCNL_Read_register(UINT8 reg,  UINT16 *val);
+bit VCNL_Write_register(UINT8 reg, UINT16 val);
+bit VCNL_Read_register(UINT8 reg,  UINT16 *val);
 
 #endif

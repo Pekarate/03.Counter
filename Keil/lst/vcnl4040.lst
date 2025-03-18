@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.7.0   VCNL4040                                                          03/03/2025 23:13:59 PAGE 1   
+C51 COMPILER V9.60.7.0   VCNL4040                                                          03/17/2025 11:17:12 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE VCNL4040
 OBJECT MODULE PLACED IN .\Output\vcnl4040.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\src\vcnl4040.c LARGE OMF2 OPTIMIZE(7,SPEED) BROWSE INC
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\src\vcnl4040.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE INC
                     -DIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\vcnl4040.lst) TAB
                     -S(2) OBJECT(.\Output\vcnl4040.obj)
 
@@ -62,7 +62,7 @@ line level    source
   51          #define VCNL4040_PS_PERS_3         (1 << 5)
   52          #define VCNL4040_PS_PERS_4         ((1 << 5) | (1 << 4))
   53          
-C51 COMPILER V9.60.7.0   VCNL4040                                                          03/03/2025 23:13:59 PAGE 2   
+C51 COMPILER V9.60.7.0   VCNL4040                                                          03/17/2025 11:17:12 PAGE 2   
 
   54          #define VCNL4040_PS_IT_MASK        ((UINT8) ~((1 << 3) | (1 << 2) | (1 << 1)))
   55          #define VCNL4040_PS_IT_1T          0
@@ -126,7 +126,7 @@ line level    source
  113          UINT16 VCNL4040_read_id()
  114          {
  115   1        data UINT16 VCNL4040_id;
-C51 COMPILER V9.60.7.0   VCNL4040                                                          03/03/2025 23:13:59 PAGE 3   
+C51 COMPILER V9.60.7.0   VCNL4040                                                          03/17/2025 11:17:12 PAGE 3   
 
  116   1        VCNL_Read_register(VCNL4040_ID, &VCNL4040_id);
  117   1        return VCNL4040_id;
@@ -190,7 +190,7 @@ line level    source
  175          // consumption. For example, PS_Duty = 1/320, peak IRED current = 100 mA,
  176          // averaged current consumption is 100 mA/320 = 0.3125 mA.
  177          void setIRDutyCycle(uint16_t dutyValue)
-C51 COMPILER V9.60.7.0   VCNL4040                                                          03/03/2025 23:13:59 PAGE 4   
+C51 COMPILER V9.60.7.0   VCNL4040                                                          03/17/2025 11:17:12 PAGE 4   
 
  178          {
  179   1        if (dutyValue > 320 - 1)
@@ -241,10 +241,10 @@ line level    source
  224          {
  225   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_ENABLE);
  226   1      }
- 227          void disableSmartPersistance(void)
- 228          {
- 229   1        bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_DISABLE);
- 230   1      }
+ 227          // void disableSmartPersistance(void)
+ 228          // {
+ 229          //   bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_DISABLE);
+ 230          // }
  231          
  232          // Power on the prox sensing portion of the device
  233          void powerOnProximity(void)
@@ -254,7 +254,7 @@ line level    source
  237          
  238          UINT8 VCNL_getProximity(uint16_t *res)
  239          {
-C51 COMPILER V9.60.7.0   VCNL4040                                                          03/03/2025 23:13:59 PAGE 5   
+C51 COMPILER V9.60.7.0   VCNL4040                                                          03/17/2025 11:17:12 PAGE 5   
 
  240   1        xdata UINT8 ret;
  241   1        ret = VCNL_Read_register(VCNL4040_PS_DATA, res);
@@ -290,11 +290,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    550    ----
+   CODE SIZE        =    738    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----       8
+   XDATA SIZE       =     16    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       2
+   DATA SIZE        =      2    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

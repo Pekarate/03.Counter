@@ -24,51 +24,36 @@ bit I2C_Reset_Flag;
 //========================================================================================================
 UINT8 I2C_SI_WAIT(void)
 {
-        UINT8 timeout = 0;
         clr_I2CON_SI;
         clr_I2TOC_I2TOF;
         while (!SI)
         {
-                if (I2TOC & SET_BIT0)
-                {
-                        clr_I2TOC_I2TOF;
-                        timeout++;
-                        if (timeout > 0)
-                        {
-                                return 1;
-                        }
-                }
+							if (I2TOC & SET_BIT0)
+							{
+											clr_I2TOC_I2TOF;
+											return 1;
+							}
         }
         return 0;
 }
 //========================================================================================================
 void I2C_SI_Check(void)
 {
-        // if (((I2STAT == 0xF8) && (I2C_Reset_Flag)) || (I2STAT == 0x00) || (I2STAT == 0x10) || (I2STAT == 0x20) || (I2TOC & SET_BIT0))
-        // {
-        //         clr_I2TOC_I2TOF;
-        //         I2C_Reset_Flag = 1;
-        //         set_I2CON_STO;
-        //         SI = 0;
-        //         if (SI)
-        //         {    
-        //                 clr_I2CON_I2CEN;
-        //                 set_I2CON_I2CEN;
-        //         }
-        // }
-        if(I2C_Reset_Flag){
-                clr_I2CON_I2CEN;
-                clr_I2CON_STA;
-                clr_I2CON_STO;
-                clr_I2CON_SI;
-                clr_I2CON_AA;
-                set_I2CON_I2CEN;
-                Init_I2C();
+        if ((I2STAT == 0x00) || (I2STAT == 0x10) || (I2STAT == 0x20) || (I2TOC & SET_BIT0))
+        {
+                clr_I2TOC_I2TOF;
+                I2C_Reset_Flag = 1;
+                set_I2CON_STO;
+                SI = 0;
+                if (SI)
+                {
+                        clr_I2CON_I2CEN;
+                        set_I2CON_I2CEN;
+                }
         }
-
 }
 //========================================================================================================
-UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
+bit VCNL_Write_register(UINT8 reg, UINT16 val)
 {
         xdata UINT8 u8low;
         xdata UINT8 u8high;
@@ -81,7 +66,6 @@ UINT8 VCNL_Write_register(UINT8 reg, UINT16 val)
                        //                ;
         if (I2C_SI_WAIT())
         {
-                set_I2CON_STO;
                 I2C_Reset_Flag = 1;
                 goto Write_Error_Stop;
         }
@@ -178,17 +162,22 @@ Write_Error_Stop:
 }
 //========================================================================================================
 UINT8 cnt = 0;
-UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
+bit VCNL_Read_register(UINT8 reg, UINT16 *val)
 {
         UINT8 u8DAT[2];
         UINT8 u8Count;
-
+        
         /* Step1 */
         set_I2CON_STA; /* Send Start bit to I2C EEPROM */
                        //        clr_I2CON_SI;
                        //        while (!SI)
                        //                ;
-        I2C_SI_WAIT();
+        if (I2C_SI_WAIT())
+        {
+                I2C_Reset_Flag = 1;
+                cnt = __LINE__;
+                goto Read_Error_Stop;
+        }
         if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
         {
                 if (I2STAT == 0x48)
@@ -198,7 +187,7 @@ UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
                 }
                 I2C_Reset_Flag = 1;
                 cnt = __LINE__;
-
+                
                 goto Read_Error_Stop;
         }
 
@@ -208,7 +197,11 @@ UINT8 VCNL_Read_register(UINT8 reg, UINT16 *val)
                                           //        clr_I2CON_SI;
                                           //        while (!SI)
                                           //                ;
-        I2C_SI_WAIT();
+        if (I2C_SI_WAIT())
+        {
+                I2C_Reset_Flag = 1;
+                goto Read_Error_Stop;
+        }
         if (I2STAT != 0x18) /* 0x18: SLA+W has been transmitted; ACK has been received */
         {
                 cnt = __LINE__;

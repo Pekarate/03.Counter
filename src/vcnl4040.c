@@ -224,10 +224,10 @@ void enableSmartPersistance(void)
 {
   bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_ENABLE);
 }
-void disableSmartPersistance(void)
-{
-  bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_DISABLE);
-}
+// void disableSmartPersistance(void)
+// {
+//   bitMask(VCNL4040_PS_CONF3, LOWER, VCNL4040_PS_SMART_PERS_MASK, VCNL4040_PS_SMART_PERS_DISABLE);
+// }
 
 // Power on the prox sensing portion of the device
 void powerOnProximity(void)

@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Output\</OutputDirectory>
-          <OutputName>non_calib_the_2</OutputName>
+          <OutputName>show_raw_value</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -314,7 +314,7 @@
             <uAregs>0</uAregs>
             <UseInterruptVector>1</UseInterruptVector>
             <Fuzzy>3</Fuzzy>
-            <Optimize>7</Optimize>
+            <Optimize>0</Optimize>
             <WarningLevel>2</WarningLevel>
             <SizeSpeed>1</SizeSpeed>
             <ObjectExtend>1</ObjectExtend>
@@ -344,10 +344,10 @@
             <linkonly>0</linkonly>
             <UseMemoryFromTarget>1</UseMemoryFromTarget>
             <CaseSensitiveSymbols>0</CaseSensitiveSymbols>
-            <WarningLevel>2</WarningLevel>
+            <WarningLevel>0</WarningLevel>
             <DataOverlaying>1</DataOverlaying>
             <OverlayString></OverlayString>
-            <MiscControls>REMOVEUNUSED</MiscControls>
+            <MiscControls></MiscControls>
             <DisableWarningNumbers>16</DisableWarningNumbers>
             <LinkerCmdFile></LinkerCmdFile>
             <Assign></Assign>
@@ -396,11 +396,6 @@
               <FileType>1</FileType>
               <FilePath>..\src\usr_i2c.c</FilePath>
             </File>
-            <File>
-              <FileName>eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Library\StdDriver\src\eeprom.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -412,19 +407,9 @@
               <FilePath>..\Library\StdDriver\src\common.c</FilePath>
             </File>
             <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Library\StdDriver\src\delay.c</FilePath>
-            </File>
-            <File>
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Library\StdDriver\src\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Library\StdDriver\src\uart.c</FilePath>
             </File>
           </Files>
         </Group>

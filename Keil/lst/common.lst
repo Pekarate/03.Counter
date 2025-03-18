@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.7.0   COMMON                                                            03/02/2025 23:10:14 PAGE 1   
+C51 COMPILER V9.60.7.0   COMMON                                                            03/17/2025 11:09:30 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE COMMON
 OBJECT MODULE PLACED IN .\Output\common.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\common.c LARGE OMF2 OPTIMIZE(7,S
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\common.c LARGE OMF2 OPTIMIZE(0,S
                     -PEED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\c
                     -ommon.lst) TABS(2) OBJECT(.\Output\common.obj)
 
@@ -57,12 +57,12 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     21    ----
+   CODE SIZE        =     61    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
-C51 COMPILER V9.60.7.0   COMMON                                                            03/02/2025 23:10:14 PAGE 2   
+C51 COMPILER V9.60.7.0   COMMON                                                            03/17/2025 11:09:30 PAGE 2   
 
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1    ----

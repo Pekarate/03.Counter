@@ -176,6 +176,7 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         {
                 I2C_Reset_Flag = 1;
                 cnt = __LINE__;
+                printf("I2C Error at Step1: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x08) /* 0x08:  A START condition has been transmitted*/
@@ -187,7 +188,7 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
                 }
                 I2C_Reset_Flag = 1;
                 cnt = __LINE__;
-                
+                printf("I2C Error at Step1: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
 
@@ -200,12 +201,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         if (I2C_SI_WAIT())
         {
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step2: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x18) /* 0x18: SLA+W has been transmitted; ACK has been received */
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step2: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
 
@@ -218,12 +221,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step3: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x28) /* 0x28:  Data byte in S1DAT has been transmitted; ACK has been received */
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step3: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         /* Step5 */
@@ -235,12 +240,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step5: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x10) /* 0x10: A repeated START condition has been transmitted */
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step5: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
 
@@ -254,12 +261,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step6: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x40) /* 0x40:  SLA+R has been transmitted; ACK has been received */
         {
                 cnt = __LINE__;
                 I2C_Reset_Flag = 1;
+                printf("I2C Error at Step6: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
 
@@ -274,12 +283,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
                 {
                         cnt = __LINE__;
                         I2C_Reset_Flag = 1;
+                        printf("I2C Error at Step7: I2STAT = %X\n", I2STAT);
                         goto Read_Error_Stop;
                 }
                 if (I2STAT != 0x50) /* 0x50:Data byte has been received; NOT ACK has been returned */
                 {
                         cnt = __LINE__;
                         I2C_Reset_Flag = 1;
+                        printf("I2C Error at Step7: I2STAT = %X\n", I2STAT);
                         goto Read_Error_Stop;
                 }
                 u8DAT[u8Count] = I2DAT;
@@ -295,12 +306,14 @@ bit VCNL_Read_register(UINT8 reg, UINT16 *val)
         {
                 I2C_Reset_Flag = 1;
                 cnt = __LINE__;
+                printf("I2C Error at Step8: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
         if (I2STAT != 0x58) /* 0x58:Data byte has been received; ACK has been returned */
         {
                 I2C_Reset_Flag = 1;
                 cnt = __LINE__;
+                printf("I2C Error at Step8: I2STAT = %X\n", I2STAT);
                 goto Read_Error_Stop;
         }
 

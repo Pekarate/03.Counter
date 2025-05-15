@@ -41,7 +41,7 @@
 
 #define NON_DETECT_COUNT 2
 #define TIME_COUNT_NON_OFFJECT 1500 // ms (NON_DETECT_COUNT * TIME_CHECK_OBJECT)
-#define TIMEOUT_TO_DECREASE_VALUE (17000 - TIME_COUNT_NON_OFFJECT)
+#define TIMEOUT_TO_DECREASE_VALUE (20000)
 
 #define SYSTEM_OK 0
 #define ERROR_VCNL_NOT_PRESENT 1
@@ -287,10 +287,10 @@ void LCD_show(UINT16 count)
 		}
 		lcd_data[i] = 0x00; // off;
 	}
-	if(sensor_raw_data > DETECT_THRESHOLD)
-	{
-		lcd_data[0] = lcd_data[0] + LCD_DOT;
-	}
+//	if(sensor_raw_data > DETECT_THRESHOLD)
+//	{
+//		lcd_data[0] = lcd_data[0] + LCD_DOT;
+//	}
 	LCD_send_bytes();
 	LCD_Delay(5);
 	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
@@ -309,6 +309,7 @@ void reset_counter()
 	time_new_obj = 0xFFFFFFFF;
 }
 
+xdata uint32_t ss_read_count = 0;
 void Process_VCNL(void)
 {
 
@@ -323,6 +324,7 @@ void Process_VCNL(void)
 
 	if (HAL_GetTick() > ttime)
 	{
+		ss_read_count++;
 		if (VCNL_getProximity(&valueps))
 		{
 			// cnt_ok++;
@@ -331,6 +333,8 @@ void Process_VCNL(void)
 			sys_clr_err_code();
 			if (valueps > DETECT_THRESHOLD)
 			{
+				time_new_obj = 0xFFFFFFFF;
+				printf("rcount: %ld sensor_raw_data: %d \r\n",ss_read_count,sensor_raw_data);
 				non_object_detected = NON_DETECT_COUNT;
 				if (is_object_visible() == 0) // non
 				{
@@ -370,6 +374,7 @@ void Process_VCNL(void)
 		}
 		else
 		{
+			printf("ss_read_fail : %ld\r\n",ss_read_count);
 			sensor_raw_data = 0;
 			ttime = HAL_GetTick() + 100;
 			ss_read_fail++;
@@ -461,7 +466,7 @@ void BTN_process()
 		case BTN_PRESSED2S:
 
 			reset_counter();
-			// show_sensor_raw = !show_sensor_raw;
+			//show_sensor_raw = !show_sensor_raw;
 			break;
 		}
 		btn_state = BTN_IDLE;
@@ -566,7 +571,7 @@ void cabib_process()
 		if (!ss_read_fail)
 		{
 			avg = (total / count_val);
-			struct_data.threshold = avg + 2;
+			struct_data.threshold = avg + 3;
 			// if (struct_data.threshold < 2)
 			// {
 			// 	struct_data.threshold = 2;
@@ -575,14 +580,20 @@ void cabib_process()
 		}
 	}
 	isCablibmode = 2;
-	Timm_tmp = HAL_GetTick() + 500;
-	while (Timm_tmp > HAL_GetTick())
-	{
-		LCD_show(struct_data.threshold);
-	}
+//	Timm_tmp = HAL_GetTick() + 500;
+//	while (Timm_tmp > HAL_GetTick())
+//	{
+//		LCD_show(struct_data.threshold);
+//	}
 	isCablibmode = 0;
 #endif
 }
+char putchar (char c)  {
+  while (!TI);
+  TI = 0;
+  return (SBUF = c);
+}
+xdata uint32_t task_count = 0;
 void main(void)
 {
 	// sys_clr_err_code();
@@ -590,15 +601,19 @@ void main(void)
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
-	CKDIV = 4; // 2Mhz 16/(CKDIV*2)
+	CKDIV = 1; // 2Mhz 16/(CKDIV*2)
+	
+	
 	GPIO_Init();
-
+	P06_QUASI_MODE;
+	UART_Open(8000000,UART0_Timer1,19200);
+	ENABLE_UART0_PRINTF;
 	non_dect_timout = 0xFFFFFF;
 	Init_I2C();
 
 	LCD_INIT();
 
-	Timer3_INT_Initial(DIV2, 0xFC, 0x18); // init timer for system
+	Timer3_INT_Initial(DIV8, 0xD8, 0xF0);
 
 	if (VCNL4040_init() == 0)
 	{ // triger mode ,auto sleep
@@ -609,18 +624,22 @@ void main(void)
 	DETECT_THRESHOLD = struct_data.threshold;
 
 	reset_counter();
+	Timm = 0;
 	while (1)
 	{
+		
 		//		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
-		// if(HAL_GetTick() > Timm)
-		// {
-		// 	Timm = HAL_GetTick() + 1000;
-		// 	obj_count++;
-		// }
+//		if(HAL_GetTick() > task_count)
+//		{
+//		 	task_count = HAL_GetTick() + 1000;
+//			//task_count+=1;
+//			printf("task_count: %ld\r\n",task_count);
+//		}
 		BTN_process();
 		Process_VCNL();
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();
+		
 	}
 	/* =================== */
 }

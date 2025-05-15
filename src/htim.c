@@ -27,7 +27,7 @@ void Timer3_ISR (void) interrupt 16
     _push_(SFRS);
   	
     clr_T3CON_TF3;
-    uTick++;
+    uTick +=10;
     _pop_(SFRS);
 }	
 

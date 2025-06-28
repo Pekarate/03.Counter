@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Output\</OutputDirectory>
-          <OutputName>show_raw_value</OutputName>
+          <OutputName>thres_5</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -410,6 +410,11 @@
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Library\StdDriver\src\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Library\StdDriver\src\uart.c</FilePath>
             </File>
           </Files>
         </Group>

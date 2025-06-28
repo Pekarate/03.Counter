@@ -28,6 +28,9 @@
 #define LCD_DATA_HIGH P01 = 1
 #define LCD_DATA_LOW P01 = 0
 
+#define LCD_COM_HIGH P12 = 1
+#define LCD_COM_LOW P12 = 0
+
 #define BUTTON_PRESSED !P07
 #define IS_SYS_RUN_MOD_A P30
 #define TIMOUT_NON_DETECT_OBJ 1800000 // ms
@@ -71,7 +74,7 @@ xdata UINT32 time_new_obj = 0xFFFFFFFF;
 xdata UINT8 lcd_data[3];
 bit show_sensor_raw = 0;
 uint16_t sensor_raw_data = 0;
-
+bit lcd_off = 0;
 xdata UINT32 Timm = 0;
 
 void reset_non_obj_detect_timout();
@@ -133,15 +136,14 @@ int eeprom_data_init()
 
 void system_reset()
 {
-	//	struct_data.cnt_mode_A = obj_count;
-	//	struct_data.cnt_mode_B = btn_count;
-	//	usr_write_eeprom_data(struct_data);
 	set_SWRST;
 }
 
 void system_shutdown()
 {
 	data UINT8 system_shutdown_cnt = 0;
+	lcd_off = 1;
+	LCD_show(0);
 	BOD_DISABLE;
 	ALL_GPIO_INPUT_MODE;
 	ENABLE_BIT7_FALLINGEDGE_TRIG;
@@ -178,6 +180,8 @@ void LCD_INIT()
 	// P01 LCD_DATA out
 	P0M1 &= 0xC5;  // 0b11000101;
 	P0M2 |= ~0xC5; // 0b00111010;
+	P1M1 &= ~(1 << 2); // Clear bit 2 to set P1.2 as output mode (push-pull)
+	P1M2 |= (1 << 2);  // Set bit 2 to enable push-pull output for P1.2
 	LCD_PWM_ON;
 	LCD_SCK_LOW;
 	LCD_LAT_LOW;
@@ -229,73 +233,83 @@ void reset_object_visible()
 void LCD_show(UINT16 count)
 {
 	data UINT8 i;
-
-	if (system_error_code)
-	{
-		lcd_data[0] = 0x37; // E
-		lcd_data[2] = LCD_CODE[(system_error_code & 0x7F) % 10];
-		lcd_data[1] = LCD_CODE[((system_error_code & 0x7F) / 10) % 10];
-	}
-	else
-	{
-		if (isCablibmode == 1)
-		{
-			lcd_data[0] = LCD_CODE[8];
-			lcd_data[1] = LCD_CODE[8] + LCD_DOT;
-			lcd_data[2] = LCD_CODE[8];
-		}
-		else if (isCablibmode == 2)
-		{
-			count = (count % 1000);
-			lcd_data[2] = LCD_CODE[count % 10];
-			lcd_data[1] = LCD_CODE[(count / 10) % 10];
-			lcd_data[0] = LCD_CODE[count / 100];
-		}
-		else
-		{
-			if (show_sensor_raw)
+	static UINT8 lcd_count = 0;
+	lcd_count = 1 - lcd_count;
+	if( lcd_off == 0) {
+		if (lcd_count) {
+			if (system_error_code)
 			{
-				sensor_raw_data = (sensor_raw_data % 1000);
-				lcd_data[0] = LCD_CODE[(sensor_raw_data / 100) % 10];
-				lcd_data[1] = LCD_CODE[(sensor_raw_data / 10) % 10];
-				lcd_data[2] = LCD_CODE[sensor_raw_data % 10];
+				lcd_data[0] = 0x37; // E
+				lcd_data[2] = LCD_CODE[(system_error_code & 0x7F) % 10];
+				lcd_data[1] = LCD_CODE[((system_error_code & 0x7F) / 10) % 10];
 			}
 			else
 			{
-				count = (count % 198);
-				lcd_data[0] = LCD_CODE[(count + 1) / 20];
-				lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
-				lcd_data[2] = LCD_CODE[0];
-
-				if (count)
+				if (isCablibmode == 1)
 				{
-					lcd_data[2] = LCD_CODE[2];
-					if (count % 2)
+					lcd_data[0] = LCD_CODE[8];
+					lcd_data[1] = LCD_CODE[8] + LCD_DOT;
+					lcd_data[2] = LCD_CODE[8];
+				}
+				else if (isCablibmode == 2)
+				{
+					count = (count % 1000);
+					lcd_data[2] = LCD_CODE[count % 10];
+					lcd_data[1] = LCD_CODE[(count / 10) % 10];
+					lcd_data[0] = LCD_CODE[count / 100];
+				}
+				else
+				{
+					if (show_sensor_raw)
 					{
-						lcd_data[2] = LCD_CODE[1];
+						sensor_raw_data = (sensor_raw_data % 1000);
+						lcd_data[0] = LCD_CODE[(sensor_raw_data / 100) % 10];
+						lcd_data[1] = LCD_CODE[(sensor_raw_data / 10) % 10];
+						lcd_data[2] = LCD_CODE[sensor_raw_data % 10];
+					}
+					else
+					{
+						count = (count % 198);
+						lcd_data[0] = LCD_CODE[(count + 1) / 20];
+						lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
+						lcd_data[2] = LCD_CODE[0];
+
+						if (count)
+						{
+							lcd_data[2] = LCD_CODE[2];
+							if (count % 2)
+							{
+								lcd_data[2] = LCD_CODE[1];
+							}
+						}
+
 					}
 				}
-
+			}
+			for (i = 0; i < 2; i++)
+			{
+				if (lcd_data[i] != LCD_CODE[0])
+				{
+					break;
+				}
+				lcd_data[i] = 0x00; // off;
 			}
 		}
+		else {
+					lcd_data[0] ^= 0xFF;
+					lcd_data[1] ^= 0xFF;
+					lcd_data[2] ^= 0xFF;
+			}
+	} else {
+		lcd_data[0] = lcd_data[1] = lcd_data[2] = 0xFF;
+		lcd_count = 0;
 	}
-	for (i = 0; i < 2; i++)
-	{
-		if (lcd_data[i] != LCD_CODE[0])
-		{
-			break;
-		}
-		lcd_data[i] = 0x00; // off;
-	}
-//	if(sensor_raw_data > DETECT_THRESHOLD)
-//	{
-//		lcd_data[0] = lcd_data[0] + LCD_DOT;
-//	}
 	LCD_send_bytes();
-	LCD_Delay(5);
-	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
-	LCD_send_bytes();
-	LCD_Delay(5);
+	if (lcd_count) {
+        LCD_COM_LOW;
+    } else {
+        LCD_COM_HIGH;
+    }
 }
 
 
@@ -571,7 +585,7 @@ void cabib_process()
 		if (!ss_read_fail)
 		{
 			avg = (total / count_val);
-			struct_data.threshold = avg + 3;
+			struct_data.threshold = avg + 5;
 			// if (struct_data.threshold < 2)
 			// {
 			// 	struct_data.threshold = 2;
@@ -601,7 +615,7 @@ void main(void)
 	ALL_GPIO_INPUT_MODE;
 	MODIFY_HIRC(HIRC_16);
 	/* Initial I2C function */
-	CKDIV = 1; // 2Mhz 16/(CKDIV*2)
+	CKDIV = 1; // 8Mhz 16/(CKDIV*2)
 	
 	
 	GPIO_Init();
@@ -613,7 +627,7 @@ void main(void)
 
 	LCD_INIT();
 
-	Timer3_INT_Initial(DIV8, 0xD8, 0xF0);
+	Timer3_INT_Initial(DIV8, 0xB1, 0xE0);  //20ms
 
 	if (VCNL4040_init() == 0)
 	{ // triger mode ,auto sleep
@@ -628,18 +642,20 @@ void main(void)
 	while (1)
 	{
 		
-		//		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
-//		if(HAL_GetTick() > task_count)
-//		{
-//		 	task_count = HAL_GetTick() + 1000;
-//			//task_count+=1;
-//			printf("task_count: %ld\r\n",task_count);
-//		}
+//		WDT_COUNTER_CLEAR;                     /* Clear WDT counter */
+		// if(HAL_GetTick() > task_count)
+		// {
+		//  	task_count = HAL_GetTick() + 1000;
+		// 	task_count+=1;
+		// 	printf("task_count: %ld\r\n",task_count);
+		// }
 		BTN_process();
 		Process_VCNL();
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();
-		
+		// printf(">>>>\r\n");
+		set_PCON_IDLE;
+		// printf("<<<<\r\n");
 	}
 	/* =================== */
 }

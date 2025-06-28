@@ -25,9 +25,9 @@ data volatile  UINT32 uTick = 0;
 void Timer3_ISR (void) interrupt 16 
 {
     _push_(SFRS);
-  	
+  	// printf("==\r\n");
     clr_T3CON_TF3;
-    uTick +=10;
+    uTick +=20;
     _pop_(SFRS);
 }	
 

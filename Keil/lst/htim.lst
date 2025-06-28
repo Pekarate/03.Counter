@@ -1,11 +1,11 @@
-C51 COMPILER V9.60.7.0   HTIM                                                              03/17/2025 11:09:29 PAGE 1   
+C51 COMPILER V9.60.7.0   HTIM                                                              05/24/2025 17:16:37 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE HTIM
 OBJECT MODULE PLACED IN .\Output\htim.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\src\htim.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE INCDIR(
-                    -..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\htim.lst) TABS(2) OBJ
-                    -ECT(.\Output\htim.obj)
+COMPILER INVOKED BY: D:\00.SOFTWARE\keilc_v5\C51\BIN\C51.EXE ..\src\htim.c LARGE OMF2 OPTIMIZE(0,SPEED) BROWSE INCDIR(..
+                    -\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\htim.lst) TABS(2) OBJEC
+                    -T(.\Output\htim.obj)
 
 line level    source
 
@@ -47,9 +47,9 @@ line level    source
   25          void Timer3_ISR (void) interrupt 16 
   26          {
   27   1          _push_(SFRS);
-  28   1          
+  28   1          // printf("==\r\n");
   29   1          clr_T3CON_TF3;
-  30   1          uTick++;
+  30   1          uTick +=20;
   31   1          _pop_(SFRS);
   32   1      } 
   33          
@@ -62,7 +62,7 @@ line level    source
   38                                  unsigned char u8RH3, 
   39                                  unsigned char u8RL3)
   40          {
-C51 COMPILER V9.60.7.0   HTIM                                                              03/17/2025 11:09:29 PAGE 2   
+C51 COMPILER V9.60.7.0   HTIM                                                              05/24/2025 17:16:37 PAGE 2   
 
   41   1          clr_T3CON_TR3;
   42   1          SFRS = 0x00;
@@ -103,7 +103,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    415    ----
+   CODE SIZE        =    372    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      5    ----
    PDATA SIZE       =   ----    ----

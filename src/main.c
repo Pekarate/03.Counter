@@ -11,6 +11,9 @@
 // #include "eeprom.h"
 #include "vcnl4040.h"
 
+//#define CONTROL_COM_ENABLE
+
+
 #define CALIBRATION_ENABLE 1
 
 #define LCD_DOT 0x80
@@ -230,6 +233,7 @@ void reset_object_visible()
 	isobjectvisible = 0;
 }
 
+#ifdef CONTROL_COM_ENABLE
 void LCD_show(UINT16 count)
 {
 	data UINT8 i;
@@ -312,7 +316,80 @@ void LCD_show(UINT16 count)
     }
 }
 
+#else
+void LCD_show(UINT16 count)
+{
+	data UINT8 i;
 
+	if (system_error_code)
+	{
+		lcd_data[0] = 0x37; // E
+		lcd_data[2] = LCD_CODE[(system_error_code & 0x7F) % 10];
+		lcd_data[1] = LCD_CODE[((system_error_code & 0x7F) / 10) % 10];
+	}
+	else
+	{
+		if (isCablibmode == 1)
+		{
+			lcd_data[0] = LCD_CODE[8];
+			lcd_data[1] = LCD_CODE[8] + LCD_DOT;
+			lcd_data[2] = LCD_CODE[8];
+		}
+		else if (isCablibmode == 2)
+		{
+			count = (count % 1000);
+			lcd_data[2] = LCD_CODE[count % 10];
+			lcd_data[1] = LCD_CODE[(count / 10) % 10];
+			lcd_data[0] = LCD_CODE[count / 100];
+		}
+		else
+		{
+			if (show_sensor_raw)
+			{
+				sensor_raw_data = (sensor_raw_data % 1000);
+				lcd_data[0] = LCD_CODE[(sensor_raw_data / 100) % 10];
+				lcd_data[1] = LCD_CODE[(sensor_raw_data / 10) % 10];
+				lcd_data[2] = LCD_CODE[sensor_raw_data % 10];
+			}
+			else
+			{
+				count = (count % 198);
+				lcd_data[0] = LCD_CODE[(count + 1) / 20];
+				lcd_data[1] = LCD_CODE[(((count + 1) / 2) % 10)] + LCD_DOT;
+				lcd_data[2] = LCD_CODE[0];
+
+				if (count)
+				{
+					lcd_data[2] = LCD_CODE[2];
+					if (count % 2)
+					{
+						lcd_data[2] = LCD_CODE[1];
+					}
+				}
+
+			}
+		}
+	}
+	for (i = 0; i < 2; i++)
+	{
+		if (lcd_data[i] != LCD_CODE[0])
+		{
+			break;
+		}
+		lcd_data[i] = 0x00; // off;
+	}
+//	if(sensor_raw_data > DETECT_THRESHOLD)
+//	{
+//		lcd_data[0] = lcd_data[0] + LCD_DOT;
+//	}
+	LCD_send_bytes();
+	LCD_Delay(5);
+	lcd_data[0] = lcd_data[1] = lcd_data[2] = 0x00;
+	LCD_send_bytes();
+	LCD_Delay(5);
+}
+
+#endif
 
 void reset_counter()
 {
@@ -654,7 +731,9 @@ void main(void)
 		LCD_show(obj_count);
 		check_non_obj_detect_timout();
 		// printf(">>>>\r\n");
+#ifdef CONTROL_COM_ENABLE
 		set_PCON_IDLE;
+#endif
 		// printf("<<<<\r\n");
 	}
 	/* =================== */

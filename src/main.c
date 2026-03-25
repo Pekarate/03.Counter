@@ -65,7 +65,7 @@ xdata UINT32 last_btn_time = 0;
 
 xdata UINT8 ss_read_fail = 0;
 xdata UINT8 isCablibmode = 0;
-xdata UINT32 non_dect_timout = 0xFFFFFF;
+xdata UINT32 non_dect_timout = 0;
 xdata UINT8 system_error_code = 0;
 xdata UINT16 DETECT_THRESHOLD = 0;
 
@@ -699,7 +699,7 @@ void main(void)
 	P06_QUASI_MODE;
 	UART_Open(8000000,UART0_Timer1,19200);
 	ENABLE_UART0_PRINTF;
-	non_dect_timout = 0xFFFFFF;
+	reset_non_obj_detect_timout();
 	Init_I2C();
 
 	LCD_INIT();

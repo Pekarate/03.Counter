@@ -18,16 +18,16 @@
 #define DIV32     32
 #define DIV64     64
 #define DIV128    128
-volatile UINT32 uTick = 0;
+data volatile  UINT32 uTick = 0;
 /************************************************************************************************************
 *    TIMER 3 interrupt subroutine
 ************************************************************************************************************/
 void Timer3_ISR (void) interrupt 16 
 {
     _push_(SFRS);
-  	
+  	// printf("==\r\n");
     clr_T3CON_TF3;
-    uTick++;
+    uTick +=20;
     _pop_(SFRS);
 }	
 
@@ -70,7 +70,7 @@ void HAL_TIM_run() {
 }
 void HAL_Delay(UINT16 dl)
 {
-  UINT32 tmp = uTick+ dl;
+  data UINT32 tmp = uTick+ dl;
   while(tmp > uTick);
 }
 

@@ -35,6 +35,43 @@
                 "_task_="
             ],
             "intelliSenseMode": "${default}"
+        },
+        {
+            "name": "Counter",
+            "includePath": [
+                "d:\\01.Freelancer\\03.Counter\\Library\\Device\\Include",
+                "d:\\01.Freelancer\\03.Counter\\Library\\StdDriver\\inc",
+                "d:\\01.Freelancer\\03.Counter\\inc",
+                "d:\\01.Freelancer\\03.Counter\\src",
+                "d:\\01.Freelancer\\03.Counter\\Library\\StdDriver\\src",
+                "d:\\01.Freelancer\\03.Counter\\Library\\Startup\\Keil"
+            ],
+            "defines": [
+                "CLOCK=4000000",
+                "__C51__",
+                "__VSCODE_C51__",
+                "reentrant=",
+                "compact=",
+                "small=",
+                "large=",
+                "data=",
+                "idata=",
+                "pdata=",
+                "bdata=",
+                "xdata=",
+                "code=",
+                "bit=char",
+                "sbit=char",
+                "sfr=char",
+                "sfr16=int",
+                "sfr32=int",
+                "interrupt=",
+                "using=",
+                "_at_=",
+                "_priority_=",
+                "_task_="
+            ],
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Output\</OutputDirectory>
-          <OutputName>counter_master</OutputName>
+          <OutputName>thres_5</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -314,7 +314,7 @@
             <uAregs>0</uAregs>
             <UseInterruptVector>1</UseInterruptVector>
             <Fuzzy>3</Fuzzy>
-            <Optimize>7</Optimize>
+            <Optimize>0</Optimize>
             <WarningLevel>2</WarningLevel>
             <SizeSpeed>1</SizeSpeed>
             <ObjectExtend>1</ObjectExtend>
@@ -344,10 +344,10 @@
             <linkonly>0</linkonly>
             <UseMemoryFromTarget>1</UseMemoryFromTarget>
             <CaseSensitiveSymbols>0</CaseSensitiveSymbols>
-            <WarningLevel>2</WarningLevel>
+            <WarningLevel>0</WarningLevel>
             <DataOverlaying>1</DataOverlaying>
             <OverlayString></OverlayString>
-            <MiscControls>REMOVEUNUSED</MiscControls>
+            <MiscControls></MiscControls>
             <DisableWarningNumbers>16</DisableWarningNumbers>
             <LinkerCmdFile></LinkerCmdFile>
             <Assign></Assign>
@@ -387,9 +387,14 @@
               <FilePath>..\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>vcnl36821.c</FileName>
+              <FileName>vcnl4040.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\vcnl36821.c</FilePath>
+              <FilePath>..\src\vcnl4040.c</FilePath>
+            </File>
+            <File>
+              <FileName>usr_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\usr_i2c.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -400,11 +405,6 @@
               <FileName>common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Library\StdDriver\src\common.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Library\StdDriver\src\delay.c</FilePath>
             </File>
             <File>
               <FileName>sys.c</FileName>

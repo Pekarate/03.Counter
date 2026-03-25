@@ -1,11 +1,11 @@
-C51 COMPILER V9.60.7.0   TIMER                                                             06/24/2023 11:15:41 PAGE 1   
+C51 COMPILER V9.60.7.0   TIMER                                                             03/24/2025 11:53:57 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE TIMER
 OBJECT MODULE PLACED IN .\Output\timer.obj
-COMPILER INVOKED BY: D:\00.SOFTWARE\03.KeilcC51\C51\BIN\C51.EXE ..\..\..\..\Library\StdDriver\src\timer.c LARGE OMF2 OPT
-                    -IMIZE(7,SPEED) BROWSE INCDIR(..\..\..\..\Library\Device\Include;..\..\..\..\Library\StdDriver\inc) DEBUG PRINT(.\lst\tim
-                    -er.lst) TABS(2) OBJECT(.\Output\timer.obj)
+COMPILER INVOKED BY: D:\00.SOFTWARE\KEILC_8051\C51\BIN\C51.EXE ..\Library\StdDriver\src\timer.c LARGE OMF2 OPTIMIZE(0,SP
+                    -EED) BROWSE INCDIR(..\Library\Device\Include;..\Library\StdDriver\inc;..\inc) DEFINE(CLOCK=4000000) DEBUG PRINT(.\lst\ti
+                    -mer.lst) TABS(2) OBJECT(.\Output\timer.obj)
 
 line level    source
 
@@ -34,9 +34,9 @@ line level    source
   17   1          while (u32CNT != 0)
   18   1          {
   19   2              TL0 = LOBYTE(TIMER_DIV12_VALUE_100us);  //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 19 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_100us': undefined identifier
+*** ERROR C202 IN LINE 19 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_100us': undefined identifier
   20   2              TH0 = HIBYTE(TIMER_DIV12_VALUE_100us);
-*** ERROR C202 IN LINE 20 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_100us': undefined identifier
+*** ERROR C202 IN LINE 20 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_100us': undefined identifier
   21   2              while (TF0 != 1);                       //Check Timer0 Time-Out Flag
   22   2              clr_TCON_TF0;
   23   2              u32CNT --;
@@ -52,9 +52,9 @@ line level    source
   33   1          while (u32CNT != 0)
   34   1          {
   35   2              TL0 = LOBYTE(TIMER_DIV12_VALUE_1ms);     //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 35 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_1ms': undefined identifier
+*** ERROR C202 IN LINE 35 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_1ms': undefined identifier
   36   2              TH0 = HIBYTE(TIMER_DIV12_VALUE_1ms);
-*** ERROR C202 IN LINE 36 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_1ms': undefined identifier
+*** ERROR C202 IN LINE 36 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_1ms': undefined identifier
   37   2               set_TCON_TR0;                                    //Start Timer0
   38   2              while (TF0 != 1);                       //Check Timer0 Time-Out Flag
   39   2              clr_TCON_TF0;
@@ -62,7 +62,7 @@ line level    source
   41   2          }
   42   1          clr_TCON_TR0;                                    //Stop Timer0
   43   1      }
-C51 COMPILER V9.60.7.0   TIMER                                                             06/24/2023 11:15:41 PAGE 2   
+C51 COMPILER V9.60.7.0   TIMER                                                             03/24/2025 11:53:57 PAGE 2   
 
   44          //------------------------------------------------------------------------------
   45          void Timer1_Delay10ms(UINT32 u32CNT)
@@ -73,9 +73,9 @@ line level    source
   50   1          while (u32CNT != 0)
   51   1          {
   52   2              TL1 = LOBYTE(TIMER_DIV12_VALUE_10ms);    //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 52 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_10ms': undefined identifier
+*** ERROR C202 IN LINE 52 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_10ms': undefined identifier
   53   2              TH1 = HIBYTE(TIMER_DIV12_VALUE_10ms);
-*** ERROR C202 IN LINE 53 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_10ms': undefined identifier
+*** ERROR C202 IN LINE 53 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV12_VALUE_10ms': undefined identifier
   54   2              while (TF1 != 1);                        //Check Timer1 Time-Out Flag
   55   2              clr_TCON_TF1;
   56   2              u32CNT --;
@@ -94,9 +94,9 @@ line level    source
   69   1          while (u8CNT != 0)
   70   1          {
   71   2              TL2 = LOBYTE(TIMER_DIV4_VALUE_500us);    //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 71 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_500us': undefined identifier
+*** ERROR C202 IN LINE 71 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_500us': undefined identifier
   72   2              TH2 = HIBYTE(TIMER_DIV4_VALUE_500us);
-*** ERROR C202 IN LINE 72 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_500us': undefined identifier
+*** ERROR C202 IN LINE 72 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_500us': undefined identifier
   73   2              set_T2CON_TR2;
   74   2              while (TF2 == 0);                       //Check Timer2 Time-Out Flag
   75   2              clr_T2CON_TF2;
@@ -114,9 +114,9 @@ line level    source
   87   1      
   88   1          while (u8CNT != 0)
   89   1          {        TL2 = LOBYTE(TIMER_DIV4_VALUE_1ms);    //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 89 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_1ms': undefined identifier
+*** ERROR C202 IN LINE 89 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_1ms': undefined identifier
   90   2              TH2 = HIBYTE(TIMER_DIV4_VALUE_1ms);
-*** ERROR C202 IN LINE 90 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_1ms': undefined identifier
+*** ERROR C202 IN LINE 90 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_1ms': undefined identifier
   91   2              set_T2CON_TR2;
   92   2              while (TF2 == 0);                       //Check Timer2 Time-Out Flag
   93   2              clr_T2CON_TF2;
@@ -126,7 +126,7 @@ line level    source
   97   1      }
   98          //------------------------------------------------------------------------------
   99          void Timer3_Delay100ms(UINT32 u32CNT)
-C51 COMPILER V9.60.7.0   TIMER                                                             06/24/2023 11:15:41 PAGE 3   
+C51 COMPILER V9.60.7.0   TIMER                                                             03/24/2025 11:53:57 PAGE 3   
 
  100          {
  101   1          T3CON = 0x07;                               //Timer3 Clock = Fsys/128
@@ -134,11 +134,9 @@ line level    source
  103   1          while (u32CNT != 0)
  104   1          {
  105   2              RL3 = LOBYTE(TIMER_DIV128_VALUE_100ms); //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 105 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV128_VALUE_100ms': undefined identifie
-             -r
+*** ERROR C202 IN LINE 105 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV128_VALUE_100ms': undefined identifier
  106   2              RH3 = HIBYTE(TIMER_DIV128_VALUE_100ms);
-*** ERROR C202 IN LINE 106 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV128_VALUE_100ms': undefined identifie
-             -r
+*** ERROR C202 IN LINE 106 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV128_VALUE_100ms': undefined identifier
  107   2              while ((T3CON&SET_BIT4) != SET_BIT4);    //Check Timer3 Time-Out Flag
  108   2              clr_T3CON_TF3;
  109   2              u32CNT --;
@@ -153,9 +151,9 @@ line level    source
  118   1          while (u32CNT != 0)
  119   1          {
  120   2              RL3 = LOBYTE(TIMER_DIV4_VALUE_10us); //Find  define in "Function_define.h" "TIMER VALUE"
-*** ERROR C202 IN LINE 120 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_10us': undefined identifier
+*** ERROR C202 IN LINE 120 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_10us': undefined identifier
  121   2              RH3 = HIBYTE(TIMER_DIV4_VALUE_10us);
-*** ERROR C202 IN LINE 121 OF ..\..\..\..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_10us': undefined identifier
+*** ERROR C202 IN LINE 121 OF ..\Library\StdDriver\src\timer.c: 'TIMER_DIV4_VALUE_10us': undefined identifier
  122   2              while ((T3CON&SET_BIT4) != SET_BIT4);    //Check Timer3 Time-Out Flag
  123   2              clr_T3CON_TF3;
  124   2              u32CNT --;

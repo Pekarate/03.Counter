@@ -34,6 +34,7 @@
 #include "pwm.h"
 #include "spi.h"
 #include "sys.h"
+#include "timer.h"
 #include "uart.h"
 #include "watchdog.h"
 #include "wkt.h"

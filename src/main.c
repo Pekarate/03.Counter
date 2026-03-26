@@ -36,7 +36,7 @@
 
 #define BUTTON_PRESSED !P07
 #define IS_SYS_RUN_MOD_A P30
-#define TIMOUT_NON_DETECT_OBJ 1800000 // ms
+#define NO_OBJECT_SLEEP_TIMEOUT_MS (30UL * 60UL * 1000UL)
 
 #define DETECT_THRESHOLD_NOT_SET 0
 
@@ -585,14 +585,14 @@ void PinInterrupt_ISR(void) interrupt 7
 
 void reset_non_obj_detect_timout()
 {
-	non_dect_timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
+	non_dect_timout = HAL_GetTick() + NO_OBJECT_SLEEP_TIMEOUT_MS;
 }
 void check_non_obj_detect_timout(void)
 {
 
 	// if (old_obj_count != (obj_count + btn_count)) // dif total 2 mode
 	// {
-	// 	non_dect_timout = HAL_GetTick() + TIMOUT_NON_DETECT_OBJ;
+	// 	non_dect_timout = HAL_GetTick() + NO_OBJECT_SLEEP_TIMEOUT_MS;
 	// 	old_obj_count = (obj_count + btn_count);
 	// }
 	// else
@@ -699,7 +699,6 @@ void main(void)
 	P06_QUASI_MODE;
 	UART_Open(8000000,UART0_Timer1,19200);
 	ENABLE_UART0_PRINTF;
-	reset_non_obj_detect_timout();
 	Init_I2C();
 
 	LCD_INIT();
@@ -715,6 +714,7 @@ void main(void)
 	DETECT_THRESHOLD = struct_data.threshold;
 
 	reset_counter();
+	reset_non_obj_detect_timout();
 	Timm = 0;
 	while (1)
 	{
@@ -726,10 +726,10 @@ void main(void)
 		// 	task_count+=1;
 		// 	printf("task_count: %ld\r\n",task_count);
 		// }
+		check_non_obj_detect_timout();
 		BTN_process();
 		Process_VCNL();
 		LCD_show(obj_count);
-		check_non_obj_detect_timout();
 		// printf(">>>>\r\n");
 #ifdef CONTROL_COM_ENABLE
 		set_PCON_IDLE;

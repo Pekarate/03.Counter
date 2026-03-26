@@ -60,7 +60,15 @@ void Timer3_INT_Initial(unsigned char u8TMDIV,
 }
 
 UINT32 HAL_GetTick() {
-	return uTick;
+	data UINT32 tick;
+	bit ea_state;
+
+	ea_state = EA;
+	EA = 0;
+	tick = uTick;
+	EA = ea_state;
+
+	return tick;
 }
 void HAL_TIM_Pause() {
 	clr_T3CON_TR3;
